@@ -1,0 +1,167 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.whyChooseAlignment {
+    padding: 100px 0 0 0;
+
+    @include respond-to("sm") {
+        padding: 60px 0 0 0;
+    }
+
+    :global(.container) {
+        padding: 0;
+    }
+
+    .title {
+        padding: 0 0 60px 0;
+
+        @include respond-to("md") {
+            padding: 0 20px 60px 20px;
+        }
+
+        @include respond-to("sm") {
+            padding: 0 20px 40px 20px;
+        }
+
+        h2 {
+            color: #121212;
+            text-align: center;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            text-transform: capitalize;
+            font-family: var(--font-el-messiri);
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+
+        @include respond-to("xl") {
+            gap: 20px;
+        }
+
+        @include respond-to("md") {
+            display: flex;
+            overflow: auto;
+            padding: 0 20px;
+            scrollbar-width: none;
+        }
+
+        @include respond-to("sm") {
+            gap: 16px;
+        }
+
+        .items {
+            border-radius: 20px;
+            border: 1px solid rgba(18, 18, 18, 0.10);
+            background: #FFF;
+            box-shadow: 0 0 39.4px 0 rgba(0, 0, 0, 0.06);
+            padding: 32px 32px 90px 32px;
+            position: relative;
+            transition: all 0.3s ease;
+
+            @include respond-to("xl") {
+                padding: 24px 24px 60px 24px;
+            }
+
+            @include respond-to("sm") {
+                padding: 16px 16px 40px 16px;
+                border-radius: 12px;
+            }
+
+            @include respond-to("md") {
+                box-shadow: none;
+                min-width: 310px;
+                max-width: 310px;
+                width: 310px;
+            }
+
+            &:hover {
+                border: 1px solid #527475;
+            }
+
+            .vecIcon {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+
+                img {
+                    display: block;
+                    opacity: 0.5;
+                }
+            }
+
+            .itemsGrid {
+                display: grid;
+                grid-template-columns: 52px 1fr;
+                gap: 18px;
+                padding: 0 0 16px 0;
+                align-items: center;
+                position: relative;
+                z-index: 9;
+
+                @include respond-to("md") {
+                    grid-template-columns: 1fr;
+                    gap: 16px;
+                }
+            }
+
+            .icon {
+                border-radius: 12px;
+                border: 1px solid rgba(18, 18, 18, 0.10);
+                background: rgba(18, 18, 18, 0.06);
+                box-shadow: 0 0 44.8px 0 rgba(0, 0, 0, 0.09);
+                backdrop-filter: blur(123.94999694824219px);
+                width: 52px;
+                height: 52px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            h3 {
+                color: #121212;
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+                text-transform: capitalize;
+
+                @include respond-to("xl") {
+                    font-size: 20px;
+                }
+
+            }
+
+            p {
+                color: #565656;
+                font-size: 18px;
+                font-style: normal;
+                position: relative;
+                z-index: 9;
+                font-weight: 400;
+                max-width: 407px;
+                line-height: 28px;
+
+                @include respond-to("sm") {
+                    font-size: 16px;
+                    line-height: 24px;
+                }
+            }
+        }
+    }
+}

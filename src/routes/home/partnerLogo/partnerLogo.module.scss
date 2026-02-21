@@ -1,0 +1,78 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.partnerLogo {
+    padding: 40px 0;
+    background: #527475;
+    overflow: hidden;
+    position: relative;
+
+    @include respond-to("sm") {
+        padding: 20px 0;
+    }
+
+    // Blur/Fade effect on the sides
+    &::before,
+    &::after {
+        content: "";
+        height: 100%;
+        position: absolute;
+        top: 0;
+        width: 150px;
+        z-index: 2;
+        pointer-events: none;
+        backdrop-filter: blur(2px); // Adds a slight actual blur to the passing logos
+
+        @include respond-to("sm") {
+            width: 60px;
+        }
+
+    }
+
+    &::before {
+        left: 0;
+        background: linear-gradient(to right, #527475 0%, rgba(82, 116, 117, 0) 100%);
+    }
+
+    &::after {
+        right: 0;
+        background: linear-gradient(to left, #527475 0%, rgba(82, 116, 117, 0) 100%);
+    }
+
+    .logoMarqueeContainer {
+        display: flex;
+        overflow: hidden;
+        user-select: none;
+        width: 100%;
+    }
+
+    .logoAlignment {
+        display: flex;
+        align-items: center;
+        gap: 80px;
+        flex-shrink: 0;
+        padding-right: 80px; // Spacing for seamless loop
+
+        @include respond-to("sm") {
+            gap: 40px;
+            padding-right: 40px;
+        }
+
+        .logoItem {
+            flex-shrink: 0;
+
+            img {
+                display: block;
+                max-width: 160px;
+                height: 40px;
+                object-fit: contain;
+                position: relative;
+
+                @include respond-to("sm") {
+                    max-width: 120px;
+                    height: 35px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,166 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.trustedByBrands {
+    padding: 100px 0;
+    background: #F5F8F8;
+    position: relative;
+
+    @include respond-to("sm") {
+        padding: 60px 0;
+    }
+
+    &::before {
+        filter: blur(100px);
+        content: "";
+        background: #527475;
+        width: 120px;
+        height: 150px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    &::after {
+        filter: blur(100px);
+        content: "";
+        background: #527475;
+        width: 120px;
+        height: 150px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .title {
+        padding: 0 0 60px 0;
+
+        @include respond-to("sm") {
+            padding: 0 0 40px 0;
+        }
+
+        h2 {
+            color: #121212;
+            text-align: center;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            text-transform: capitalize;
+            font-family: var(--font-el-messiri);
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        position: relative;
+        z-index: 1;
+
+        @include respond-to("md") {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @include respond-to("sm") {
+            grid-template-columns: 1fr;
+        }
+
+
+        .items {
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+
+            @include respond-to("md") {
+                &:last-child {
+                    display: none;
+                }
+            }
+
+            @include respond-to("sm") {
+                &:nth-child(2) {
+                    display: none;
+                }
+            }
+
+            .marqueeTrack {
+                display: flex;
+                flex-direction: column;
+                will-change: transform;
+            }
+
+            .box:last-child {
+                margin: 0;
+            }
+
+            .box {
+                border-radius: 16px;
+                border: 1.5px solid rgba(100, 127, 128, 0.30);
+                background: #FFF;
+                margin: 0 0 20px 0;
+                padding: 24px;
+
+                @include respond-to("sm") {
+                    border-radius: 12px;
+                    padding: 16px;
+                }
+
+                p {
+                    color: #121212;
+                    font-size: 14.6px;
+                    font-style: normal;
+                    font-weight: 400;
+                    margin: 0 0 24px 0;
+                    line-height: 24px;
+                }
+
+                .profileGrid {
+                    display: grid;
+                    grid-template-columns: 40px 1fr;
+                    gap: 8px;
+
+                    h4 {
+                        color: #121212;
+                        font-size: 14.5px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: 20px;
+                        letter-spacing: -0.4px;
+                    }
+
+                    span {
+                        display: block;
+                        color: #121212;
+                        font-size: 12.6px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 20px;
+                        letter-spacing: -0.4px;
+                    }
+
+                    img {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                }
+            }
+        }
+    }
+}

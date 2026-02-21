@@ -1,0 +1,329 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.createPerfectPhotos {
+    background: #F7F8FA;
+    padding: 100px 0;
+    position: relative;
+
+    @include respond-to("sm") {
+        padding: 60px 0;
+    }
+
+    .leftAlignment {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        img {
+            display: block;
+            max-width: 600px;
+
+            @include respond-to("sm") {
+                max-width: 80%;
+            }
+        }
+    }
+
+    .rightAlignment {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+
+        img {
+            display: block;
+            max-width: 600px;
+
+            @include respond-to("sm") {
+                max-width: 80%;
+            }
+        }
+    }
+
+    :global(.container) {
+        position: relative;
+        z-index: 9;
+
+    }
+
+    .title {
+        padding: 0 0 60px 0;
+
+        @include respond-to("sm") {
+            padding: 0 0 40px 0;
+        }
+
+        h2 {
+            max-width: 942px;
+            margin: 0 auto;
+            text-align: center;
+            color: #121212;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            font-family: var(--font-el-messiri);
+            text-transform: capitalize;
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+    .allBoxAlignment {
+
+
+        .box:last-child {
+            margin: 0;
+
+
+            .grid {
+                grid-template-columns: 696px 1fr;
+
+                @include respond-to("xl") {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                @include respond-to("md") {
+                    grid-template-columns: 1fr;
+                }
+
+                .items:first-child {
+                    order: 2;
+                }
+
+                .content {
+                    margin-left: auto;
+
+                }
+            }
+        }
+
+        .box {
+            backdrop-filter: blur(206.3000030517578px);
+            padding: 60px;
+            overflow: hidden;
+            border-radius: 34px;
+            border: 1px solid rgba(0, 0, 0, 0.10);
+            background: #FFF;
+            box-shadow: 0 0 43.8px 0 rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
+            position: relative;
+            margin: 0 0 60px 0;
+
+            @include respond-to("xl") {
+                padding: 40px;
+                margin: 0 0 40px 0;
+            }
+
+            @include respond-to("sm") {
+                padding: 20px;
+                border-radius: 12px;
+                margin: 0 0 20px 0;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: 1fr 696px;
+                gap: 60px;
+                position: relative;
+                align-items: center;
+
+                @include respond-to("xl") {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                @include respond-to("md") {
+                    grid-template-columns: 1fr;
+                    gap: 40px;
+                }
+
+                @include respond-to("sm") {
+                    gap: 20px;
+                }
+
+                .content {
+                    max-width: 616px;
+
+                    h3 {
+                        color: #121212;
+                        font-size: 42px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 58px;
+                        text-transform: capitalize;
+                        max-width: 616px;
+                        margin: 0 0 14px 0;
+
+                        @include respond-to("xl") {
+                            font-size: 32px;
+                            line-height: 40px;
+                        }
+
+                        @include respond-to("sm") {
+                            font-size: 24px;
+                            line-height: 34px;
+                        }
+                    }
+
+                    p {
+                        color: #727272;
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                        margin: 0 0 40px 0;
+                        max-width: 616px;
+
+                        @include respond-to("sm") {
+                            font-size: 16px;
+                            margin: 0 0 30px 0;
+                        }
+                    }
+
+                    .buttonDesign {
+                        padding: 20px 0 0 0;
+
+                        @include respond-to("sm") {
+                            padding: 10px 0 0 0;
+                        }
+
+                        button {
+                            border: none;
+                            cursor: pointer;
+                            border-radius: 12px;
+                            background: #527475;
+                            padding: 14px 20px;
+                            color: #FFF;
+                            text-align: center;
+                            font-size: 16px;
+                            font-style: normal;
+                            font-weight: 600;
+                            line-height: normal;
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            transition: .3s ease-in-out;
+
+                            @include respond-to("sm") {
+                                width: 100%;
+                                justify-content: center;
+                            }
+
+                            svg {
+                                transition: .3s ease-in-out;
+                            }
+
+                            &:hover {
+                                svg {
+                                    transform: translateX(5px);
+                                }
+                            }
+                        }
+                    }
+
+                    .allIconTextAlignment {
+                        .iconText {
+                            display: grid;
+                            padding: 0 0 16px 0;
+                            grid-template-columns: 20px 1fr;
+                            gap: 13px;
+                            align-items: center;
+
+                            img {
+                                display: block;
+                            }
+
+                            span {
+                                display: block;
+                                color: #565656;
+                                font-size: 18px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: normal;
+
+                                @include respond-to("sm") {
+                                    font-size: 16px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .box {
+                    border-radius: 20px;
+                    border: 1px solid #FFF;
+                    background: linear-gradient(123deg, #FFF 1.02%, #DDE1E1 98.98%);
+                    box-shadow: 0 0 39.4px 0 rgba(0, 0, 0, 0.06);
+                    padding: 24px;
+
+                    @include respond-to("sm") {
+                        border-radius: 12px;
+                        padding: 10px;
+                    }
+
+                    .image {
+                        img {
+                            display: block;
+                            width: 100%;
+                            border-radius: 14px 14px 0 0;
+                            height: 415px;
+                            object-fit: cover;
+
+                            @include respond-to("xl") {
+                                height: 320px;
+                            }
+
+                            @include respond-to("sm") {
+                                height: 200px;
+                            }
+                        }
+                    }
+
+                    .text {
+                        background-color: #fff;
+                        border-radius: 0 0 20px 20px;
+                        padding: 20px;
+                        background: #FFF;
+
+                        @include respond-to("sm") {
+                            border-radius: 0 0 12px 12px;
+                            padding: 10px;
+                        }
+
+                        ul {
+                            margin: 0;
+                            padding: 0 0 0 20px;
+
+                            li {
+                                color: #121212;
+                                font-size: 20px;
+                                font-style: normal;
+                                font-weight: 600;
+                                line-height: normal;
+                                text-transform: capitalize;
+
+                                @include respond-to("xl") {
+                                    font-size: 16px;
+                                }
+
+                                @include respond-to("sm") {
+                                    font-size: 14px;
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            }
+        }
+    }
+}

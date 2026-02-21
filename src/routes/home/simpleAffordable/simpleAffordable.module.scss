@@ -1,0 +1,374 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.simpleAffordable {
+    padding: 100px 0;
+    overflow: hidden;
+    position: relative;
+    background-color: #F5F8F8;
+
+    @include respond-to("sm") {
+        padding: 60px 0;
+    }
+
+    .leftVec {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+
+        img {
+            display: block;
+            max-width: 400px;
+
+            @include respond-to("sm") {
+                max-width: 80%;
+            }
+        }
+    }
+
+    :global(.container) {
+        @include respond-to("sm") {
+            padding: 0;
+            position: relative;
+            z-index: 9;
+        }
+    }
+
+    .bottom {
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        img {
+            display: block;
+            max-width: 400px;
+
+            @include respond-to("sm") {
+                max-width: 80%;
+            }
+        }
+    }
+
+
+
+    .title {
+        padding: 0 0 40px 0;
+
+        h2 {
+            color: #121212;
+            text-align: center;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            text-transform: capitalize;
+            font-family: var(--font-el-messiri);
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+    .groupButtonCenter {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 0 50px 0;
+
+        @include respond-to("sm") {
+            padding: 0 0 40px 0;
+        }
+
+        .groupButton {
+            border-radius: 100px;
+            border: 1px solid #D2D4D6;
+            background: #FFF;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            button {
+                border: none;
+                cursor: pointer;
+                color: #121212;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 120%;
+                text-transform: capitalize;
+                padding: 15px 34px;
+                background-color: transparent;
+                border-radius: 99px;
+
+                @include respond-to("sm") {
+                    font-size: 16px;
+                    padding: 12px 24px;
+                }
+
+                &.active {
+                    border-radius: 100px;
+                    color: #fff;
+                    background: #527475;
+                }
+            }
+        }
+    }
+
+    .grid {
+        max-width: 1274px;
+        margin: 0 auto;
+        display: grid;
+        gap: 30px;
+        grid-template-columns: repeat(3, 1fr);
+
+        @include respond-to("xl") {
+            gap: 20px;
+        }
+
+        @include respond-to("md") {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px 20px;
+        }
+
+        @include respond-to("sm") {
+            display: flex;
+            overflow: auto;
+            padding: 0 20px;
+            scrollbar-width: none;
+            gap: 12px;
+        }
+
+        .items {
+            border-radius: 25px;
+            border: 1px solid #D2D4D6;
+            background: #FFF;
+            padding: 30px 20px 20px 20px;
+            position: relative;
+            transition: border-color 0.3s ease;
+
+            @include respond-to("sm") {
+                border-radius: 12px;
+                max-width: 310px;
+                min-width: 310px;
+                width: 310px;
+            }
+
+            &:hover {
+                border-color: #527475;
+            }
+
+            &.popularItem {
+                .popularBadge {
+                    background: #121212;
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    padding: 10px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    z-index: 9;
+                    border-radius: 25px 25px 0 0;
+
+                    @include respond-to("sm") {
+                        border-radius: 12px 12px 0 0;
+                        padding: 6px;
+                    }
+
+                    svg {
+                        fill: #fff;
+                    }
+                }
+
+                .infoBox {
+                    background-color: #527475;
+                    background-image: url('/assets/images/noise.png'); // Subtle texture if available
+                    background-size: cover;
+
+                    button {
+                        color: #121212;
+                        background-color: #fff;
+                    }
+
+                    h3 {
+                        color: #fff;
+
+                        sub {
+                            color: #fff;
+                        }
+                    }
+
+                    p {
+                        color: rgba(255, 255, 255, 0.90);
+                    }
+                }
+            }
+
+            .allDetails {
+                padding: 30px 0 30px 30px;
+
+                @include respond-to("sm") {
+                    padding: 14px 0 14px 14px;
+                }
+
+                span {
+                    display: block;
+                    padding: 0 0 14px 0;
+                    color: #121212;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    letter-spacing: -0.16px;
+                }
+            }
+
+            .buttonAlignment {
+                position: absolute;
+                bottom: -22px;
+                left: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                @include respond-to("sm") {
+                    position: inherit;
+                    bottom: 0;
+                }
+
+                button {
+                    width: 100%;
+                    border-radius: 12px;
+                    background: #647F80;
+                    max-width: 270px;
+                    color: #FFF;
+                    text-align: center;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    padding: 12px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: .3s ease-in-out;
+                    justify-content: center;
+                    cursor: pointer;
+                    border: none;
+
+                    svg {
+                        transition: .3s ease-in-out;
+                    }
+
+                    &:hover {
+                        background: #527475;
+
+                        svg {
+                            transform: translateX(6px);
+                        }
+                    }
+                }
+            }
+
+            .infoBox {
+                background-color: rgba(106, 130, 131, 0.10);
+                border: 1px solid rgba(94, 124, 124, 0.20);
+                padding: 30px;
+                border-radius: 20px;
+                position: relative;
+                overflow: hidden;
+
+                @include respond-to("sm") {
+                    border-radius: 12px;
+                    padding: 14px;
+                }
+
+                .image {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    right: -10px;
+                    opacity: 0.2; // Match the subtle watermark look
+
+                    img {
+                        display: block;
+                        width: 100px;
+                    }
+                }
+
+                button {
+                    color: #121212;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 120%;
+                    text-transform: capitalize;
+                    font-family: var(--font-el-messiri);
+                    border-radius: 100px;
+                    background: #DDE4E4;
+                    margin: 0 0 20px 0;
+                    padding: 9px 40px;
+                    border: none;
+
+                    @include respond-to("sm") {
+                        font-size: 14px;
+                        padding: 8px 20px;
+                        margin: 0 0 10px 0;
+                    }
+                }
+
+                h3 {
+                    color: #000;
+                    font-size: 40px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: normal;
+                    font-family: var(--font-el-messiri);
+
+                    @include respond-to("sm") {
+                        font-size: 30px;
+                    }
+
+                    sub {
+                        color: #000;
+                        font-family: var(--font-el-messiri);
+                        font-size: 20px;
+                        font-style: normal;
+                        position: relative;
+                        bottom: 10px;
+                        left: -8px;
+                        font-weight: 700;
+                        line-height: normal;
+
+                        @include respond-to("sm") {
+                            font-size: 14px;
+                        }
+                    }
+                }
+
+                p {
+                    color: #444;
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                }
+            }
+        }
+    }
+
+}

@@ -1,0 +1,278 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.faqSectionAlignment {
+    background: #F5F8F8;
+    padding: 100px 0;
+    position: relative;
+
+    @include respond-to("sm") {
+        padding: 60px 0;
+    }
+
+    :global(.container) {
+        position: relative;
+        z-index: 9;
+    }
+
+    .leftVec {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+
+        img {
+            display: block;
+            max-width: 400px;
+        }
+    }
+
+    .bottom {
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        img {
+            display: block;
+            max-width: 400px;
+        }
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 570px 1fr;
+        gap: 40px;
+
+        @include respond-to("md") {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .griditems {
+            .faqMainBox {
+                border-radius: 24px;
+                border: 1px solid rgba(0, 0, 0, 0.07);
+                background: #FFF;
+                box-shadow: 0 0 80px 0 rgba(0, 0, 0, 0.06);
+                max-width: 800px;
+                padding: 20px;
+                margin-left: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                @include respond-to("xl") {
+                    padding: 16px;
+                }
+
+                @include respond-to("sm") {
+                    border-radius: 12px;
+                    padding: 14px;
+                }
+
+                .lineBox {
+                    border-radius: 16px;
+                    border: 1px solid rgba(18, 18, 18, 0.14);
+                    background: #FFF;
+                    padding: 16px;
+                    margin: 0 0 12px 0;
+
+                    @include respond-to("xl") {
+                        margin: 0;
+                    }
+
+                    &:last-child {
+                        margin: 0;
+                    }
+
+                    .faqBody {
+                        .spacing {
+                            padding: 16px 0 0 0;
+
+                            p {
+                                color: #5C5C5C;
+                                font-size: 18px;
+                                font-style: normal;
+                                font-weight: 400;
+                                line-height: 32px;
+                                max-width: 693px;
+
+                                @include respond-to("xl") {
+                                    font-size: 16px;
+                                    line-height: 26px;
+                                }
+
+                                @include respond-to("sm") {
+                                    font-size: 14px;
+                                    line-height: 22px;
+                                }
+                            }
+                        }
+                    }
+
+                    .faqHeader {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        cursor: pointer;
+
+                        @include respond-to("sm") {
+                            gap: 6px;
+                        }
+
+                        .icon {
+                            display: flex;
+                            align-items: center;
+
+                            svg {
+                                cursor: pointer;
+                            }
+                        }
+
+                        h4 {
+                            color: #121212;
+                            font-size: 20px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            text-transform: capitalize;
+
+                            @include respond-to("xl") {
+                                font-size: 18px;
+                            }
+
+                            @include respond-to("sm") {
+                                font-size: 16px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .box {
+                border-radius: 20px;
+                border: 1px solid rgba(18, 18, 18, 0.10);
+                background: #FFF;
+                box-shadow: 0 0 26px 0 rgba(0, 0, 0, 0.05);
+                backdrop-filter: blur(15.600000381469727px);
+                position: relative;
+                overflow: hidden;
+                padding: 32px;
+
+                @include respond-to("xl") {
+                    padding: 24px;
+                }
+
+                @include respond-to("sm") {
+                    padding: 16px;
+                    border-radius: 12px;
+                }
+
+                img {
+                    display: block;
+                }
+
+                h3 {
+                    margin: 30px 0 15px 0;
+                    color: #121212;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+
+                    @include respond-to("sm") {
+                        font-size: 18px;
+                        margin: 16px 0;
+                    }
+                }
+
+                p {
+                    color: #121212;
+                    margin: 0 0 24px 0;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    max-width: 473px;
+                    line-height: 28px;
+
+                    @include respond-to("sm") {
+                        font-size: 16px;
+                        margin: 0 0 16px 0;
+                    }
+                }
+
+                button {
+                    border: none;
+                    cursor: pointer;
+                    border-radius: 12px;
+                    background: #647F80;
+                    padding: 12px 20px;
+                    color: #FFF;
+                    text-align: center;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    transition: .3s ease-in-out;
+
+                    @include respond-to("sm") {
+                        width: 100%;
+                        justify-content: center;
+                    }
+
+                    svg {
+                        transition: .3s ease-in-out;
+                    }
+
+                    &:hover {
+                        svg {
+                            transform: translateX(6px);
+                        }
+                    }
+                }
+
+                &::before {
+                    position: absolute;
+                    width: 100px;
+                    height: 100px;
+                    right: 0;
+                    top: 0;
+                    content: '';
+                    background-color: #085F62;
+                    opacity: 0.9;
+                    filter: blur(106.0999984741211px);
+                }
+            }
+
+            .title {
+                padding: 0 0 50px 0;
+
+                @include respond-to("sm") {
+                    padding: 0 0 40px 0;
+                }
+
+                h2 {
+                    color: #121212;
+                    font-size: 62px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 73px;
+                    font-family: var(--font-el-messiri);
+                    text-transform: capitalize;
+
+                    @include respond-to("xl") {
+                        font-size: 50px;
+                        line-height: 60px;
+                    }
+
+                    @include respond-to("sm") {
+                        font-size: 36px;
+                        line-height: 41px;
+                    }
+                }
+            }
+        }
+    }
+}

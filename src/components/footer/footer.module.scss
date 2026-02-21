@@ -1,0 +1,149 @@
+@use '../../scss/main.scss' as *;
+@use '../../scss/breakpoints/breakpoints.scss' as *;
+
+.footer {
+    background-image: url('/assets/images/footer.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 100px 0 0 0;
+    width: 100%;
+
+    @include respond-to("sm") {
+        padding: 60px 0 0 0;
+    }
+
+    .textImage {
+
+        img {
+            width: 100%;
+            display: block;
+        }
+    }
+
+    .footerGrid {
+        display: grid;
+        grid-template-columns: 477px 1fr;
+        gap: 160px;
+
+        @include respond-to("md") {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .items {
+            .menuListAlignment {
+                display: flex;
+                justify-content: space-between;
+
+                @include respond-to("sm") {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                }
+
+                h3 {
+                    margin: 0 0 40px 0;
+                    color: #121212;
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                }
+
+                a {
+                    padding: 0 0 18px 0;
+                    display: inline-block;
+                    color: #515151;
+                    font-size: 18px;
+                    cursor: pointer;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    position: relative;
+                    text-decoration: none;
+                    transition: color 0.3s ease, transform 0.3s ease;
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        bottom: 10px;
+                        left: 0;
+                        width: 100%;
+                        height: 2px;
+                        background: linear-gradient(90deg, #121212, #515151);
+                        transform: scaleX(0);
+                        transform-origin: left;
+                        transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    }
+
+                    &:hover {
+                        color: #121212;
+                        transform: translateX(4px);
+
+                        &::after {
+                            transform: scaleX(1);
+                        }
+                    }
+
+                    &:last-child {}
+                }
+            }
+
+            .leftContentAlignment {
+                p {
+                    color: #515151;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 25px;
+                    margin: 0 0 40px 0;
+                    max-width: 477px;
+
+                    @include respond-to("sm") {
+                        font-size: 16px;
+                        margin: 0 0 20px 0;
+                    }
+                }
+
+                .socialIcon {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+
+                    @include respond-to("sm") {
+                        gap: 10px;
+                    }
+
+                    .socialIconItem {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 12px;
+                        padding: 8px;
+                        cursor: pointer;
+                        will-change: transform;
+                        transition: background 0.3s ease;
+
+
+                        img {
+                            display: block;
+                            pointer-events: none;
+                        }
+                    }
+                }
+
+                .footerlogo {
+                    padding: 0 0 18px 0;
+
+                    img {
+                        display: block;
+
+                        @include respond-to("sm") {
+                            max-width: 160px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

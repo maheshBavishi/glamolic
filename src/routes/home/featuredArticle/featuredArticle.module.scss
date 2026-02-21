@@ -1,0 +1,227 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.featuredArticle {
+    padding: 100px 0;
+    overflow: hidden;
+    position: relative;
+    background: rgba(255, 255, 255, 0.20);
+
+    @include respond-to("sm") {
+        padding: 60px 0;
+    }
+
+    &::before {
+        filter: blur(100px);
+        content: "";
+        background-color: #085F62;
+        opacity: 0.9;
+        width: 120px;
+        height: 150px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    &::after {
+        filter: blur(100px);
+        content: "";
+        background-color: #085F62;
+        opacity: 0.9;
+        width: 120px;
+        height: 150px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    :global(.container) {
+        position: relative;
+        z-index: 9;
+    }
+
+    .title {
+        padding: 0 0 60px 0;
+
+        @include respond-to("sm") {
+            padding: 0 0 40px 0;
+        }
+
+        h2 {
+            color: #121212;
+            text-align: center;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            text-transform: capitalize;
+            font-family: var(--font-el-messiri);
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+
+        @include respond-to("xl") {
+            gap: 20px;
+        }
+
+        @include respond-to("md") {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @include respond-to("sm") {
+            grid-template-columns: 1fr;
+        }
+
+        .items {
+            border-radius: 16px;
+            border: 1px solid rgba(18, 18, 18, 0.12);
+            background: #FFF;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: .3s ease-in-out;
+
+            @include respond-to("xl") {
+                padding: 12px;
+            }
+
+            &:hover {
+                border: 1px solid #085F62;
+            }
+
+            &::before {
+                filter: blur(100px);
+                content: "";
+                background-color: #647F80;
+                opacity: 0.9;
+                width: 100px;
+                height: 100px;
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+            .content {
+                padding: 20px 0 0 0;
+
+                button {
+                    border: none;
+                    border-radius: 6px;
+                    background: rgba(18, 18, 18, 0.10);
+                    padding: 6px 12px;
+                    color: #121212;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
+
+                h3 {
+                    margin: 18px 0 12px 0;
+                    color: #121212;
+                    font-size: 22px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    text-transform: capitalize;
+                    max-width: 434px;
+
+                    @include respond-to("xl") {
+                        font-size: 20px;
+                    }
+                }
+
+                p {
+                    color: #565656;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 30px;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+
+                    @include respond-to("xl") {
+                        font-size: 16px;
+                        line-height: 26px;
+                    }
+                }
+
+                .readmore {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 0 0 0;
+                    gap: 6px;
+                    cursor: pointer;
+
+                    &:hover {
+                        svg {
+                            transform: translateX(5px);
+                        }
+                    }
+
+                    svg {
+                        transition: 0.3s ease-in-out;
+                    }
+
+                    span {
+                        display: block;
+                        color: #121212;
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+
+                        @include respond-to("xl") {
+                            font-size: 16px;
+                            line-height: 26px;
+                        }
+                    }
+                }
+            }
+
+            .imagebox {
+                padding: 12px;
+                border-radius: 16px;
+                background: linear-gradient(180deg, #FFF 0%, #E3E8E8 100%);
+                box-shadow: 0 4px 19px 0 rgba(0, 0, 0, 0.08);
+                position: relative;
+
+                @include respond-to("xl") {
+                    padding: 6px;
+                }
+
+                img {
+                    width: 100%;
+                    height: 310px;
+                    border-radius: 16px;
+                    object-fit: cover;
+                    display: block;
+
+                    @include respond-to("xl") {
+                        height: 260px;
+                    }
+
+                    @include respond-to("md") {
+                        height: 220px;
+                    }
+                }
+            }
+        }
+    }
+}

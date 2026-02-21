@@ -1,0 +1,541 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.herobanner {
+    background-image: url('/assets/images/hero-banner.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100dvh;
+
+    @include respond-to("md") {
+        height: auto;
+    }
+
+    .herobannerTopAlignment {
+        padding: 160px 0 0 0;
+
+        @include respond-to("xl") {
+            padding: 140px 0 0 0;
+        }
+
+        @include respond-to("sm") {
+            padding: 130px 0 0 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 765px 1fr;
+            gap: 60px;
+
+            @include respond-to("xl") {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            @include respond-to("md") {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .griditems {
+                h1 {
+                    color: #121212;
+                    font-size: 72px;
+                    font-style: normal;
+                    font-weight: 600;
+                    font-family: var(--font-el-messiri);
+                    line-height: 92px;
+                    text-transform: capitalize;
+
+                    @include respond-to("xl") {
+                        font-size: 52px;
+                        line-height: 60px;
+                    }
+
+                    @include respond-to("sm") {
+                        font-size: 40px;
+                        line-height: 50px;
+                    }
+                }
+
+                .lastContentAlignment {
+                    display: flex;
+
+                    @include respond-to("sm") {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 20px;
+                    }
+
+                    .items {
+                        padding: 0 50px;
+                        border-right: 1px solid rgba(0, 0, 0, 0.19);
+
+                        @include respond-to("sm") {
+                            padding: 0;
+                            border: none;
+                        }
+
+                        &:first-child {
+                            padding-left: 0;
+                        }
+
+                        &:last-child {
+                            padding-right: 0;
+                            border: none;
+
+                            @include respond-to("sm") {
+                                grid-column: span 2;
+                            }
+                        }
+
+                        h3 {
+                            color: #121212;
+                            font-size: 45px;
+                            text-align: center;
+                            font-style: normal;
+                            font-weight: 600;
+                            line-height: normal;
+
+                            @include respond-to("xl") {
+                                font-size: 36px;
+                                line-height: 46px;
+                            }
+                        }
+
+                        p {
+                            color: #333;
+                            font-size: 18px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+
+                            @include respond-to("sm") {
+                                font-size: 16px;
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+
+                .twoButtonAlignment {
+                    display: flex;
+                    align-items: center;
+                    padding: 0 0 40px 0;
+                    gap: 10px;
+
+                    @include respond-to("xl") {
+                        padding: 0 0 30px 0;
+                    }
+
+                    @include respond-to("sm") {
+                        display: grid;
+                        grid-template-columns: 1fr;
+                        gap: 16px;
+
+                    }
+
+                    button {
+                        padding: 14px 28px;
+                        color: #FFF;
+                        text-align: center;
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        cursor: pointer;
+                        border-radius: 12px;
+                        background: #527475;
+                        border: 1px solid #527475;
+
+                        @include respond-to("sm") {
+                            justify-content: center;
+                        }
+
+                        &.lightButton {
+                            color: #121212;
+                            border: 1px solid rgba(18, 18, 18, 0.10);
+                            background: rgba(255, 255, 255, 0.10);
+                            box-shadow: 0 0 44.8px 0 rgba(0, 0, 0, 0.09);
+                            backdrop-filter: blur(123.94999694824219px);
+                        }
+                    }
+                }
+
+                .text {
+                    padding: 0 0 40px 0;
+
+                    @include respond-to("sm") {
+                        padding: 10px 0 30px 0;
+                    }
+
+
+                    p {
+                        color: #727272;
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                        text-transform: capitalize;
+
+                        @include respond-to("sm") {
+                            font-size: 16px;
+                        }
+                    }
+                }
+
+                .tagline {
+                    padding: 0 0 20px 0;
+
+                    button {
+                        padding: 11px 24px;
+                        border-radius: 1000px;
+                        border: 1px solid rgba(18, 18, 18, 0.08);
+                        background: radial-gradient(95.79% 95.8% at 50% 50%, #FFF 0%, #F2F2F2 100%);
+                        backdrop-filter: blur(29.149999618530273px);
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        cursor: pointer;
+                        color: #121212;
+                        text-align: center;
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                        text-transform: capitalize;
+
+                        @include respond-to("sm") {
+                            font-size: 14px;
+                        }
+                    }
+                }
+
+                .rightAlignmentBox {
+                    max-width: 698px;
+                    margin-left: auto;
+                }
+
+                .genrateImage {
+                    position: relative;
+                    border-radius: 30px;
+                    padding: 24px;
+                    margin: 0 0 24px 0;
+                    backdrop-filter: blur(135.75px);
+                    background-color: #fff;
+
+                    @include respond-to("sm") {
+                        border-radius: 12px;
+                        padding: 14px;
+                        margin: 0 0 14px 0;
+                    }
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        inset: 0;
+                        padding: 1px;
+                        border-radius: 30px;
+                        background: linear-gradient(250.81deg, #527475 0.92%, #FFFFFF 23.7%, #FFFFFF 61.43%, #527475 99.08%);
+                        -webkit-mask:
+                            linear-gradient(#fff 0 0) content-box,
+                            linear-gradient(#fff 0 0);
+                        mask:
+                            linear-gradient(#fff 0 0) content-box,
+                            linear-gradient(#fff 0 0);
+                        -webkit-mask-composite: xor;
+                        mask-composite: exclude;
+                        pointer-events: none;
+
+                        @include respond-to("sm") {
+                            border-radius: 12px;
+                        }
+                    }
+
+                    .twocol {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 12px;
+
+                        @include respond-to("sm") {
+                            grid-template-columns: 1fr;
+                            gap: 24px;
+                        }
+
+
+
+                        .items {
+                            &:first-child {
+                                display: grid;
+                                grid-template-columns: 122px 1fr;
+                                gap: 12px;
+                            }
+
+                            &:last-child {
+                                display: grid;
+                                grid-template-columns: 1fr 1fr;
+                                gap: 12px;
+                                position: relative;
+
+                                .bottombutton {
+                                    position: absolute;
+                                    left: 50%;
+                                    bottom: -8%;
+                                    transform: translateX(-50%);
+                                    width: 100%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+
+                                    button {
+                                        color: #121212;
+                                        text-align: center;
+                                        font-size: 12px;
+                                        font-style: normal;
+                                        font-weight: 500;
+                                        line-height: normal;
+                                        border-radius: 10000px;
+                                        background: #EDEDED;
+                                        border: none;
+                                        padding: 6px 12px;
+                                        display: -webkit-box;
+                                        -webkit-line-clamp: 1;
+                                        -webkit-box-orient: vertical;
+                                        overflow: hidden;
+                                        text-transform: capitalize;
+                                    }
+                                }
+
+                                .imagestyle:first-child {
+                                    img {
+                                        border-radius: 8px 0 0 8px;
+                                    }
+                                }
+
+                                .imagestyle:last-child {
+                                    img {
+                                        border-radius: 0 8px 8px 0;
+                                    }
+                                }
+                            }
+
+                            .imagestyle {
+                                position: relative;
+
+                                img {
+                                    display: block;
+                                    width: 100%;
+                                    height: 147px;
+                                    object-fit: cover;
+                                    border-radius: 8px;
+                                }
+
+                                .bottombutton {
+                                    position: absolute;
+                                    left: 50%;
+                                    bottom: -8%;
+                                    transform: translateX(-50%);
+                                    width: 100%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+
+                                    button {
+                                        color: #121212;
+                                        text-align: center;
+                                        font-size: 12px;
+                                        font-style: normal;
+                                        font-weight: 500;
+                                        line-height: normal;
+                                        border-radius: 10000px;
+                                        background: #EDEDED;
+                                        border: none;
+                                        padding: 6px 12px;
+                                        text-transform: capitalize;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .breadcumbAlignment {
+                        display: flex;
+                        align-items: center;
+                        padding: 0 0 20px 0;
+                        gap: 14px;
+
+                        @include respond-to("sm") {
+                            padding: 0 0 16px 0;
+                        }
+
+                        span {
+                            display: block;
+                            color: #121212;
+                            font-size: 18px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            text-transform: capitalize;
+
+                            @include respond-to("sm") {
+                                font-size: 16px;
+                            }
+                        }
+                    }
+                }
+
+                .uploadBox {
+                    position: relative;
+                    border-radius: 30px;
+                    padding: 24px;
+                    margin: 0 0 24px 0;
+                    backdrop-filter: blur(135.75px);
+                    background-color: #fff;
+
+                    @include respond-to("xl") {
+                        padding: 18px;
+                    }
+
+                    @include respond-to("sm") {
+                        border-radius: 12px;
+                        padding: 14px;
+                        margin: 0 0 14px 0;
+                    }
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        inset: 0;
+                        padding: 1px;
+                        border-radius: 30px;
+                        background: linear-gradient(250.81deg, #527475 0.92%, #FFFFFF 23.7%, #FFFFFF 61.43%, #527475 99.08%);
+                        -webkit-mask:
+                            linear-gradient(#fff 0 0) content-box,
+                            linear-gradient(#fff 0 0);
+                        mask:
+                            linear-gradient(#fff 0 0) content-box,
+                            linear-gradient(#fff 0 0);
+                        -webkit-mask-composite: xor;
+                        mask-composite: exclude;
+                        pointer-events: none;
+
+                        @include respond-to("sm") {
+                            border-radius: 12px;
+                        }
+                    }
+
+                    .uploadBoxText {
+                        padding: 6px;
+                        border-radius: 1000px;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        margin: 0 0 18px 0;
+                        background: #EEF6F3;
+                        box-shadow: 0 -1px 2.6px 0 rgba(82, 116, 117, 0.10) inset;
+
+                        @include respond-to("sm") {
+                            padding: 10px;
+                            border-radius: 12px;
+                        }
+
+                        span {
+                            display: block;
+                            color: #121212;
+                            font-size: 16px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            text-transform: capitalize;
+
+                            @include respond-to("xl") {
+                                font-size: 14px;
+                            }
+                        }
+
+                        .icon {
+                            width: 28px;
+                            height: 28px;
+                            background: #000;
+                            min-width: 28px;
+                            border-radius: 50%;
+                            min-height: 28px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            @include respond-to("sm") {
+                                display: none;
+                            }
+                        }
+                    }
+
+                    .uploadPicture {
+                        border-radius: 20px;
+                        border: 1.5px dashed #527475;
+                        background: #FFF;
+                        height: 249px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        @include respond-to("xl") {
+                            height: 200px;
+                        }
+
+                        .btnCenter {
+                            display: flex;
+                            justify-content: center;
+
+                            button {
+                                padding: 13px 20px;
+                                border-radius: 10px;
+                                background: #527475;
+                                cursor: pointer;
+                                color: #FFF;
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                                font-size: 18px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: normal;
+                                color: #FFF;
+                                border: 1px solid #527475;
+                                transition: all 0.3s ease-in-out;
+
+                                @include respond-to("xl") {
+                                    font-size: 16px;
+                                }
+
+                                &:hover {
+                                    background-color: #fff;
+                                    color: #527475;
+
+                                    svg {
+                                        path {
+                                            fill: #527475;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        p {
+                            color: #929292;
+                            font-size: 16px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            margin: 0 0 20px 0;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
