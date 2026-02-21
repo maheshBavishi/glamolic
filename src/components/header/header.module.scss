@@ -142,16 +142,7 @@
     height: 100%;
     z-index: 99999;
     background-color: #fff;
-
-    &.hide {
-        transform: translateX(100%);
-        transition: .3s ease-in-out;
-    }
-
-    &.show {
-        transform: translateX(0%);
-        transition: .3s ease-in-out;
-    }
+    overflow: hidden;
 
     .mobileHeaderAlign {
         padding: 20px;
