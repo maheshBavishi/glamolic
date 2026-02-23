@@ -77,7 +77,7 @@ export default function WhyChoose() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2>Why Choose GlamolicAI</h2>
+                    <h2>Why Choose Glamolic AI</h2>
                 </motion.div>
                 <motion.div
                     className={styles.grid}
