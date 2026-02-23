@@ -217,6 +217,10 @@
                 .rightAlignmentBox {
                     max-width: 698px;
                     margin-left: auto;
+
+                    @include respond-to("md") {
+                        max-width: 100%;
+                    }
                 }
 
                 .genrateImage {

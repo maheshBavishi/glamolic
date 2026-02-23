@@ -116,7 +116,7 @@ export default function CreatePerfectPhotos() {
                                 "Smooth cinematic movement"
                             ],
                             image: SliderImage2,
-                            note: "From Product Photo to Realistic Model Shoot in Seconds"
+                            note: "Create Ready-to-Post Fashion Reels in Seconds"
                         }
                     ].map((box, idx) => (
                         <motion.div

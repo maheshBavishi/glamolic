@@ -97,11 +97,39 @@
 
                 .items:first-child {
                     order: 2;
+
+                }
+
+                .items:last-child {
+                    @include respond-to("md") {
+                        order: 1;
+                    }
                 }
 
                 .content {
                     margin-left: auto;
 
+                }
+            }
+        }
+
+        .box:first-child {
+
+
+            .grid {
+                .items:first-child {
+                    order: 2;
+
+                }
+
+                .items:last-child {
+                    @include respond-to("md") {
+                        order: 1;
+                    }
+                }
+
+                .content {
+                    margin-left: auto;
                 }
             }
         }
@@ -124,7 +152,7 @@
             }
 
             @include respond-to("sm") {
-                padding: 20px;
+                padding: 14px;
                 border-radius: 12px;
                 margin: 0 0 20px 0;
             }
