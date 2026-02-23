@@ -55,7 +55,7 @@ export default function HowItWorks() {
     };
 
     return (
-        <div className={styles.howItWorksPage}>
+        <div className={styles.howItWorksPage} id='howitwork'>
             <div className='container'>
                 <motion.div
                     className={styles.title}

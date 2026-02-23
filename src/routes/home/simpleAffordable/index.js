@@ -76,7 +76,7 @@ export default function SimpleAffordable() {
     };
 
     return (
-        <div className={styles.simpleAffordable}>
+        <div className={styles.simpleAffordable} id="pricing">
             <motion.div
                 className={styles.leftVec}
                 initial={{ opacity: 0, x: -100 }}

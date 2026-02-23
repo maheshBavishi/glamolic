@@ -96,8 +96,8 @@ export default function Header() {
                         </div>
                         <div className={styles.menu}>
                             <a aria-label='Home' className={styles.active}>Home</a>
-                            <a aria-label='How It Work'>How It Work</a>
-                            <a aria-label='Pricing'>Pricing</a>
+                            <a aria-label='How It Work' href="#howitwork">How It Work</a>
+                            <a aria-label='Pricing' href="#pricing">Pricing</a>
                             <a aria-label='History'>History</a>
                             <a aria-label='Contact US'>Contact US</a>
                         </div>
