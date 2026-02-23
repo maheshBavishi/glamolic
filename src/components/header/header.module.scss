@@ -9,6 +9,27 @@
     width: 100%;
     padding: 16px 0;
     z-index: 9;
+       &.hide {
+        transform: translateY(-100%);
+        transition: .3s ease-in-out;
+    }
+
+    &.show {
+        transform: translateY(0%);
+        position: fixed;
+        transition: 0.3s ease-in-out;
+        z-index: 999;
+        background: linear-gradient(90deg,
+                rgba(255, 255, 255, 0.5) 0%,
+                rgba(255, 255, 255, 0.4) 20%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.4) 80%,
+                rgba(255, 255, 255, 0.5) 100%);
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        top: 0;
+        left: 0;
+    }
 
     .headerAlignment {
         display: flex;
