@@ -137,6 +137,7 @@
 
                     img {
                         display: block;
+                        cursor: pointer;
 
                         @include respond-to("sm") {
                             max-width: 160px;

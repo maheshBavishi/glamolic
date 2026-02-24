@@ -121,7 +121,9 @@
 
             .grid {
                 .items:first-child {
-                    order: 2;
+                    @include respond-to("md") {
+                        order: 2;
+                    }
 
                 }
 
