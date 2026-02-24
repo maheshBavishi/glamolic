@@ -99,7 +99,7 @@ export default function Header() {
                             <a aria-label='How It Work' href="#howitwork">How It Work</a>
                             <a aria-label='Pricing' href="#pricing">Pricing</a>
                             <a aria-label='History'>History</a>
-                            <a aria-label='Contact US'>Contact US</a>
+                            <a aria-label='Contact US'>Contact Us</a>
                         </div>
                         <div className={styles.buttonAlignment}>
                             <button aria-label='Login' className={styles.light}>
@@ -140,7 +140,7 @@ export default function Header() {
                             <motion.a variants={itemVariants} aria-label='How It Work'>How It Work</motion.a>
                             <motion.a variants={itemVariants} aria-label='Pricing'>Pricing</motion.a>
                             <motion.a variants={itemVariants} aria-label='History'>History</motion.a>
-                            <motion.a variants={itemVariants} aria-label='Contact US'>Contact US</motion.a>
+                            <motion.a variants={itemVariants} aria-label='Contact US'>Contact Us</motion.a>
                         </div>
                         <motion.div variants={itemVariants} className={styles.mobileFooter} onClick={() => setHeaderOpen(false)}>
                             <button aria-label='Login' className={styles.light}>
