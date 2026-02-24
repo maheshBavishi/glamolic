@@ -109,6 +109,9 @@
                 .content {
                     margin-left: auto;
 
+                    @include respond-to("md") {
+                        margin-left: inherit;
+                    }
                 }
             }
         }

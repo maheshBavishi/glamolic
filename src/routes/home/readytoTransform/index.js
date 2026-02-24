@@ -54,7 +54,7 @@ export default function ReadytoTransform() {
                                     Ready to transform your fashion photography?
                                 </h2>
                                 <p>
-                                    Join hundreds of brand's already using GlamolicAI to create stunning product images. Start your free
+                                    Join hundreds of Brand's already using GlamolicAI to create stunning product images. Start your free
                                     trial today!
                                 </p>
                                 <motion.button
