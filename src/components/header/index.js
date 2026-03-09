@@ -102,7 +102,7 @@ export default function Header() {
                             <a aria-label='How It Work' href="#howitwork">How It Work</a>
                             <a aria-label='Pricing' href="#pricing">Pricing</a>
                             <a aria-label='History'>History</a>
-                            <a aria-label='Contact US'>Contact Us</a>
+                            <Link href="/contact-us" aria-label='Contact US'>Contact Us</Link>
                         </div>
                         <div className={styles.buttonAlignment}>
                             <Link href="/login">

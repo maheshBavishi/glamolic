@@ -2,6 +2,7 @@
 import React, { useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import styles from './footer.module.scss';
+import Link from 'next/link';
 const FooterLogo = '/assets/logo/footer-logo.svg';
 const LikdinIcon = '/assets/icons/linkdin.svg';
 const InstagramIcon = '/assets/icons/instagram.svg';
@@ -114,9 +115,9 @@ export default function Footer() {
                                     Legal
                                 </h3>
                                 <div>
-                                    <a aria-label='Privacy Policy'>Privacy Policy</a>
+                                    <Link href="/privacy-policy" aria-label='Privacy Policy'>Privacy Policy</Link>
                                 </div>
-                                <a aria-label='Terms of Service'>Terms of Service</a>
+                                <Link href="/terms-conditions" aria-label='Terms of Service'>Terms of Service</Link>
                             </div>
                         </div>
                     </div>
