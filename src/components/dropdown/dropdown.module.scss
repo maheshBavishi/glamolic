@@ -1,0 +1,14 @@
+@use '../../scss/main.scss' as *;
+@use '../../scss/breakpoints/breakpoints.scss' as *;
+
+.dropdown {
+    label {
+        display: block;
+        color: #121212;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        padding: 0 0 6px 0;
+    }
+}

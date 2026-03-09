@@ -1,0 +1,106 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.brandSection {
+    padding: 60px 0 100px 0;
+    background: rgba(255, 255, 255, 0.20);
+    position: relative;
+
+
+    &::before {
+        filter: blur(100px);
+        content: "";
+        background: #527475;
+        width: 120px;
+        height: 150px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    :global(.container) {
+        position: relative;
+        z-index: 9;
+    }
+
+    .title {
+        padding: 0 0 40px 0;
+
+        @include respond-to("sm") {
+            padding: 0 0 40px 0;
+        }
+
+        h2 {
+            max-width: 942px;
+            margin: 0 auto;
+            text-align: center;
+            color: #121212;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            font-family: var(--font-el-messiri);
+            text-transform: capitalize;
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+
+        .items {
+            border-radius: 20px;
+            border: 1px solid rgba(18, 18, 18, 0.10);
+            background: #FFF;
+            box-shadow: 0 0 64.4px 0 rgba(0, 0, 0, 0.08);
+            padding: 24px;
+            transition: .3s ease-in-out;
+
+            &:hover {
+                border: 1px solid #527475;
+            }
+
+            h3 {
+                margin: 30px 0 6px 0;
+                color: #121212;
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+                text-transform: capitalize;
+            }
+
+            p {
+                color: #565656;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+
+            .icon {
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 12px;
+                border: 1px solid rgba(18, 18, 18, 0.10);
+                background: rgba(18, 18, 18, 0.06);
+                box-shadow: 0 0 44.8px 0 rgba(0, 0, 0, 0.09);
+                backdrop-filter: blur(123.94999694824219px);
+            }
+        }
+    }
+}

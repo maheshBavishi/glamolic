@@ -71,3 +71,13 @@ button {
     padding: 0 20px;
   }
 }
+
+.height-changer {
+  min-height: calc(100dvh - 588px);
+}
+
+@media (max-width: 1500px) {
+  .height-changer {
+    min-height: calc(100dvh - 523px);
+  }
+}

@@ -14,33 +14,33 @@ export default function WhyChoose() {
     const chooseData = [
         {
             icon: <MediaIcon />,
-            title: "High-Quality Images",
-            desc: "Generate stunning 4K resolution images perfect for print and digital media with professional studio lighting."
+            title: "Ultra HD 4K Quality",
+            desc: "Every AI photo is generated in 4K resolution with perfect studio lighting — ready for print catalogs and digital stores."
         },
         {
             icon: <CategoriesIcon />,
-            title: "Multiple Categories",
-            desc: "Support for Women, Men, and Kids clothing with diverse subcategories including traditional & western wear."
+            title: "Every Fashion Category Covered",
+            desc: "From Sarees & Lehengas to Blazers, Jeans & Kids wear — Glamolic AI supports all Indian and western fashion categories."
         },
         {
             icon: <MediaIcon />,
-            title: "Easy Download",
-            desc: "Download individual images, bulk ZIP files, or professional PDFs ready for printing and sharing"
+            title: "Download in Any Format",
+            desc: "Get your AI photos as individual files, bulk ZIPs or professional PDFs — instantly ready to upload anywhere."
         },
         {
             icon: <BrandIcon />,
             title: "Brand Consistency",
-            desc: "Maintain consistent model looks across all your product images with our model consistency feature."
+            desc: "Maintain a consistent model look across all your product images with our model consistency feature."
         },
         {
             icon: <FlashIcon />,
             title: "Lightning Fast",
-            desc: "Generate professional photos in seconds, not days. Skip the traditional photoshoot hassle."
+            desc: "No booking, no waiting, no editing rounds. Get professional AI fashion photos generated in under 30 seconds."
         },
         {
             icon: <StarIcon />,
             title: "Multiple Variations",
-            desc: "Generate multiple image variations per product to find the perfect shot for your campaign."
+            desc: "Generate multiple poses, backgrounds and model styles per product — pick the best shot for each platform."
         }
     ];
 

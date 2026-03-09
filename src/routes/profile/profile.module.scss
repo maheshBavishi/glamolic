@@ -1,0 +1,253 @@
+@use '../../scss/main.scss' as *;
+@use '../../scss/breakpoints/breakpoints.scss' as *;
+
+.profileAlignment {
+    background-image: url('/assets/images/common-banner.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    padding: 140px 0 100px 0;
+
+    .boxCenteralignment {
+        max-width: 1080px;
+        margin: 0 auto;
+
+        .boxHeaderAlignment {
+            padding: 0 0 32px 0;
+
+            p {
+                color: #727272;
+                font-size: 18px;
+                font-style: normal;
+                text-align: center;
+                font-weight: 600;
+                line-height: normal;
+            }
+
+            h2 {
+                color: #121212;
+                font-size: 42px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 53px;
+                text-align: center;
+                text-transform: capitalize;
+            }
+
+        }
+
+        .lightbox {
+            border-radius: 24px;
+            background: #F7F7F7;
+            padding: 24px;
+
+            .listBox {
+                padding: 16px 0 0 0;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+
+                .information {
+                    border-radius: 20px;
+                    border: 1px solid rgba(18, 18, 18, 0.10);
+                    background: #FFF;
+                    padding: 24px;
+                    display: grid;
+                    grid-template-columns: 50px 1fr;
+                    gap: 14px;
+
+                    p {
+                        color: rgba(18, 18, 18, 0.50);
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: 20px;
+                    }
+
+                    span {
+                        display: block;
+                        color: #121212;
+                        font-size: 24px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                    }
+
+                    .icon {
+                        border-radius: 14px;
+                        border: 1px solid #FFF;
+                        background: #527475;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 50px;
+                        height: 50px;
+                    }
+                }
+            }
+
+            .freeplan {
+                border-radius: 12px;
+                background: linear-gradient(90deg, #527475 15.19%, rgba(255, 255, 255, 0.00) 100%);
+                padding: 14px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                h4 {
+                    color: #FFF;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                }
+
+                p {
+                    color: rgba(255, 255, 255, 0.70);
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                }
+
+                .buttonDesign {
+                    button {
+                        border-radius: 1000px;
+                        border: 1px solid rgba(18, 18, 18, 0.10);
+                        background: #527475;
+                        padding: 10px 24px;
+                        color: #FFF;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        line-height: normal;
+                    }
+                }
+            }
+        }
+
+        .profileInformation {
+            border-radius: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.10);
+            background: #FFF;
+            padding: 32px;
+
+            .topAlignment {
+                padding: 32px 0 0 0;
+
+                .twocol {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 16px;
+                    border-radius: 24px;
+                    background: #F7F7F7;
+                    padding: 24px;
+
+                    .col {
+                        grid-column: span 2;
+                    }
+                }
+
+                .texticon {
+                    display: flex;
+                    padding: 0 0 12px 0;
+                    align-items: center;
+                    gap: 10px;
+
+                    h3 {
+                        color: #3F4153;
+                        font-size: 24px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                    }
+                }
+            }
+
+            .profileheaderAlignment {
+                display: flex;
+                align-items: center;
+                padding: 0 0 32px 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+                justify-content: space-between;
+
+                .profilegrid {
+                    display: grid;
+                    align-items: center;
+                    grid-template-columns: 120px 1fr;
+                    gap: 24px;
+
+                    h2 {
+                        color: #000;
+                        font-size: 32px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                        text-transform: capitalize;
+                    }
+
+                    a {
+                        display: block;
+                        color: #3F4153;
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                    }
+
+                    .profile {
+                        position: relative;
+
+                        .image {
+                            img {
+                                width: 120px;
+                                height: 120px;
+                                border-radius: 50%;
+                                display: block;
+                                object-fit: cover;
+                            }
+                        }
+
+                        .edit {
+                            width: 50px;
+                            height: 50px;
+                            position: absolute;
+                            right: 0;
+                            bottom: 0;
+                            display: flex;
+                            cursor: pointer;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 10000px;
+                            border: 3px solid #FFF;
+                            background: rgba(255, 255, 255, 0.20);
+                            backdrop-filter: blur(10.449999809265137px);
+                        }
+                    }
+                }
+
+                .buttonUi {
+                    button {
+                        border-radius: 10000px;
+                        background: #527475;
+                        padding: 6px 18px;
+                        border: none;
+                        color: rgba(255, 255, 255, 0.70);
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                        cursor: pointer;
+
+                        span {
+                            color: #ffff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

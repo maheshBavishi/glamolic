@@ -70,12 +70,12 @@
             border: 1px solid rgba(18, 18, 18, 0.10);
             background: #FFF;
             box-shadow: 0 0 39.4px 0 rgba(0, 0, 0, 0.06);
-            padding: 32px 32px 90px 32px;
+            padding: 32px 32px 60px 32px;
             position: relative;
             transition: all 0.3s ease;
 
             @include respond-to("xl") {
-                padding: 24px 24px 60px 24px;
+                padding: 24px 24px 40px 24px;
             }
 
             @include respond-to("sm") {
@@ -154,11 +154,12 @@
                 position: relative;
                 z-index: 9;
                 font-weight: 400;
-                max-width: 407px;
+                max-width: 90%;
                 line-height: 28px;
 
                 @include respond-to("sm") {
                     font-size: 16px;
+                    max-width: 100%;
                     line-height: 24px;
                 }
             }

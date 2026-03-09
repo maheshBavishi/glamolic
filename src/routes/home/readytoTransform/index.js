@@ -51,11 +51,10 @@ export default function ReadytoTransform() {
                         <motion.div className={styles.griditems} variants={slideFadeLeft}>
                             <div className={styles.content}>
                                 <h2>
-                                    Ready to transform your fashion photography?
+                                    Stop Paying for Photoshoots. Start Using Glamolic AI.
                                 </h2>
                                 <p>
-                                    Join hundreds of Brand's already using GlamolicAI to create stunning product images. Start your free
-                                    trial today!
+                                    Join hundreds of brands already using Glamolic AI to create stunning product images. Start your free trial today!
                                 </p>
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}

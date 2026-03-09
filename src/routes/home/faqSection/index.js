@@ -12,27 +12,31 @@ const ProfileGroup = '/assets/icons/profile-group.svg';
 const faqData = [
     {
         question: 'What is Glamolic AI?',
-        answer: 'Glamolic AI is an AI-powered fashion visualization platform that converts your basic product photos into professional model and studio-quality images instantly — without photoshoots, models, or expensive setups.',
+        answer: 'Glamolic AI is an AI-powered fashion photography tool that lets clothing brands generate realistic model photos from a single product image — perfect for Shopify, Amazon, Myntra and ecommerce catalogs.',
     },
     {
         question: 'How does Glamolic AI work?',
-        answer: 'Simply upload your product photo, choose a model or background style, and our AI generates studio-quality visuals in seconds. No technical skills or design experience required.',
+        answer: 'Simply upload your clothing image, choose your model type, pose and background — and our AI generates a professional fashion photoshoot in seconds. No editing skills needed.',
     },
     {
         question: 'Is Glamolic AI free to use?',
-        answer: 'Glamolic AI offers a free trial so you can experience the platform. After the trial, flexible pricing plans are available to suit businesses of all sizes — from startups to enterprise brands.',
+        answer: 'Glamolic AI offers a free trial so you can test the platform before purchasing. Paid plans start at ₹999 and include credits for generating professional AI fashion photos.',
     },
     {
-        question: 'What types of products can I use with Glamolic AI?',
-        answer: 'Glamolic AI works with a wide range of fashion products including clothing, accessories, footwear, and jewelry. Our AI is trained to handle diverse product categories with high accuracy.',
+        question: 'What types of clothing can I use with Glamolic AI?',
+        answer: "Glamolic AI supports all fashion categories — Women's ethnic wear (Sarees, Lehengas, Kurtis), Men's clothing (Blazers, Sherwanis, Jackets), Kids wear, and western fashion. Perfect for any clothing brand.",
     },
     {
-        question: 'Do I need a professional photographer?',
-        answer: 'Not at all! Glamolic AI is designed to turn even basic smartphone photos into professional-grade visuals. You can skip expensive photoshoots entirely and still get stunning results.',
+        question: 'Do I need a professional photographer or studio?',
+        answer: 'No. Glamolic AI is built specifically for fashion photoshoot without a photographer. Just upload your clothing image and our AI handles all the lighting, model placement and background — automatically.',
     },
     {
-        question: 'Can I customize the models and backgrounds?',
-        answer: 'Yes! You can choose from a variety of AI-generated models with different poses, body types, and ethnicities. You can also select or customize studio backgrounds to match your brand aesthetic.',
+        question: 'Can I customize the AI models and backgrounds?',
+        answer: 'Yes! You can choose model gender, body type, skin tone, age group and face style. For backgrounds, select from studio setups, outdoor scenes, street environments.',
+    },
+    {
+        question: 'Can I use Glamolic AI photos for Amazon, Shopify or Myntra?',
+        answer: 'Yes! Glamolic AI generates high-resolution 4K images that meet the product photo requirements for Amazon, Shopify, Myntra, Meesho and all major ecommerce platforms.',
     },
 ];
 
@@ -110,17 +114,16 @@ export default function FaqSection() {
                         <motion.div className={styles.box} variants={fadeInUp}>
                             <img src={ProfileGroup} alt='ProfileGroup' />
                             <h3>
-                                Still confused? We'll guide you.
+                                Need help getting started?
                             </h3>
                             <p>
-                                Our team will help you create your first AI fashion visuals and set up the perfect workflow for your store —
-                                step by step.
+                                Our onboarding team will walk you through your first AI photoshoot and set up the perfect workflow for your ecommerce store.
                             </p>
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                Start Free Setup
+                                Chat With Us
                                 <RightWhiteIcon />
                             </motion.button>
                         </motion.div>

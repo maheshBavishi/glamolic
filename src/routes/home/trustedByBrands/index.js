@@ -6,64 +6,60 @@ import { motion } from 'framer-motion';
 
 const reviews = [
     {
-        text: "smallest.ai, led by Sudarshan, has achieved an outstanding level of TTS quality with significantly fewer resources, a leaner team, and minimal PR or fundraising compared to others in the space. It's a masterclass in building with focus and efficiency—credit where it's due!",
-        name: "Tony Gordon",
-        role: "Co Founder | Gordon Salon US",
-        img: "https://randomuser.me/api/portraits/men/32.jpg",
+        text: "Glamolic AI completely changed how we shoot our collections. We used to spend $3,000+ per photoshoot. Now we generate better photos in minutes. Every Shopify seller needs this.",
+        name: "Sarah Mitchell",
+        role: "Founder | StyleHaus Co. — New York, NY",
     },
     {
-        text: "Glamolic transformed our brand identity completely. The attention to detail in every product is extraordinary. Our customers constantly ask what we use, and the answer is always Glamolic.",
-        name: "Sophia Reynolds",
-        role: "CEO | Luxe Beauty Co.",
-        img: "https://randomuser.me/api/portraits/women/44.jpg",
+        text: "We scaled from 50 to 500 product listings in one month because of Glamolic AI. The model photos look so real, our conversion rate jumped by 38% overnight.",
+        name: "James Whitfield",
+        role: "CEO | Urban Thread Apparel — Los Angeles, CA",
     },
     {
-        text: "I've tried dozens of beauty brands over the years, but Glamolic's formulations are in a league of their own. Sustainable, effective, and absolutely stunning results every single time.",
-        name: "Marcus Webb",
-        role: "Director | The Glow Studio",
-        img: "https://randomuser.me/api/portraits/men/56.jpg",
+        text: "I was skeptical at first, but the results blew me away. Our Amazon listings with Glamolic AI photos get 2x more clicks than our old product shots. Absolutely worth it.",
+        name: "Ashley Brooks",
+        role: "eCommerce Manager | Bloom Boutique — Austin, TX",
     },
     {
-        text: "Our partnership with Glamolic has boosted our salon's revenue by over 40%. Clients come back specifically for the Glamolic treatments, and the results speak for themselves.",
-        name: "Priya Sharma",
-        role: "Owner | Priya's Beauty Lounge",
-        img: "https://randomuser.me/api/portraits/women/68.jpg",
+        text: "As a small clothing brand, hiring models and photographers was never in our budget. Glamolic AI gave us the same quality at a fraction of the cost. Game changer.",
+        name: "David Nguyen",
+        role: "Co-Founder | FitFirst Fashion — San Francisco, CA",
     },
     {
-        text: "The product quality is consistently exceptional. Glamolic has not only elevated our offerings but has redefined what luxury beauty means for our brand and our clientele.",
-        name: "James Calloway",
-        role: "VP Marketing | BeautyFirst Group",
-        img: "https://randomuser.me/api/portraits/men/22.jpg",
+        text: "Our Instagram engagement doubled after we switched to Glamolic AI photos. The images are cinematic, realistic and on-brand every single time. Our customers think we hired a top photographer.",
+        name: "Rachel Torres",
+        role: "Head of Marketing | Velvet & Vine — Miami, FL",
     },
     {
-        text: "Switching to Glamolic was the best decision we made this year. The formulations are clean, cruelty-free, and the results are visible from the very first use. Highly recommended!",
-        name: "Elena Vasquez",
-        role: "Founder | Pure Skin Clinic",
-        img: "https://randomuser.me/api/portraits/women/12.jpg",
+        text: "We sell on Myntra, Amazon and our own Shopify store. Glamolic AI keeps our product photos consistent across every platform. The brand consistency feature alone is worth the price.",
+        name: "Tyler Johnson",
+        role: "Owner | Midwest Threads — Chicago, IL",
     },
     {
-        text: "Glamolic's team genuinely cares about partnership success. They went above and beyond to customize solutions for our market. It's rare to find this level of commitment in any industry.",
-        name: "Daniel Park",
-        role: "COO | Radiance Brands Inc.",
-        img: "https://randomuser.me/api/portraits/men/76.jpg",
+        text: "I've tested every AI photo tool out there. Nothing comes close to Glamolic AI's realism. The fabric texture, lighting and model blending is on another level entirely.",
+        name: "Megan Clarke",
+        role: "Creative Director | Luxe Label NYC — New York, NY",
     },
     {
-        text: "Since introducing Glamolic products to our shelves, customer satisfaction scores have skyrocketed. The brand practically sells itself—the quality and packaging are absolutely world-class.",
-        name: "Amara Osei",
-        role: "Retail Manager | Beauty Hub Africa",
-        img: "https://randomuser.me/api/portraits/women/90.jpg",
+        text: "We launched our entire spring catalog using only Glamolic AI — no studio, no models, no photographer. Saved us over $8,000 and the photos look better than anything we've done before.",
+        name: "Brandon Lee",
+        role: "Founder | Pacific Styles — Seattle, WA",
     },
     {
-        text: "Working with Glamolic has been a game-changer. Their innovation pipeline is impressive, and their commitment to sustainable practices aligns perfectly with our brand values.",
-        name: "Lisa Tran",
-        role: "Head of Partnerships | EcoGlow",
-        img: "https://randomuser.me/api/portraits/women/55.jpg",
+        text: "Glamolic AI is the best investment we made this year. Our product pages look like a high-end fashion magazine. Customers spend more time browsing and our cart abandonment dropped significantly.",
+        name: "Natalie Rivera",
+        role: "VP of Product | Trendy Closet — Dallas, TX",
+    },
+    {
+        text: "From upload to download in under 60 seconds. The speed is unreal and the quality never drops. Glamolic AI is now a core part of our ecommerce workflow and we can't imagine working without it.",
+        name: "Chris Patel",
+        role: "Operations Lead | NextGen Fashion — Boston, MA",
     },
 ];
 
-const col1 = reviews.slice(0, 3);
-const col2 = reviews.slice(3, 6);
-const col3 = reviews.slice(6, 9);
+const col1 = reviews.slice(0, 4);
+const col2 = reviews.slice(4, 7);
+const col3 = reviews.slice(7, 10);
 
 function MarqueeColumn({ cards, duration = 20, reverse = false }) {
     // Duplicate cards to create seamless infinite scroll
@@ -87,7 +83,6 @@ function MarqueeColumn({ cards, duration = 20, reverse = false }) {
                     <div className={styles.box} key={idx}>
                         <p>{review.text}</p>
                         <div className={styles.profileGrid}>
-                            <img src={review.img} alt={review.name} />
                             <div>
                                 <h4>{review.name}</h4>
                                 <span>{review.role}</span>

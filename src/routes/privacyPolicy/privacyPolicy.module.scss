@@ -1,0 +1,48 @@
+@use '../../scss/main.scss' as *;
+@use '../../scss/breakpoints/breakpoints.scss' as *;
+
+.privacyPolicyContent {
+    padding: 0 0 100px 0;
+
+    h2 {
+        color: #121212;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: normal;
+        margin: 40px 0 16px 0;
+    }
+
+    h3 {
+        color: #121212;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: normal;
+        margin: 24px 0 8px 0;
+    }
+
+    p {
+        color: #555555;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 26px;
+        margin: 0 0 16px 0;
+    }
+
+    ul {
+        padding-left: 20px;
+        margin: 0 0 16px 0;
+
+        li {
+            color: #555555;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 26px;
+            margin-bottom: 6px;
+        }
+    }
+
+    strong {
+        font-weight: 600;
+        color: #121212;
+    }
+}

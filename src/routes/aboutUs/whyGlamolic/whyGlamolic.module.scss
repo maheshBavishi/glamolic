@@ -1,0 +1,140 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.whyGlamolic {
+    background: rgba(255, 255, 255, 0.20);
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        filter: blur(100px);
+        content: "";
+        background: #527475;
+        width: 120px;
+        height: 150px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    &::after {
+        filter: blur(100px);
+        content: "";
+        background: #527475;
+        width: 120px;
+        height: 150px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    :global(.container) {
+        position: relative;
+        z-index: 9;
+    }
+
+    .title {
+        padding: 0 0 40px 0;
+
+        @include respond-to("sm") {
+            padding: 0 0 40px 0;
+        }
+
+        h2 {
+            max-width: 942px;
+            margin: 0 auto;
+            text-align: center;
+            color: #121212;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            font-family: var(--font-el-messiri);
+            text-transform: capitalize;
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+    .whitebox {
+        border-radius: 34px;
+        border: 1px solid rgba(0, 0, 0, 0.10);
+        background: #FFF;
+        box-shadow: 0 0 43.8px 0 rgba(0, 0, 0, 0.08);
+        padding: 60px;
+        display: grid;
+        grid-template-columns: 1fr 715px;
+        gap: 20px;
+
+        .allIcontextAlignment {
+
+            .icongrid {
+                display: grid;
+                grid-template-columns: 28px 1fr;
+                gap: 10px;
+                align-items: center;
+                padding: 0 0 24px 0;
+
+                &:last-child {
+                    padding: 0;
+                }
+
+                span {
+                    display: block;
+                    color: #727272;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    text-transform: capitalize;
+                }
+            }
+
+        }
+
+        .text {
+            padding: 0 0 40px 0;
+
+            h2 {
+                color: #121212;
+                font-size: 42px;
+                font-style: normal;
+                margin: 0 0 14px 0;
+                font-weight: 700;
+                line-height: normal;
+                text-transform: capitalize;
+            }
+
+            p {
+                color: #727272;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                max-width: 657px;
+            }
+        }
+
+        .lightbox {
+            border-radius: 33.643px;
+            background: linear-gradient(180deg, #FFF 0%, #E3E8E8 100%);
+            box-shadow: 0 0 26.774px 0 rgba(0, 0, 0, 0.08);
+            padding: 16px;
+
+            img {
+                display: block;
+                width: 100%;
+            }
+        }
+    }
+
+}

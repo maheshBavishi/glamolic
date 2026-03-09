@@ -14,20 +14,20 @@ export default function HowItWorks() {
         {
             step: "Step 1",
             image: StepOne,
-            title: "Upload Your Product",
-            desc: "Upload front and back view images of your clothing product"
+            title: "Upload Your Outfit",
+            desc: "Simply upload your clothing photo — Saree, Kurti, Lehenga, Western wear or any fashion item"
         },
         {
             step: "Step 2",
             image: StepTwo,
-            title: "Choose Style & Settings",
-            desc: "Select category, background, resolution, and other preferences"
+            title: "Set Your Style Preferences",
+            desc: " Choose model gender, background type, image size and resolution — all in a few clicks"
         },
         {
             step: "Step 3",
             image: StepThree,
-            title: "Download Ready Images",
-            desc: "Get professional model photos ready for your store"
+            title: "Download & Publish Instantly",
+            desc: "Your catalog-ready AI model photos are generated in seconds — download and upload directly to Shopify, Amazon or Myntra"
         }
     ];
 

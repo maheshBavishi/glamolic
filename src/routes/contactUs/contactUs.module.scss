@@ -1,0 +1,186 @@
+@use '../../scss/main.scss' as *;
+@use '../../scss/breakpoints/breakpoints.scss' as *;
+
+.contactUsAlignment {
+    background-image: url('/assets/images/common-banner.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    padding: 140px 0 100px 0;
+
+    .boxCenteralignment {
+        max-width: 1080px;
+        margin: 0 auto;
+
+        .boxHeaderAlignment {
+            padding: 0 0 32px 0;
+
+            p {
+                color: #727272;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 600;
+                text-align: center;
+                line-height: normal;
+            }
+
+            h2 {
+                color: #121212;
+                font-size: 42px;
+                font-style: normal;
+                font-weight: 600;
+                text-align: center;
+                line-height: 53px;
+                text-transform: capitalize;
+            }
+
+        }
+
+        .contactInformation {
+            padding: 32px;
+            border-radius: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.10);
+            background: #FFF;
+
+            .information {
+                border-radius: 24px;
+                background: #F7F7F7;
+                padding: 24px;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+
+                .items {
+                    border-radius: 20px;
+                    border: 1px solid rgba(18, 18, 18, 0.10);
+                    background: #FFF;
+                    padding: 24px;
+                    display: grid;
+                    grid-template-columns: 50px 1fr;
+                    gap: 14px;
+
+                    .icon {
+                        border-radius: 14px;
+                        border: 1px solid #FFF;
+                        background: #527475;
+                        width: 50px;
+                        height: 50px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    p {
+                        color: rgba(18, 18, 18, 0.50);
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: 16px;
+                    }
+
+                    a {
+                        display: block;
+                        cursor: pointer;
+                        color: #121212;
+                        font-size: 20px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                    }
+                }
+
+            }
+
+            .formAlignment {
+                border-radius: 24px;
+                background: #F7F7F7;
+                margin: 0 0 32px 0;
+                padding: 24px;
+
+                .sendMessage {
+                    button {
+                        border-radius: 12px;
+                        background: #527475;
+                        padding: 12px 20px;
+                        color: #FFF;
+                        text-align: center;
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 600;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        background: #527475;
+                        line-height: normal;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        border: none;
+                    }
+                }
+
+                .textareaDesign {
+                    padding: 0 0 32px 0;
+
+                    label {
+                        display: block;
+                        color: #121212;
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                        padding: 0 0 6px 0;
+                    }
+
+                    textarea {
+                        padding: 14px 16px;
+                        width: 100%;
+                        color: rgba(18, 18, 18, 0.60);
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                        font-family: var(--font-heebo);
+                        height: 134px;
+                        resize: none;
+                        border-radius: 12px;
+                        border: 1px solid rgba(18, 18, 18, 0.10);
+                        background: #FFF;
+                        outline: none;
+                    }
+
+                    ::placeholder {
+                        color: rgba(18, 18, 18, 0.60);
+                        font-size: 18px;
+                        font-style: normal;
+                        font-family: var(--font-heebo);
+                        font-weight: 500;
+                        line-height: normal;
+                    }
+                }
+
+                .twocol {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 16px;
+                    padding: 0 0 16px 0;
+
+                    .collg {
+                        grid-column: span 2;
+                    }
+                }
+            }
+
+            .title {
+                padding: 0 0 12px 0;
+
+                h3 {
+                    color: #3F4153;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                }
+            }
+        }
+    }
+}

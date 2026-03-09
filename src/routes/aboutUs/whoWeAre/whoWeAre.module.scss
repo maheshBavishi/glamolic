@@ -1,0 +1,192 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.whoWeAreAlignment {
+    background: rgba(255, 255, 255, 0.20);
+    position: relative;
+    padding: 100px 0;
+    overflow: hidden;
+
+    &::before {
+        filter: blur(100px);
+        content: "";
+        background: #527475;
+        width: 120px;
+        height: 150px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    :global(.container) {
+        position: relative;
+        z-index: 9;
+    }
+
+    .title {
+        padding: 0 0 40px 0;
+
+        @include respond-to("sm") {
+            padding: 0 0 40px 0;
+        }
+
+        h2 {
+            max-width: 942px;
+            margin: 0 auto;
+            text-align: center;
+            color: #121212;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            font-family: var(--font-el-messiri);
+            text-transform: capitalize;
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+    .whiteBox {
+        border-radius: 34px;
+        border: 1px solid rgba(0, 0, 0, 0.10);
+        background: #FFF;
+        box-shadow: 0 0 43.8px 0 rgba(0, 0, 0, 0.08);
+        position: relative;
+        padding: 60px;
+        display: grid;
+        grid-template-columns: 652px 1fr;
+        gap: 20px;
+        align-items: center;
+
+        .lightBox {
+            border-radius: 20px;
+            border: 1px solid #FFF;
+            background: linear-gradient(123deg, #FFF 1.02%, #DDE1E1 98.98%);
+            box-shadow: 0 0 39.4px 0 rgba(0, 0, 0, 0.06);
+            padding: 24px;
+
+            img {
+                display: block;
+                border-radius: 20px;
+                width: 100%;
+            }
+        }
+
+        .rightContent {
+            max-width: 726px;
+            margin-left: auto;
+        }
+
+        .buttonDesign {
+
+            button {
+                border: none;
+                cursor: pointer;
+                border-radius: 12px;
+                background: #527475;
+                padding: 14px 20px;
+                color: #FFF;
+                text-align: center;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: .3s ease-in-out;
+
+                @include respond-to("sm") {
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                svg {
+                    transition: .3s ease-in-out;
+                }
+
+                &:hover {
+                    svg {
+                        transform: translateX(5px);
+                    }
+                }
+            }
+        }
+
+        .allIcontextAlignment {
+            padding: 0 0 60px 0;
+
+            .iconGrid {
+                padding: 0 0 24px 0;
+                display: grid;
+                grid-template-columns: 40px 1fr;
+                gap: 16px;
+
+                &:last-child {
+                    padding: 0;
+                }
+
+                h3 {
+                    color: #121212;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    text-transform: capitalize;
+                }
+
+                p {
+                    color: #727272;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    text-transform: capitalize;
+                }
+
+                .icon {
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    border-radius: 9px;
+                    border: 1px solid rgba(18, 18, 18, 0.10);
+                    background: rgba(18, 18, 18, 0.06);
+                    box-shadow: 0 0 44.8px 0 rgba(0, 0, 0, 0.09);
+                    backdrop-filter: blur(123.94999694824219px);
+                    justify-content: center;
+                }
+            }
+        }
+
+        .text {
+            padding: 0 0 60px 0;
+
+            h2 {
+                color: #121212;
+                font-size: 42px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 58px;
+                text-transform: capitalize;
+                margin: 0 0 10px 0;
+            }
+
+            p {
+                color: #727272;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+            }
+        }
+    }
+}

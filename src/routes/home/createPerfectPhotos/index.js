@@ -89,32 +89,34 @@ export default function CreatePerfectPhotos() {
                     variants={fadeIn}
                 >
                     <h2>
-                        Create Perfect Photos for Every Fashion Category
+                        AI Fashion Photos for All Styles - All Categories - All Brands
                     </h2>
                 </motion.div>
                 <div className={styles.allBoxAlignment}>
                     {[
                         {
-                            title: "Create Studio-Quality Model Photos From Your Outfit",
-                            text: "Turn a single clothing image into a professional photoshoot with realistic models, lighting and branded backgrounds. Generate high-resolution catalog images instantly no photographers, studio or manual editing needed.",
+                            title: "Turn Your Clothing Into a Professional AI Model Photoshoot",
+                            text: "Upload your outfit and get professional AI model photos in seconds. Perfect for Sarees, Lehengas, Kurtis, Western wear & more. No studio. No photographer. No editing required.",
                             checks: [
-                                "Choose model gender, body type & ethnicity",
-                                "Select age group & face style matching your brand",
-                                "Multiple poses & fashion expressions",
-                                "Studio, outdoor & custom backgrounds"
+                                "AI models for Women, Men & Kids clothing",
+                                "Brand-matched model appearance & style",
+                                "Dynamic poses for every fashion category",
+                                "Professional studio to outdoor backgrounds"
                             ],
                             image: SliderImage,
+                            button: "Create Model Photos Now",
                             note: "From Product Photo to Realistic Model Shoot in Seconds"
                         },
                         {
-                            title: "Create Fashion Videos Without Recording",
-                            text: "Create cinematic fashion videos from your outfit image with natural motion and camera movement. Produce ad-ready reels and promotional clips in seconds no filming, actors or editing required.",
+                            title: "Turn Your Outfit Into a Cinematic Fashion Video Instantly",
+                            text: "Just upload your clothing photo and get a professional fashion video with realistic AI models in motion. Ready for Instagram, Reels, YouTube Shorts & online ads in seconds.",
                             checks: [
-                                "Natural walking & turning motion",
-                                "Multiple camera angles & zoom styles",
-                                "Indoor, street & runway environments",
-                                "Smooth cinematic movement"
+                                "Realistic human motion — walk, turn & pose",
+                                "Dynamic camera angles for a premium ad feel",
+                                "20+ environments — indoor, outdoor & runway",
+                                "Export-ready for social media & ecommerce ads"
                             ],
+                            button: "Generate AI Fashion Reel",
                             image: SliderImage2,
                             note: "Create Ready-to-Post Fashion Reels in Seconds"
                         }
@@ -145,7 +147,7 @@ export default function CreatePerfectPhotos() {
                                                 whileHover={{ scale: 1.05 }}
                                                 whileTap={{ scale: 0.95 }}
                                             >
-                                                Generate Photoshoot
+                                                {box.button}
                                                 <RightWhiteIcon />
                                             </motion.button>
                                         </motion.div>

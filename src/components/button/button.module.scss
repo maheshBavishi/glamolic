@@ -1,0 +1,21 @@
+@use '../../scss/main.scss' as *;
+@use '../../scss/breakpoints/breakpoints.scss' as *;
+
+.button {
+    button {
+        border: none;
+        padding: 14px 28px;
+        color: #FFF;
+        text-align: center;
+        cursor: pointer;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-radius: 12px;
+        background: #527475;
+    }
+}

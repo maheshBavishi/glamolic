@@ -1,0 +1,81 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.photoshootsSection {
+    background-image: url('/assets/images/green-frame.png');
+    background-repeat: no-repeat;
+    padding: 100px 0;
+    background-size: cover;
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 656px;
+        gap: 20px;
+
+
+
+        .items {
+
+            .allContentAlignment {
+                max-width: 764px;
+
+                .colGrid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 14px;
+
+                    .colGridItems {
+                        border-radius: 20px;
+                        background: rgba(255, 255, 255, 0.14);
+                        padding: 8px;
+
+                        img {
+                            width: 100%;
+                            height: 190px;
+                            border-radius: 12px;
+                            display: block;
+                            object-fit: cover;
+                        }
+                    }
+                }
+
+                .text {
+                    padding: 0 0 60px 0;
+
+                    h2 {
+                        color: #FFF;
+                        font-size: 42px;
+                        font-style: normal;
+                        font-weight: 700;
+                        line-height: normal;
+                        margin: 0 0 10px 0;
+                        text-transform: capitalize;
+                        max-width: 706px;
+                    }
+
+                    p {
+                        color: rgba(255, 255, 255, 0.70);
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                    }
+                }
+            }
+
+            .lightBox {
+                border-radius: 27.298px;
+                background: linear-gradient(238deg, rgba(221, 225, 225, 0.30) 0.38%, rgba(255, 255, 255, 0.15) 99.62%);
+                box-shadow: 0 0 35.852px 0 rgba(0, 0, 0, 0.06);
+                padding: 20px;
+
+                .image {
+                    img {
+                        display: block;
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}

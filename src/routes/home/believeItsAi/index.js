@@ -68,17 +68,17 @@ export default function BelieveItsAi() {
                         <motion.div variants={slideInRight}>
                             <motion.div className={styles.content} variants={staggerContainer}>
                                 <motion.h3 variants={fadeInUp}>
-                                    So real you won’t believe it’s AI-generated!
+                                    See The Difference - Real vs Glamolic AI
                                 </motion.h3>
                                 <motion.p variants={fadeInUp}>
-                                    When you apply a style to your photo, glamolic AI doesn't just overlay elements it intelligently generates them to produce high quality, realistic images that blend seamlessly with your original photo for a
-                                    natural, lifelike result.
+                                    When you apply a style to your photo, glamolic AI doesn't just overlay elements it intelligently generates them to produce high quality, realistic
+                                    images that blend seamlessly with your original photo for a natural, lifelike result.
                                 </motion.p>
                                 <motion.div className={styles.allIconTextAlignment} variants={staggerContainer}>
                                     {[
-                                        "Realistic lighting, shadows & reflections",
-                                        "Natural model blending in enviornments",
-                                        "Fine tuned studio quality results"
+                                        "Perfect fabric texture, shadow & light rendering",
+                                        "AI models that blend naturally into any environment",
+                                        "Studio-grade output - every single time"
                                     ].map((text, idx) => (
                                         <motion.div key={idx} className={styles.iconText} variants={fadeInUp}>
                                             <img src={CheckIcon} alt='CheckIcon' />
@@ -91,7 +91,7 @@ export default function BelieveItsAi() {
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        Generate Photoshoot
+                                        Create Realistic AI Photos
                                         <RightWhiteIcon />
                                     </motion.button>
                                 </motion.div>

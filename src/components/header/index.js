@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import styles from './header.module.scss';
 import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from "next/link";
 
 const Logo = '/assets/logo/logo.svg';
 
@@ -92,7 +93,9 @@ export default function Header() {
                 <div className='container'>
                     <div className={styles.headerAlignment}>
                         <div className={styles.logo}>
-                            <img src={Logo} alt='Logo' />
+                            <Link href="/">
+                                <img src={Logo} alt='Logo' />
+                            </Link>
                         </div>
                         <div className={styles.menu}>
                             <a aria-label='Home' className={styles.active}>Home</a>

@@ -99,8 +99,7 @@ export default function Herobanner() {
                             </motion.h1>
                             <motion.div className={styles.text} variants={leftItemVariants}>
                                 <p>
-                                    Generate professional AI model images from your clothing in seconds. No models, no camera, no editing just
-                                    upload & create.
+                                    Generate Professional AI Model Images From Your Clothing In Seconds. No Models, No Camera, No Editing - Just Upload & Create.
                                 </p>
                             </motion.div>
                             <motion.div className={styles.twoButtonAlignment} variants={leftItemVariants}>

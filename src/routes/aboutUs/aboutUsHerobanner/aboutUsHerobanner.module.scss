@@ -1,0 +1,174 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.aboutHerobanner {
+    background-image: url('/assets/images/hero-banner.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    background-position: center center;
+
+    @include respond-to("md") {
+        height: auto;
+    }
+
+    .herobannerTopAlignment {
+        padding: 160px 0 100px 0;
+
+        @include respond-to("xl") {
+            padding: 140px 0 100px 0;
+        }
+
+        @include respond-to("sm") {
+            padding: 130px 0 0 0;
+        }
+    }
+
+    .grid {
+        display: grid;
+        align-items: center;
+        grid-template-columns: 1fr 758px;
+        gap: 20px;
+
+        .allTextAlignment {
+            display: flex;
+
+            .items {
+                padding: 0 40px;
+                border-right: 1px solid rgba(0, 0, 0, 0.19);
+
+                &:first-child {
+                    padding-left: 0;
+                }
+
+                &:last-child {
+                    padding-right: 0;
+                    border: none;
+                }
+
+                h3 {
+                    color: #121212;
+                    font-size: 42px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    text-align: center;
+                }
+
+                p {
+                    color: #333;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    text-align: center;
+                }
+            }
+        }
+
+        .twoButtonAlignment {
+            display: flex;
+            align-items: center;
+            padding: 0 0 80px 0;
+            gap: 10px;
+
+            @include respond-to("xl") {
+                padding: 0 0 30px 0;
+            }
+
+            @include respond-to("sm") {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 16px;
+
+            }
+
+            button {
+                padding: 14px 28px;
+                color: #FFF;
+                text-align: center;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+                border-radius: 12px;
+                background: #527475;
+                border: 1px solid #527475;
+
+                @include respond-to("sm") {
+                    justify-content: center;
+                }
+
+                &.lightButton {
+                    color: #121212;
+                    border: 1px solid rgba(18, 18, 18, 0.10);
+                    background: rgba(255, 255, 255, 0.10);
+                    box-shadow: 0 0 44.8px 0 rgba(0, 0, 0, 0.09);
+                    backdrop-filter: blur(123.94999694824219px);
+                }
+            }
+        }
+
+        .textstyle {
+            padding: 0 0 32px 0;
+
+            p {
+                color: #727272;
+                font-size: 20px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                max-width: 568px;
+            }
+        }
+
+        h1 {
+            color: #121212;
+            font-size: 72px;
+            font-style: normal;
+            font-family: var(--font-el-messiri);
+            font-weight: 600;
+            line-height: 92px;
+            text-transform: capitalize;
+        }
+
+        .box {
+            border-radius: 20px;
+            border: 1px solid #FFF;
+            background: linear-gradient(238deg, #FFF 0.38%, #DDE1E1 99.62%);
+            box-shadow: 0 0 39.4px 0 rgba(0, 0, 0, 0.06);
+            padding: 24px;
+
+            .image {
+                img {
+                    display: block;
+                    width: 100%;
+                }
+            }
+
+            .textBox {
+                border-radius: 0 0 20px 20px;
+                padding: 20px;
+                background: #FFF;
+
+                ul {
+                    margin: 0;
+                    padding: 0 0 0 20px;
+
+                    li {
+                        color: #121212;
+                        font-size: 20px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                        text-transform: capitalize;
+                    }
+                }
+            }
+        }
+    }
+}

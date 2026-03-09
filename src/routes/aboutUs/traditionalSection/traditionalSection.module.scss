@@ -1,0 +1,89 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.traditionalSection {
+    padding: 100px 0;
+
+    .title {
+        padding: 0 0 40px 0;
+
+        @include respond-to("sm") {
+            padding: 0 0 40px 0;
+        }
+
+        h2 {
+            max-width: 942px;
+            margin: 0 auto;
+            text-align: center;
+            color: #121212;
+            font-size: 62px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 82px;
+            font-family: var(--font-el-messiri);
+            text-transform: capitalize;
+
+            @include respond-to("xl") {
+                font-size: 50px;
+                line-height: 60px;
+            }
+
+            @include respond-to("sm") {
+                font-size: 36px;
+                line-height: 41px;
+            }
+        }
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        max-width: 1275px;
+        margin: 0 auto;
+
+        .griditems {
+            border-radius: 20px;
+            border: 1px solid rgba(18, 18, 18, 0.16);
+            background: rgba(255, 255, 255, 0.00);
+            padding: 32px;
+
+            &:nth-child(2n+2) {
+                border-radius: 20px;
+                border: 1px solid rgba(18, 18, 18, 0.16);
+                background: #527475;
+
+                h3 {
+                    color: #fff;
+                }
+
+                p {
+                    color: #fff;
+                }
+            }
+
+            h3 {
+                color: #121212;
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+                text-transform: capitalize;
+                margin: 24px 0 6px 0;
+            }
+
+            p {
+                color: #565656;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+
+            }
+
+            img {
+                display: block;
+            }
+        }
+    }
+}
