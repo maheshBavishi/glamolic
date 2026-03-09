@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './categorySelection.module.scss';
 import LeftIcon from '@/icons/leftIcon';
 import RightWhiteIcon from '@/icons/rightWhiteIcon';
+import Link from 'next/link';
 const WomenImage = '/assets/images/women.png';
 const MenImage = '/assets/images/men.png';
 export default function CategorySelection() {
@@ -32,13 +33,15 @@ export default function CategorySelection() {
                                         <li> Lehengas</li>
                                         <li>Kurtis & More</li>
                                     </ul>
-                                    <button
-                                        whileHover={{ scale: 1.05, x: 5 }}
-                                        whileTap={{ scale: 0.95 }}
-                                    >
-                                        Explore
-                                        <RightWhiteIcon />
-                                    </button>
+                                    <Link href="/women-collection">
+                                        <button
+                                            whileHover={{ scale: 1.05, x: 5 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            Explore
+                                            <RightWhiteIcon />
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
                             <div className={styles.griditems}>

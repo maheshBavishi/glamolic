@@ -105,9 +105,11 @@ export default function Header() {
                             <a aria-label='Contact US'>Contact Us</a>
                         </div>
                         <div className={styles.buttonAlignment}>
-                            <button aria-label='Login' className={styles.light}>
-                                Login
-                            </button>
+                            <Link href="/login">
+                                <button aria-label='Login' className={styles.light}>
+                                    Login
+                                </button>
+                            </Link>
                             <button aria-label='Login' className={styles.fill}>
                                 Get Started
                             </button>
@@ -146,9 +148,11 @@ export default function Header() {
                             <motion.a variants={itemVariants} aria-label='Contact US'>Contact Us</motion.a>
                         </div>
                         <motion.div variants={itemVariants} className={styles.mobileFooter} onClick={() => setHeaderOpen(false)}>
-                            <button aria-label='Login' className={styles.light}>
-                                Login
-                            </button>
+                            <Link href="/login">
+                                <button aria-label='Login' className={styles.light}>
+                                    Login
+                                </button>
+                            </Link>
                             <button aria-label='Login' className={styles.fill}>
                                 Get Started
                             </button>

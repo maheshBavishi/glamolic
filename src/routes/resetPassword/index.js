@@ -2,14 +2,15 @@ import React from 'react'
 import styles from './resetPassword.module.scss';
 import CloseIcon from '@/icons/closeIcon';
 import Input from '@/components/input';
+import Link from 'next/link';
 const GoogleIcon = '/assets/icons/google.svg';
 export default function ResetPassword() {
     return (
         <div className={styles.loginwrapper}>
             <div className={styles.modal}>
-                <div className={styles.closeIcon}>
+                {/* <div className={styles.closeIcon}>
                     <CloseIcon />
-                </div>
+                </div> */}
                 <div className={styles.text}>
                     <h2>
                         Reset Password
@@ -24,9 +25,11 @@ export default function ResetPassword() {
                     </div>
 
                     <div className={styles.buttonDesign}>
-                        <button aria-label='Sign In'>
-                            Send Reset link
-                        </button>
+                        <Link href="/otp-screen">
+                            <button aria-label='Sign In'>
+                                Send Reset link
+                            </button>
+                        </Link>
                     </div>
                     <div className={styles.centertext}>
                         <p>

@@ -2,14 +2,15 @@ import React from 'react'
 import styles from './login.module.scss';
 import CloseIcon from '@/icons/closeIcon';
 import Input from '@/components/input';
+import Link from 'next/link';
 const GoogleIcon = '/assets/icons/google.svg';
 export default function Login() {
     return (
         <div className={styles.loginwrapper}>
             <div className={styles.modal}>
-                <div className={styles.closeIcon}>
+                {/* <div className={styles.closeIcon}>
                     <CloseIcon />
-                </div>
+                </div> */}
                 <div className={styles.text}>
                     <h2>
                         Welcome Back
@@ -24,18 +25,20 @@ export default function Login() {
                     </div>
                     <Input label='Password' placeholder=' Enter your password' smallInput />
                     <div className={styles.forgotpassword}>
-                        <a>
+                        <Link href="/reset-password">
                             Forgot password?
-                        </a>
+                        </Link>
                     </div>
                     <div className={styles.buttonDesign}>
-                        <button aria-label='Sign In'>
-                            Sign In
-                        </button>
+                        <Link href="/category-selection">
+                            <button aria-label='Sign In'>
+                                Sign In
+                            </button>
+                        </Link>
                     </div>
                     <div className={styles.centertext}>
                         <p>
-                            Don't have an account? <a> Sign in</a>
+                            Don't have an account? <Link href="/signup">Sign up</Link>
                         </p>
                     </div>
                     <div className={styles.orlineGrid}>
