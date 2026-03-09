@@ -3,6 +3,7 @@ import React from 'react'
 import styles from './readytoTransform.module.scss';
 import RightWhiteIcon from '@/icons/rightWhiteIcon';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const ModelImage1 = '/assets/images/modal1.png';
 const ModelImage2 = '/assets/images/modal2.png';
@@ -85,13 +86,15 @@ export default function ReadytoTransform() {
                                                 <li> Lehengas</li>
                                                 <li>Kurtis & More</li>
                                             </ul>
-                                            <motion.button
-                                                whileHover={{ scale: 1.05, x: 5 }}
-                                                whileTap={{ scale: 0.95 }}
-                                            >
-                                                Explore
-                                                <RightWhiteIcon />
-                                            </motion.button>
+                                            <Link href="/women-collection">
+                                                <motion.button
+                                                    whileHover={{ scale: 1.05, x: 5 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                >
+                                                    Explore
+                                                    <RightWhiteIcon />
+                                                </motion.button>
+                                            </Link>
                                         </div>
                                     </motion.div>
                                 </motion.div>
@@ -113,13 +116,15 @@ export default function ReadytoTransform() {
                                                 <li> Sherwanis</li>
                                                 <li>Blazer & More</li>
                                             </ul>
-                                            <motion.button
-                                                whileHover={{ scale: 1.05, x: 5 }}
-                                                whileTap={{ scale: 0.95 }}
-                                            >
-                                                Explore
-                                                <RightWhiteIcon />
-                                            </motion.button>
+                                            <Link href="/women-collection">
+                                                <motion.button
+                                                    whileHover={{ scale: 1.05, x: 5 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                >
+                                                    Explore
+                                                    <RightWhiteIcon />
+                                                </motion.button>
+                                            </Link>
                                         </div>
                                     </motion.div>
                                 </motion.div>

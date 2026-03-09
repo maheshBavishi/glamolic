@@ -8,9 +8,9 @@ export default function Login() {
     return (
         <div className={styles.loginwrapper}>
             <div className={styles.modal}>
-                {/* <div className={styles.closeIcon}>
+                <div className={styles.closeIcon}>
                     <CloseIcon />
-                </div> */}
+                </div>
                 <div className={styles.text}>
                     <h2>
                         Welcome Back
