@@ -101,7 +101,7 @@ export default function Header() {
                             <a aria-label='Home' className={styles.active}>Home</a>
                             <a aria-label='How It Work' href="#howitwork">How It Work</a>
                             <a aria-label='Pricing' href="#pricing">Pricing</a>
-                            <a aria-label='History'>History</a>
+                            <Link href="/history" aria-label='History'>History</Link>
                             <Link href="/contact-us" aria-label='Contact US'>Contact Us</Link>
                         </div>
                         <div className={styles.buttonAlignment}>
