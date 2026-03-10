@@ -1,14 +1,21 @@
+"use client"
 import React from 'react'
 import styles from './resetPassword.module.scss';
 import CloseIcon from '@/icons/closeIcon';
 import Input from '@/components/input';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 const GoogleIcon = '/assets/icons/google.svg';
 export default function ResetPassword() {
+     const router = useRouter();
+
+    const handleClose = () => {
+        router.back();
+    };
     return (
         <div className={styles.loginwrapper}>
             <div className={styles.modal}>
-                <div className={styles.closeIcon}>
+                <div className={styles.closeIcon} onClick={handleClose}>
                     <CloseIcon />
                 </div>
                 <div className={styles.text}>
