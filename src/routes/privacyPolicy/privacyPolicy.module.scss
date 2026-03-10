@@ -4,6 +4,10 @@
 .privacyPolicyContent {
     padding: 0 0 100px 0;
 
+    @include respond-to("sm") {
+        padding: 0 0 60px 0;
+    }
+
     h2 {
         color: #121212;
         font-size: 24px;

@@ -8,6 +8,10 @@
     width: 100%;
     padding: 140px 0 100px 0;
 
+    @include respond-to("sm") {
+        padding: 140px 0 60px 0;
+    }
+
     .boxCenteralignment {
         max-width: 1080px;
         margin: 0 auto;
@@ -22,6 +26,10 @@
                 font-weight: 600;
                 text-align: center;
                 line-height: normal;
+
+                @include respond-to("sm") {
+                    font-size: 16px;
+                }
             }
 
             h2 {
@@ -32,6 +40,12 @@
                 text-align: center;
                 line-height: 53px;
                 text-transform: capitalize;
+
+                @include respond-to("sm") {
+                    font-size: 36px;
+                    line-height: 41px;
+                    margin: 0 0 10px 0;
+                }
             }
 
         }
@@ -42,6 +56,11 @@
             border: 1px solid rgba(0, 0, 0, 0.10);
             background: #FFF;
 
+            @include respond-to("sm") {
+                padding: 24px 14px;
+                border-radius: 12px;
+            }
+
             .information {
                 border-radius: 24px;
                 background: #F7F7F7;
@@ -49,6 +68,12 @@
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 16px;
+
+                @include respond-to("sm") {
+                    grid-template-columns: 1fr;
+                    padding: 14px;
+                    border-radius: 12px;
+                }
 
                 .items {
                     border-radius: 20px;
@@ -58,6 +83,13 @@
                     display: grid;
                     grid-template-columns: 50px 1fr;
                     gap: 14px;
+
+                    @include respond-to("sm") {
+                        padding: 14px;
+                        align-items: center;
+                        border-radius: 12px;
+                        padding: 14px;
+                    }
 
                     .icon {
                         border-radius: 14px;
@@ -76,6 +108,10 @@
                         font-style: normal;
                         font-weight: 500;
                         line-height: 16px;
+
+                        @include respond-to("sm") {
+                            font-size: 14px;
+                        }
                     }
 
                     a {
@@ -86,6 +122,10 @@
                         font-style: normal;
                         font-weight: 600;
                         line-height: normal;
+
+                        @include respond-to("sm") {
+                            font-size: 16px;
+                        }
                     }
                 }
 
@@ -96,6 +136,11 @@
                 background: #F7F7F7;
                 margin: 0 0 32px 0;
                 padding: 24px;
+
+                @include respond-to("sm") {
+                    padding: 14px;
+                    border-radius: 12px;
+                }
 
                 .sendMessage {
                     button {
@@ -121,6 +166,10 @@
                 .textareaDesign {
                     padding: 0 0 32px 0;
 
+                    @include respond-to("sm") {
+                        padding: 0 0 10px 0;
+                    }
+
                     label {
                         display: block;
                         color: #121212;
@@ -129,6 +178,10 @@
                         font-weight: 500;
                         line-height: normal;
                         padding: 0 0 6px 0;
+
+                        @include respond-to("sm") {
+                            font-size: 16px;
+                        }
                     }
 
                     textarea {
@@ -146,6 +199,11 @@
                         border: 1px solid rgba(18, 18, 18, 0.10);
                         background: #FFF;
                         outline: none;
+
+                        @include respond-to("sm") {
+                            font-size: 16px;
+                            border-radius: 10px;
+                        }
                     }
 
                     ::placeholder {
@@ -155,6 +213,10 @@
                         font-family: var(--font-heebo);
                         font-weight: 500;
                         line-height: normal;
+
+                        @include respond-to("sm") {
+                            font-size: 16px;
+                        }
                     }
                 }
 
@@ -164,8 +226,16 @@
                     gap: 16px;
                     padding: 0 0 16px 0;
 
+                    @include respond-to("sm") {
+                        grid-template-columns: 1fr;
+                    }
+
                     .collg {
                         grid-column: span 2;
+
+                        @include respond-to("sm") {
+                            grid-column: auto;
+                        }
                     }
                 }
             }

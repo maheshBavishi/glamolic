@@ -4,6 +4,10 @@
 .traditionalSection {
     padding: 100px 0;
 
+    @include respond-to("sm") {
+        padding: 60px 0;
+    }
+
     .title {
         padding: 0 0 40px 0;
 

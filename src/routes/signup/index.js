@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './signup.module.scss';
 import CloseIcon from '@/icons/closeIcon';
 import Input from '@/components/input';
+import Link from 'next/link';
 const GoogleIcon = '/assets/icons/google.svg';
 export default function Signup() {
     return (
@@ -38,7 +39,7 @@ export default function Signup() {
                     </div>
                     <div className={styles.centertext}>
                         <p>
-                            Don't have an account? <a> Sign in</a>
+                            Don't have an account? <Link href="/login"> Sign in</Link>
                         </p>
                     </div>
                     <div className={styles.orlineGrid}>
