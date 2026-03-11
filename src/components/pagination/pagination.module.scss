@@ -1,0 +1,121 @@
+@use '../../scss/main.scss' as *;
+
+.paginationWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 24px 0 0 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: 32px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .pageLimit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #727272;
+    font-size: 15px;
+    font-weight: 500;
+
+    select {
+      padding: 8px 12px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background: #F7F7F7;
+      color: #121212;
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+      min-width: 70px;
+      transition: border-color 0.2s;
+
+      &:focus {
+        border-color: rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  .pageInfo {
+    color: #727272;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .pageControls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .navButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background: #FFF;
+      color: #121212;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: #F7F7F7;
+      }
+
+      &:not(:disabled):hover {
+        background: #F7F7F7;
+        border-color: rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .pageNumbers {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 10px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        background: transparent;
+        color: #727272;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #F7F7F7;
+          color: #121212;
+        }
+
+        &.activePage {
+          background: #527475;
+          color: #FFF;
+          box-shadow: 0 4px 10px rgba(82, 116, 117, 0.2);
+        }
+      }
+
+      .ellipsis {
+        color: #727272;
+        padding: 0 6px;
+        font-weight: 600;
+      }
+    }
+  }
+}
