@@ -1,4 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
+import { useCreditsStore } from "@/hooks/useCreditsStore";
+import { useGenerateStore } from "@/hooks/useGenerateStore";
 
 const DEFAULT_BACKEND_URL = "https://ai-api.glamolic.com/api";
 
@@ -27,10 +29,13 @@ const fetchWithFallback = async (path, options) => {
         continue;
       }
 
-      return { response, requestUrl };
+      return { response, requestUrl, triedUrls: baseUrls };
     } catch (error) {
       lastNetworkError = error;
-      if (index < baseUrls.length - 1) continue;
+
+      if (index < baseUrls.length - 1) {
+        continue;
+      }
     }
   }
 
@@ -39,17 +44,33 @@ const fetchWithFallback = async (path, options) => {
   );
 };
 
-export const regenerateImage = async (payload) => {
+const handleUnauthorizedError = async () => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("session_expired", "true");
+    localStorage.removeItem("generate-storage");
+  }
+
+  useGenerateStore.getState().resetStore();
+  useCreditsStore.getState().resetCredits();
+  await supabase.auth.signOut();
+
+  if (typeof window !== "undefined") {
+    window.location.href = "/";
+  }
+};
+
+export const generateImage = async (payload) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
+
   const token = session?.access_token;
 
   if (!token) {
     throw new Error("No authentication token found. Please log in again.");
   }
 
-  const { response, requestUrl } = await fetchWithFallback("/regenerate", {
+  const { response, requestUrl } = await fetchWithFallback("/generate", {
     method: "POST",
     headers: {
       accept: "application/json",
@@ -61,14 +82,14 @@ export const regenerateImage = async (payload) => {
   });
 
   if (response?.status === 401) {
-    throw new Error("Unauthorized. Please log in again.");
+    await handleUnauthorizedError();
+    return;
   }
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || errorData.message || `Regenerate API request failed (${response.status}) at ${requestUrl}`);
+    throw new Error(errorData.detail || errorData.message || `API request failed (${response.status}) at ${requestUrl}`);
   }
 
-  const responseData = await response.json();
-  return responseData;
+  return response.json();
 };
