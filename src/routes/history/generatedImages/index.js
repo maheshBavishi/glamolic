@@ -150,7 +150,7 @@ export default function GeneratedImages({ item }) {
                 alt="FillIcon"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDownloadImage(url, `${item?.id}-${index}`);
+                  handleDownloadImage(url, index);
                 }}
                 style={{ cursor: "pointer" }}
               />

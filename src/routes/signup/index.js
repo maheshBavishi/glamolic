@@ -1,12 +1,13 @@
 "use client"
-import React, { useState, useEffect } from 'react'
-import styles from './signup.module.scss';
-import CloseIcon from '@/icons/closeIcon';
-import Input from '@/components/input';
-import Link from 'next/link';
-import { useAuth } from "@/context/AuthContext";
 import GoogleLogin from "@/components/GoogleLogin";
+import Input from '@/components/input';
+import { useAuth } from "@/context/AuthContext";
+import CloseIcon from '@/icons/closeIcon';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import toast from "react-hot-toast";
+import styles from './signup.module.scss';
 
 export default function Signup() {
     const router = useRouter();

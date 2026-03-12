@@ -3,9 +3,11 @@ import Button from "@/components/button";
 import Pagination from "@/components/pagination";
 import { useAuth } from "@/context/AuthContext";
 import { useHistoryData } from "@/hooks/useHistoryData";
+import { useVideoHistoryData } from "@/hooks/useVideoHistoryData";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import HistoryCard from "./components/historyCard";
+import VideoHistoryCard from "./components/videoHistoryCard";
 import styles from "./history.module.scss";
 
 const GenrationIcon = "/assets/icons/genration.svg";
@@ -24,9 +26,20 @@ export default function History() {
     }
   }, [user, loading, router]);
 
-  const { history, totalCount, loadingHistory } = useHistoryData(user, currentPage, itemsPerPage);
+  const { history, totalCount, loadingHistory } = useHistoryData(user, activeTab === "images" ? currentPage : 1, itemsPerPage);
+  const { videoHistory, totalVideoCount, loadingVideoHistory } = useVideoHistoryData(user, activeTab === "videos" ? currentPage : 1, itemsPerPage);
 
-  const totalPages = Math.ceil(totalCount / itemsPerPage) || 1;
+  const currentHistory = activeTab === "images" ? history : videoHistory;
+  const currentTotalCount = activeTab === "images" ? totalCount : totalVideoCount;
+  const currentLoading = activeTab === "images" ? loadingHistory : loadingVideoHistory;
+
+  const totalPages = Math.ceil(currentTotalCount / itemsPerPage) || 1;
+
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+    setCurrentPage(1);
+    setExpandedId(null);
+  };
 
   const handlePageChange = (page) => {
     setExpandedId(null);
@@ -60,7 +73,7 @@ export default function History() {
             </div>
             <div className={styles.centerTabAlignment}>
               <div className={styles.tabdesign}>
-                <button className={activeTab === "images" ? styles.active : ""} onClick={() => setActiveTab("images")}>
+                <button className={activeTab === "images" ? styles.active : ""} onClick={() => handleTabChange("images")}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path
                       d="M7.5013 18.3333H12.5013C16.668 18.3333 18.3346 16.6667 18.3346 12.5V7.5C18.3346 3.33333 16.668 1.66667 12.5013 1.66667H7.5013C3.33464 1.66667 1.66797 3.33333 1.66797 7.5V12.5C1.66797 16.6667 3.33464 18.3333 7.5013 18.3333Z"
@@ -86,7 +99,7 @@ export default function History() {
                   </svg>
                   Images
                 </button>
-                <button className={activeTab === "videos" ? styles.active : ""} onClick={() => setActiveTab("videos")}>
+                <button className={activeTab === "videos" ? styles.active : ""} onClick={() => handleTabChange("videos")}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path
                       d="M10.443 17.0167H5.1763C2.54297 17.0167 1.66797 15.2667 1.66797 13.5084V6.49173C1.66797 3.8584 2.54297 2.9834 5.1763 2.9834H10.443C13.0763 2.9834 13.9513 3.8584 13.9513 6.49173V13.5084C13.9513 16.1417 13.068 17.0167 10.443 17.0167Z"
@@ -114,24 +127,35 @@ export default function History() {
                 </button>
               </div>
             </div>
-            {loadingHistory ? (
+            {currentLoading ? (
               <div style={{ textAlign: "center", padding: "40px", color: "#666" }}>Loading history...</div>
-            ) : history.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "40px", color: "#666" }}>
-                <p>No generation history found. Start creating!</p>
+            ) : currentHistory.length === 0 ? (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyStateIcon}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0" />
+                    <path d="M12 8v4l3 3" />
+                  </svg>
+                </div>
+                <h3>No History Yet</h3>
+                <p>Your generation history will appear here once you create your first {activeTab === "images" ? "collection" : "video"}.</p>
               </div>
             ) : (
               <>
                 <div className={styles.cardsList}>
-                  {history.map((item) => (
-                    <HistoryCard key={item.id} item={item} isExpanded={expandedId === item.id} onToggleExpand={() => toggleExpand(item.id)} />
+                  {currentHistory.map((item) => (
+                    activeTab === "images" ? (
+                      <HistoryCard key={item.id} item={item} isExpanded={expandedId === item.id} onToggleExpand={() => toggleExpand(item.id)} />
+                    ) : (
+                      <VideoHistoryCard key={item.id} item={item} isExpanded={expandedId === item.id} onToggleExpand={() => toggleExpand(item.id)} />
+                    )
                   ))}
                 </div>
-                {history.length > 0 && (
+                {currentHistory.length > 0 && (
                   <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
-                    totalCount={totalCount}
+                    totalCount={currentTotalCount}
                     itemsPerPage={itemsPerPage}
                     onPageChange={handlePageChange}
                     onItemsPerPageChange={handleItemsPerPageChange}

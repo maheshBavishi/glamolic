@@ -1,10 +1,10 @@
-import History from '@/routes/history'
-import React from 'react'
+import History from "@/routes/history";
+import React from "react";
 
 export default function page() {
-    return (
-        <div>
-            <History />
-        </div>
-    )
+  return (
+    <div>
+      <History />
+    </div>
+  );
 }

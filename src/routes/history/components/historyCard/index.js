@@ -1,5 +1,4 @@
-"use client";
-import React from "react";
+"use client";import React, { useState } from "react";
 import styles from "../../history.module.scss";
 import ProductIcon from "@/icons/productIcon";
 import ImageIcon from "@/icons/imageIcon";
@@ -9,9 +8,11 @@ import StudioIcon from "@/icons/studioIcon";
 import NoteIcon from "@/icons/noteIcon";
 import CalendarIcon from "@/icons/calendarIcon";
 import GeneratedImages from "../../generatedImages";
-import { getStatusBadgeClass } from "@/utils/statusUtils";
+import { getStatusBadgeClass, getStatusIcon } from "@/utils/statusUtils";
 
 export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
+  const [imgLoaded, setImgLoaded] = useState(false);
+
   let settings = {};
   if (typeof item?.settings === "string") {
     try {
@@ -23,9 +24,8 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
     settings = item.settings;
   }
 
-  const ProductImage = item?.thumbnails[0] || "/assets/images/product2.png";
+  const ProductImage = item?.thumbnails[0];
   const statusText = item?.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : "Processing";
-
 
   const promptInstructions = item?.prompts?.length > 0 ? item.prompts[0].prompt : "No specific instructions provided.";
 
@@ -33,46 +33,57 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
     <div className={styles.detailsBox}>
       <div className={styles.detailsboxHeader} onClick={onToggleExpand}>
         <div className={styles.image}>
-          <img src={ProductImage} alt={item?.productName || "ProductImage"} />
+          {!imgLoaded && <div className={styles.imgSkeleton} />}
+          <img
+            src={ProductImage}
+            alt={item?.productName || "ProductImage"}
+            onLoad={() => setImgLoaded(true)}
+            style={{ display: imgLoaded ? "block" : "none" }}
+          />
         </div>
         <div className={styles.details}>
           <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap", marginBottom: "8px" }}>
             <div className={styles.primaryChip}>
-              <span>{item?.category || "AI Photoshoot"}</span>
+              <span>{item?.category}</span>
             </div>
             <div className={getStatusBadgeClass(item?.status, styles)}>
-              <span>✓ {statusText}</span>
+              <span>
+                {getStatusIcon(item?.status)}
+                {statusText}
+              </span>
+
+              {/* <span>✓ {statusText}</span> */}
             </div>
             <div style={{ color: "#727272", fontSize: "15px", fontWeight: "500", display: "flex", alignItems: "center", gap: "6px" }}>
               <CalendarIcon />
               {item?.date}
             </div>
           </div>
-          <h2 style={{ marginTop: "0" }}>{item?.productName || "AI Photoshoot"}</h2>
+          <h2 style={{ marginTop: "0" }}>{item?.productName}</h2>
           <div className={styles.allToogleAlignment}>
             <button>
               <ProductIcon />
-              {item?.products || 1} Products
+              {item?.products} Products
             </button>
             <button>
               <ImageIcon />
-              {item?.totalImages || 2} Images
+              {item?.totalImages} Images
             </button>
             <button>
               <ResolutionIcon />
-              {settings?.resolution || "2k"}
+              {settings?.resolution}
             </button>
             <button>
               <SizeIcon />
-              {settings?.imageSize || "12x18"}
+              {settings?.imageSize}
             </button>
             <button>
               <StudioIcon />
-              {settings?.backgroundType || "Studio"}
+              {settings?.backgroundType}
             </button>
             <button>
               <ProductIcon />
-              {settings?.imagesPerProduct || 1} per product
+              {settings?.imagesPerProduct} per product
             </button>
           </div>
         </div>

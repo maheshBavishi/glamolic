@@ -154,9 +154,15 @@ export default function Header() {
               <a aria-label="Pricing" href="#pricing">
                 Pricing
               </a>
-              <Link href="/history" aria-label="History">
-                History
-              </Link>
+              {user?.id ? (
+                <Link href="/history" aria-label="History">
+                  History
+                </Link>
+              ) : (
+                <Link href="/login" aria-label="History">
+                  History
+                </Link>
+              )}
               <Link href="/contact-us" aria-label="Contact US">
                 Contact Us
               </Link>
