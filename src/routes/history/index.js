@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import HistoryCard from "./components/historyCard";
 import VideoHistoryCard from "./components/videoHistoryCard";
 import styles from "./history.module.scss";
+import Link from "next/link";
 
 const GenrationIcon = "/assets/icons/genration.svg";
 
@@ -68,7 +69,9 @@ export default function History() {
                 <p>Review and download your past generated collections</p>
               </div>
               <div>
-                <Button text="New Generation" icon={GenrationIcon} />
+                <Link href="/category-selection">
+                  <Button text="New Generation" icon={GenrationIcon} />
+                </Link>
               </div>
             </div>
             <div className={styles.centerTabAlignment}>
@@ -132,7 +135,17 @@ export default function History() {
             ) : currentHistory.length === 0 ? (
               <div className={styles.emptyState}>
                 <div className={styles.emptyStateIcon}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0" />
                     <path d="M12 8v4l3 3" />
                   </svg>
@@ -143,13 +156,13 @@ export default function History() {
             ) : (
               <>
                 <div className={styles.cardsList}>
-                  {currentHistory.map((item) => (
+                  {currentHistory.map((item) =>
                     activeTab === "images" ? (
                       <HistoryCard key={item.id} item={item} isExpanded={expandedId === item.id} onToggleExpand={() => toggleExpand(item.id)} />
                     ) : (
                       <VideoHistoryCard key={item.id} item={item} isExpanded={expandedId === item.id} onToggleExpand={() => toggleExpand(item.id)} />
-                    )
-                  ))}
+                    ),
+                  )}
                 </div>
                 {currentHistory.length > 0 && (
                   <Pagination

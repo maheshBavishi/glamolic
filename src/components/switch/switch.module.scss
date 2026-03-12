@@ -5,6 +5,11 @@
     display: flex;
     align-items: center;
 
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
     .switch {
         position: relative;
         display: inline-block;
@@ -28,6 +33,10 @@
         background-color: #EDEDED;
         -webkit-transition: .4s;
         transition: .4s;
+    }
+
+    input:disabled + .slider {
+        cursor: not-allowed;
     }
 
     .slider:before {
