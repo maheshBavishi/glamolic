@@ -5,6 +5,7 @@ import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styles from "./header.module.scss";
 
@@ -113,16 +114,62 @@ export default function Header() {
   const scrollDirection = useScrollDirection();
   const [headerOpen, setHeaderOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const { user, profile, signOut, loading } = useAuth();
   const { credits, fetchCredits, loading: creditsLoading } = useCreditsStore();
   const dropdownRef = useRef(null);
+
+  const scrollToSection = (sectionId) => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+    const section = document.getElementById(sectionId);
+    if (!section) {
+      return false;
+    }
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.replaceState(null, "", `/#${sectionId}`);
+    return true;
+  };
+
+  const navigateToHomeSection = (sectionId) => {
+    setHeaderOpen(false);
+    if (pathname === "/") {
+      scrollToSection(sectionId);
+      return;
+    }
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("home-scroll-target", sectionId);
+    }
+    router.push("/");
+  };
 
   useEffect(() => {
     if (user?.id) {
       fetchCredits(user.id);
     }
   }, [user, fetchCredits]);
+
+  useEffect(() => {
+    if (pathname !== "/" || typeof window === "undefined") {
+      return;
+    }
+    const pendingTarget = window.sessionStorage.getItem("home-scroll-target");
+    const hashTarget = window.location.hash ? window.location.hash.slice(1) : "";
+    const target = pendingTarget || hashTarget;
+    if (!target) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      const didScroll = scrollToSection(target);
+      if (didScroll && pendingTarget) {
+        window.sessionStorage.removeItem("home-scroll-target");
+      }
+    }, 120);
+    return () => window.clearTimeout(timer);
+  }, [pathname]);
 
   useOnClickOutside(dropdownRef, () => setDropdownOpen(false));
 
@@ -145,13 +192,27 @@ export default function Header() {
               </Link>
             </div>
             <div className={styles.menu}>
-              <a aria-label="Home" className={styles.active}>
+              <Link href="/" aria-label="Home" className={styles.active}>
                 Home
-              </a>
-              <a aria-label="How It Work" href="#howitwork">
+              </Link>
+              <a
+                aria-label="How It Work"
+                href="/#howitwork"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToHomeSection("howitwork");
+                }}
+              >
                 How It Work
               </a>
-              <a aria-label="Pricing" href="#pricing">
+              <a
+                aria-label="Pricing"
+                href="/#pricing"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToHomeSection("pricing");
+                }}
+              >
                 Pricing
               </a>
               {user?.id ? (
@@ -251,13 +312,29 @@ export default function Header() {
               </svg>
             </div>
             <div className={styles.mobileBody} onClick={() => setHeaderOpen(false)}>
-              <motion.a variants={itemVariants} aria-label="Home" className={styles.active}>
+              <motion.a variants={itemVariants} aria-label="Home" className={styles.active} href="/" onClick={() => setHeaderOpen(false)}>
                 Home
               </motion.a>
-              <motion.a variants={itemVariants} aria-label="How It Work">
+              <motion.a
+                variants={itemVariants}
+                aria-label="How It Work"
+                href="/#howitwork"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToHomeSection("howitwork");
+                }}
+              >
                 How It Work
               </motion.a>
-              <motion.a variants={itemVariants} aria-label="Pricing">
+              <motion.a
+                variants={itemVariants}
+                aria-label="Pricing"
+                href="/#pricing"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToHomeSection("pricing");
+                }}
+              >
                 Pricing
               </motion.a>
               <motion.a variants={itemVariants} aria-label="History">
