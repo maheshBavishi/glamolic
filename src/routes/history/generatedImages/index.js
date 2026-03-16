@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCreditsStore } from "@/hooks/useCreditsStore";
 import { regenerateImage } from "@/api/regenerateImage";
 import { useHistoryActions } from "@/hooks/useHistoryActions";
+import ImagePreviewModal from "./ImagePreviewModal";
 
 const StickIcon = "/assets/icons/stick.svg";
 const PdfIcon = "/assets/icons/pdf.svg";
@@ -37,6 +38,11 @@ const getPublicFallbackUrl = (url) => {
   }
 };
 
+const clampIndex = (value, min, max) => {
+  if (Number.isNaN(value)) return min;
+  return Math.min(Math.max(value, min), max);
+};
+
 const GeneratedImageTile = memo(function GeneratedImageTile({
   imageUrl,
   sourceUrl,
@@ -44,6 +50,7 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
   onRegenerate,
   onDownload,
   onGenerateVideo,
+  onOpenPreview,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
@@ -97,6 +104,7 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
 
   const prioritizeImage = index < 3;
   const imageSrc = activeUrl || imageUrl;
+  const canOpenPreview = Boolean(imageUrl) && !hasFailed;
 
   const handleImageLoad = () => {
     setIsLoaded(true);
@@ -109,7 +117,22 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
 
   return (
     <div className={styles.items}>
-      <div className={styles.image}>
+      <div
+        className={styles.image}
+        onClick={() => {
+          if (!canOpenPreview) return;
+          onOpenPreview(index);
+        }}
+        onKeyDown={(event) => {
+          if (!canOpenPreview) return;
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          onOpenPreview(index);
+        }}
+        role={canOpenPreview ? "button" : undefined}
+        tabIndex={canOpenPreview ? 0 : -1}
+        aria-label={canOpenPreview ? `Open image ${index + 1} full preview` : undefined}
+      >
         {!isLoaded && !hasFailed && <div className={styles.imageSkeleton} aria-hidden="true" />}
         {imageUrl ? (
           <Image
@@ -131,6 +154,7 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
         ) : (
           <div className={styles.imageFallback}>Image not available</div>
         )}
+        {canOpenPreview ? <div className={styles.viewFullHint}>Click to view full size</div> : null}
         {hasFailed && <div className={styles.imageFallback}>Image not available</div>}
       </div>
       {sourceUrl ? (
@@ -166,6 +190,8 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
 
 export default function GeneratedImages({ item }) {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_IMAGES);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState(0);
   const loadMoreRef = useRef(null);
   const { user } = useAuth();
   const { credits, fetchCredits } = useCreditsStore();
@@ -182,15 +208,46 @@ export default function GeneratedImages({ item }) {
   );
   const imageSignature = imageItems.map((imageItem) => imageItem.originalUrl).join("|");
   const visibleImageItems = imageItems.slice(0, visibleCount);
+  const allPreviewImages = useMemo(
+    () => imageItems.map((imageItem) => imageItem.originalUrl || imageItem.displayUrl),
+    [imageItems],
+  );
   const hasMoreImages = visibleCount < imageItems.length;
   const { handleDownloadImage, handleDownloadAll, handleExportPDF } = useHistoryActions();
   const handleGenerateVideoSoon = useCallback(() => {
     toast("Video generation coming soon!");
   }, []);
 
+  const handleOpenPreview = useCallback((index) => {
+    setViewerIndex(index);
+    setIsViewerOpen(true);
+  }, []);
+
+  const handleClosePreview = useCallback(() => {
+    setIsViewerOpen(false);
+  }, []);
+
+  const handlePreviewIndexChange = useCallback(
+    (nextIndex) => {
+      setViewerIndex(clampIndex(nextIndex, 0, Math.max(allPreviewImages.length - 1, 0)));
+    },
+    [allPreviewImages.length],
+  );
+
   useEffect(() => {
     setVisibleCount(INITIAL_VISIBLE_IMAGES);
   }, [item?.id, imageSignature]);
+
+  useEffect(() => {
+    if (!isViewerOpen) return;
+    if (allPreviewImages.length === 0) {
+      setIsViewerOpen(false);
+      return;
+    }
+    if (viewerIndex >= allPreviewImages.length) {
+      setViewerIndex(allPreviewImages.length - 1);
+    }
+  }, [allPreviewImages.length, isViewerOpen, viewerIndex]);
 
   useEffect(() => {
     if (!hasMoreImages) return;
@@ -344,6 +401,7 @@ export default function GeneratedImages({ item }) {
               onRegenerate={handleRegenerateImage}
               onDownload={handleDownloadImage}
               onGenerateVideo={handleGenerateVideoSoon}
+              onOpenPreview={handleOpenPreview}
             />
           );
         })}
@@ -363,6 +421,15 @@ export default function GeneratedImages({ item }) {
           </p>
         </div>
       </div>
+
+      <ImagePreviewModal
+        isOpen={isViewerOpen}
+        images={allPreviewImages}
+        currentIndex={viewerIndex}
+        onClose={handleClosePreview}
+        onIndexChange={handlePreviewIndexChange}
+        productName={item?.productName || item?.category || "AI Photoshoot"}
+      />
     </div>
   );
 }

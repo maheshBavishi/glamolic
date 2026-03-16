@@ -28,6 +28,12 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
   }
 
   const productImage = typeof item?.thumbnails?.[0] === "string" ? item.thumbnails[0].trim() : "";
+  const normalizedStatus = String(item?.status || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[\s-]+/g, "_");
+  const isTerminalStatus = ["completed", "failed", "canceled", "cancelled"].includes(normalizedStatus);
+  const showImageSkeleton = (!imgLoaded && Boolean(productImage)) || (!productImage && !isTerminalStatus);
   const statusText = item?.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : "Processing";
 
   const promptInstructions = item?.prompts?.length > 0 ? item.prompts[0].prompt : "No specific instructions provided.";
@@ -40,7 +46,7 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
     <div className={styles.detailsBox}>
       <div className={styles.detailsboxHeader} onClick={onToggleExpand}>
         <div className={styles.image}>
-          {!imgLoaded && productImage && <div className={styles.imgSkeleton} />}
+          {showImageSkeleton && <div className={styles.imgSkeleton} />}
           {productImage ? (
             <Image
               src={productImage}
