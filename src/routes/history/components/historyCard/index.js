@@ -1,4 +1,7 @@
-"use client";import React, { useState } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import styles from "../../history.module.scss";
 import ProductIcon from "@/icons/productIcon";
 import ImageIcon from "@/icons/imageIcon";
@@ -24,22 +27,36 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
     settings = item.settings;
   }
 
-  const ProductImage = item?.thumbnails[0];
+  const productImage = typeof item?.thumbnails?.[0] === "string" ? item.thumbnails[0].trim() : "";
   const statusText = item?.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : "Processing";
 
   const promptInstructions = item?.prompts?.length > 0 ? item.prompts[0].prompt : "No specific instructions provided.";
+
+  useEffect(() => {
+    setImgLoaded(false);
+  }, [productImage]);
 
   return (
     <div className={styles.detailsBox}>
       <div className={styles.detailsboxHeader} onClick={onToggleExpand}>
         <div className={styles.image}>
-          {!imgLoaded && <div className={styles.imgSkeleton} />}
-          <img
-            src={ProductImage}
-            alt={item?.productName || "ProductImage"}
-            onLoad={() => setImgLoaded(true)}
-            style={{ display: imgLoaded ? "block" : "none" }}
-          />
+          {!imgLoaded && productImage && <div className={styles.imgSkeleton} />}
+          {productImage ? (
+            <Image
+              src={productImage}
+              alt={item?.productName || "Product image"}
+              fill
+              sizes="166px"
+              onLoad={() => setImgLoaded(true)}
+              style={{
+                objectFit: "cover",
+                objectPosition: "top",
+                borderRadius: "16px",
+                opacity: imgLoaded ? 1 : 0,
+                transition: "opacity 0.2s ease-in-out",
+              }}
+            />
+          ) : null}
         </div>
         <div className={styles.details}>
           <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap", marginBottom: "8px" }}>

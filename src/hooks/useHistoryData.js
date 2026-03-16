@@ -2,6 +2,54 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+const normalizeImageUrl = (value) => (typeof value === "string" ? value.trim() : "");
+
+const collectImageUrls = (source) => {
+  const urls = [];
+
+  const pushUrl = (value) => {
+    const normalized = normalizeImageUrl(value);
+    if (normalized) {
+      urls.push(normalized);
+    }
+  };
+
+  const collectFromGroup = (group) => {
+    if (!group) return;
+
+    if (typeof group === "string") {
+      pushUrl(group);
+      return;
+    }
+
+    if (Array.isArray(group)) {
+      group.forEach(collectFromGroup);
+      return;
+    }
+
+    if (typeof group === "object") {
+      if (Array.isArray(group.images)) {
+        group.images.forEach(pushUrl);
+      }
+      if (Array.isArray(group.urls)) {
+        group.urls.forEach(pushUrl);
+      }
+      if (typeof group.imageUrl === "string") {
+        pushUrl(group.imageUrl);
+      }
+      if (typeof group.image_url === "string") {
+        pushUrl(group.image_url);
+      }
+      if (typeof group.url === "string") {
+        pushUrl(group.url);
+      }
+    }
+  };
+
+  collectFromGroup(source);
+  return urls;
+};
+
 export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
   const [history, setHistory] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -30,25 +78,13 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
       const filesToDelete = [];
 
       oldRows.forEach((row) => {
-        if (row.image_urls && Array.isArray(row.image_urls)) {
-          row.image_urls.forEach((productGroup) => {
-            if (productGroup.images && Array.isArray(productGroup.images)) {
-              productGroup.images.forEach((url) => {
-                try {
-                  const path = new URL(url).pathname.split("/").slice(-2).join("/");
-                  filesToDelete.push(path);
-                } catch {}
-              });
-            } else if (productGroup.urls && Array.isArray(productGroup.urls)) {
-              productGroup.urls.forEach((url) => {
-                try {
-                  const path = new URL(url).pathname.split("/").slice(-2).join("/");
-                  filesToDelete.push(path);
-                } catch {}
-              });
-            }
-          });
-        }
+        const rowImageUrls = collectImageUrls(row.image_urls);
+        rowImageUrls.forEach((url) => {
+          try {
+            const path = new URL(url).pathname.split("/").slice(-2).join("/");
+            filesToDelete.push(path);
+          } catch {}
+        });
       });
 
       if (filesToDelete.length > 0) {
@@ -82,17 +118,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
       productMetadata = {};
     }
 
-    const imageUrls = [];
-
-    if (item.image_urls && Array.isArray(item.image_urls)) {
-      item.image_urls.forEach((productGroup) => {
-        if (productGroup.images && Array.isArray(productGroup.images)) {
-          imageUrls.push(...productGroup.images);
-        } else if (productGroup.urls && Array.isArray(productGroup.urls)) {
-          imageUrls.push(...productGroup.urls);
-        }
-      });
-    }
+    const imageUrls = collectImageUrls(item.image_urls);
 
     let productName = "Untitled Collection";
     if (settings.productName) {

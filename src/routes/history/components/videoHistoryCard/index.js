@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import styles from "../../history.module.scss";
 import { getStatusBadgeClass, getStatusIcon } from "@/utils/statusUtils";
 import CalendarIcon from "@/icons/calendarIcon";
@@ -91,9 +92,10 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
 
   const getThumbnail = () => {
     if (item.generated_images && item.generated_images.length > 0) {
-      return item.generated_images[0];
+      const thumbnail = item.generated_images[0];
+      return typeof thumbnail === "string" ? thumbnail.trim() : "";
     }
-    return item?.settings?.image_link;
+    return typeof item?.settings?.image_link === "string" ? item.settings.image_link.trim() : "";
   };
 
   const thumbnailUrl = getThumbnail();
@@ -102,6 +104,10 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
   const dateFormatted = new Date(item.created_at).toLocaleString();
 
   const videoUrl = item?.video_url;
+
+  useEffect(() => {
+    setImgLoaded(false);
+  }, [thumbnailUrl]);
 
   return (
     <div className={styles.detailsBox} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
@@ -121,11 +127,17 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
           {!imgLoaded && thumbnailUrl && <div className={styles.imgSkeleton} />}
           {thumbnailUrl ? (
             <>
-              <img
+              <Image
                 src={thumbnailUrl}
                 alt={productName}
+                fill
+                sizes="166px"
                 onLoad={() => setImgLoaded(true)}
-                style={{ display: imgLoaded ? "block" : "none", opacity: 0.8 }}
+                style={{
+                  objectFit: "cover",
+                  opacity: imgLoaded ? 0.8 : 0,
+                  transition: "opacity 0.2s ease-in-out",
+                }}
               />
               <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
                 <PlayIcon />
