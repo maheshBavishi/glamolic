@@ -679,517 +679,527 @@ export default function WomenCollection() {
               <p>Upload your product images and customize the generation settings to create professional, on model photoshoots.</p>
             </div>
           </div>
+          <div className={styles.grid}>
+            <div className={styles.items}>
+              <div className={styles.leftBox}>
+                <div className={styles.boxtitle}>
+                  <h2>
+                    Generation Settings
+                  </h2>
+                </div>
+                <div className={styles.lightbox}>
+                  <div className={styles.singleGrid}>
+                    <Input
+                      label="Product Name"
+                      placeholder="Summer floral dress"
+                      value={settings.productName || ""}
+                      onChange={(event) => updateSettings({ productName: event.target.value })}
+                    />
+                    <Dropdown
+                      label="Resolution"
+                      instanceId="resolution"
+                      options={resolutionOptions}
+                      value={resolutionOptions.find((option) => option.value === settings.resolution) || null}
+                      onChange={(option) => updateSettings({ resolution: option?.value || "2k" })}
+                      placeholder="Select resolution"
+                    />
+                    <Dropdown
+                      label="Image size"
+                      instanceId="image-size"
+                      options={settings.imageOrientation === "landscape" ? landscapeImageSizeOptions : portraitImageSizeOptions}
+                      value={
+                        (settings.imageOrientation === "landscape" ? landscapeImageSizeOptions : portraitImageSizeOptions).find(
+                          (option) => option.value === settings.imageSize,
+                        ) || null
+                      }
+                      onChange={(option) => updateSettings({ imageSize: option?.value || "12x18" })}
+                      placeholder="Select image size"
+                    />
 
-          <div className={styles.settingBox}>
-            <div className={styles.title}>
-              <h3>Generation Settings</h3>
-            </div>
-
-            <div className={styles.informationBox}>
-              <Input
-                label="Product Name"
-                placeholder="Summer floral dress"
-                value={settings.productName || ""}
-                onChange={(event) => updateSettings({ productName: event.target.value })}
-              />
-
-              <div className={styles.twoCol}>
-                <Dropdown
-                  label="Resolution"
-                  instanceId="resolution"
-                  options={resolutionOptions}
-                  value={resolutionOptions.find((option) => option.value === settings.resolution) || null}
-                  onChange={(option) => updateSettings({ resolution: option?.value || "2k" })}
-                  placeholder="Select resolution"
-                />
-
-                <Dropdown
-                  label="Orientation"
-                  instanceId="orientation"
-                  options={imageOrientationOptions}
-                  value={imageOrientationOptions.find((option) => option.value === settings.imageOrientation) || null}
-                  onChange={(option) => {
-                    const orientation = option?.value || "portrait";
-                    const defaultSize = orientation === "portrait" ? "12x18" : "18x12";
-                    updateSettings({ imageOrientation: orientation, imageSize: defaultSize });
-                  }}
-                  placeholder="Select orientation"
-                />
-
-                <Dropdown
-                  label="Image size"
-                  instanceId="image-size"
-                  options={settings.imageOrientation === "landscape" ? landscapeImageSizeOptions : portraitImageSizeOptions}
-                  value={
-                    (settings.imageOrientation === "landscape" ? landscapeImageSizeOptions : portraitImageSizeOptions).find(
-                      (option) => option.value === settings.imageSize,
-                    ) || null
-                  }
-                  onChange={(option) => updateSettings({ imageSize: option?.value || "12x18" })}
-                  placeholder="Select image size"
-                />
-
-                <Dropdown
-                  label="Background Type"
-                  instanceId="background-type"
-                  options={backgroundTypeOptions}
-                  value={backgroundTypeOptions.find((option) => option.value === settings.backgroundType) || null}
-                  onChange={(option) => updateSettings({ backgroundType: option?.value || "studio" })}
-                  placeholder="Select background type"
-                />
-
-                {!settings.isEcommerce ? (
-                  <Dropdown
-                    label="Images/Product"
-                    instanceId="images-per-product"
-                    options={imagesPerProductOptions}
-                    value={imagesPerProductOptions.find((option) => option.value === settings.imagesPerProduct) || null}
-                    onChange={(option) => {
-                      const selectedCount = Number(option?.value) || 1;
-                      updateSettings({ imagesPerProduct: selectedCount });
-                    }}
-                    placeholder="Select image count"
-                  />
-                ) : null}
-              </div>
-
-              {settings.isEcommerce ? (
-                <div className={styles.viewSelection}>
-                  <div className={styles.viewSelectionHeader}>
-                    <p>Select views</p>
+                    <Dropdown
+                      label="Background Type"
+                      instanceId="background-type"
+                      options={backgroundTypeOptions}
+                      value={backgroundTypeOptions.find((option) => option.value === settings.backgroundType) || null}
+                      onChange={(option) => updateSettings({ backgroundType: option?.value || "studio" })}
+                      placeholder="Select background type"
+                    />
+                    {!settings.isEcommerce ? (
+                      <Dropdown
+                        label="Images/Product"
+                        instanceId="images-per-product"
+                        options={imagesPerProductOptions}
+                        value={imagesPerProductOptions.find((option) => option.value === settings.imagesPerProduct) || null}
+                        onChange={(option) => {
+                          const selectedCount = Number(option?.value) || 1;
+                          updateSettings({ imagesPerProduct: selectedCount });
+                        }}
+                        placeholder="Select image count"
+                      />
+                    ) : null}
+                    <Dropdown
+                      label="Orientation"
+                      instanceId="orientation"
+                      options={imageOrientationOptions}
+                      value={imageOrientationOptions.find((option) => option.value === settings.imageOrientation) || null}
+                      onChange={(option) => {
+                        const orientation = option?.value || "portrait";
+                        const defaultSize = orientation === "portrait" ? "12x18" : "18x12";
+                        updateSettings({ imageOrientation: orientation, imageSize: defaultSize });
+                      }}
+                      placeholder="Select orientation"
+                    />
                   </div>
+                  <div>
+                    {settings.isEcommerce ? (
+                      <div>
+                        <div className={styles.selectviewContent}>
+                          <label>
+                            Select views
+                          </label>
 
-                  <div className={styles.viewOptions}>
-                    {ecommerceViewOptions.map((viewOption) => {
-                      const isSelected = (settings.ecommerceViewTypes || []).includes(viewOption.value);
-                      return (
-                        <div key={viewOption.value} className={`${styles.viewChip} ${isSelected ? styles.viewChipActive : ""}`}>
-                          <button
-                            type="button"
-                            className={styles.viewChipButton}
-                            onClick={() => {
-                              const current = settings.ecommerceViewTypes || [];
 
-                              if (isSelected) {
-                                updateSettings({ ecommerceViewTypes: current.filter((value) => value !== viewOption.value) });
-                                return;
-                              }
+                          <div className={styles.viewOptions}>
+                            {ecommerceViewOptions.map((viewOption) => {
+                              const isSelected = (settings.ecommerceViewTypes || []).includes(viewOption.value);
+                              return (
+                                <div key={viewOption.value} className={`${styles.viewChip} ${isSelected ? styles.viewChipActive : ""}`}>
+                                  <button
+                                    type="button"
+                                    className={styles.viewChipButton}
+                                    onClick={() => {
+                                      const current = settings.ecommerceViewTypes || [];
 
-                              if (remainingSlots <= 0) {
-                                toast.error("You can select up to 8 total views.");
-                                return;
-                              }
+                                      if (isSelected) {
+                                        updateSettings({ ecommerceViewTypes: current.filter((value) => value !== viewOption.value) });
+                                        return;
+                                      }
 
-                              updateSettings({ ecommerceViewTypes: [...current, viewOption.value] });
-                            }}
-                          >
-                            <span className={`${styles.chipDot} ${isSelected ? styles.chipDotActive : ""}`}>
-                              {isSelected ? String.fromCharCode(10003) : ""}
-                            </span>
-                            {viewOption.label}
-                          </button>
+                                      if (remainingSlots <= 0) {
+                                        toast.error("You can select up to 8 total views.");
+                                        return;
+                                      }
+
+                                      updateSettings({ ecommerceViewTypes: [...current, viewOption.value] });
+                                    }}
+                                  >
+                                    <span className={`${styles.chipDot} ${isSelected ? styles.chipDotActive : ""}`}>
+                                      {isSelected ? String.fromCharCode(10003) : ""}
+                                    </span>
+                                    {viewOption.label}
+                                  </button>
+                                </div>
+                              );
+                            })}
+
+                            <div
+                              className={`${styles.viewChip} ${styles.additionalChip} ${(settings.ecommerceViewTypes || []).includes("additional") ? styles.viewChipActive : ""}`}
+                            >
+                              <button
+                                type="button"
+                                className={styles.additionalToggle}
+                                onClick={() => {
+                                  const current = settings.ecommerceViewTypes || [];
+                                  const isSelected = current.includes("additional");
+
+                                  if (isSelected) {
+                                    updateSettings({
+                                      ecommerceViewTypes: current.filter((value) => value !== "additional"),
+                                      additionalImagesCount: 0,
+                                    });
+                                    return;
+                                  }
+
+                                  if (remainingSlots <= 0) {
+                                    toast.error("You can select up to 8 total views.");
+                                    return;
+                                  }
+
+                                  updateSettings({
+                                    ecommerceViewTypes: [...current, "additional"],
+                                    additionalImagesCount: 1,
+                                  });
+                                }}
+                              >
+                                <span
+                                  className={`${styles.chipDot} ${(settings.ecommerceViewTypes || []).includes("additional") ? styles.chipDotActive : ""}`}
+                                >
+                                  {(settings.ecommerceViewTypes || []).includes("additional") ? String.fromCharCode(10003) : ""}
+                                </span>
+                                Additional setting
+                              </button>
+
+                              {(settings.ecommerceViewTypes || []).includes("additional") ? <div className={styles.additionalSeparator} /> : null}
+
+                              {(settings.ecommerceViewTypes || []).includes("additional") ? (
+                                <div className={styles.additionalCounter}>
+                                  <button
+                                    type="button"
+                                    className={styles.counterButton}
+                                    onClick={() => {
+                                      if (additionalImagesCount > 1) {
+                                        updateSettings({ additionalImagesCount: additionalImagesCount - 1 });
+                                      }
+                                    }}
+                                  >
+                                    -
+                                  </button>
+                                  <span className={styles.counterValue}>{additionalImagesCount}</span>
+                                  <button
+                                    type="button"
+                                    className={styles.counterButton}
+                                    onClick={() => {
+                                      const maxAdditional = Math.max(0, 8 - selectedStandardCount);
+                                      if (additionalImagesCount < maxAdditional) {
+                                        updateSettings({ additionalImagesCount: additionalImagesCount + 1 });
+                                      }
+                                    }}
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              ) : null}
+                            </div>
+                          </div>
                         </div>
-                      );
-                    })}
-
-                    <div
-                      className={`${styles.viewChip} ${styles.additionalChip} ${(settings.ecommerceViewTypes || []).includes("additional") ? styles.viewChipActive : ""}`}
-                    >
-                      <button
-                        type="button"
-                        className={styles.additionalToggle}
-                        onClick={() => {
-                          const current = settings.ecommerceViewTypes || [];
-                          const isSelected = current.includes("additional");
-
-                          if (isSelected) {
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className={styles.subbox}>
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div className={styles.icon}>
+                          <ShopIcon />
+                        </div>
+                        <div>
+                          <h5>Ecommerce Image</h5>
+                          <p>Specialized for product listings</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={Boolean(settings.isEcommerce)}
+                        onChange={(checked) => {
+                          if (!checked) {
                             updateSettings({
-                              ecommerceViewTypes: current.filter((value) => value !== "additional"),
+                              isEcommerce: false,
+                              ecommerceViewTypes: [],
                               additionalImagesCount: 0,
+                              imagesPerProduct: 2,
                             });
                             return;
                           }
 
-                          if (remainingSlots <= 0) {
-                            toast.error("You can select up to 8 total views.");
-                            return;
-                          }
-
                           updateSettings({
-                            ecommerceViewTypes: [...current, "additional"],
-                            additionalImagesCount: 1,
+                            isEcommerce: true,
+                            ecommerceViewTypes: settings.ecommerceViewTypes || [],
+                            additionalImagesCount: settings.additionalImagesCount || 0,
                           });
                         }}
-                      >
-                        <span
-                          className={`${styles.chipDot} ${(settings.ecommerceViewTypes || []).includes("additional") ? styles.chipDotActive : ""}`}
-                        >
-                          {(settings.ecommerceViewTypes || []).includes("additional") ? String.fromCharCode(10003) : ""}
-                        </span>
-                        Additional setting
-                      </button>
+                      />
+                    </div>
 
-                      {(settings.ecommerceViewTypes || []).includes("additional") ? <div className={styles.additionalSeparator} /> : null}
-
-                      {(settings.ecommerceViewTypes || []).includes("additional") ? (
-                        <div className={styles.additionalCounter}>
-                          <button
-                            type="button"
-                            className={styles.counterButton}
-                            onClick={() => {
-                              if (additionalImagesCount > 1) {
-                                updateSettings({ additionalImagesCount: additionalImagesCount - 1 });
-                              }
-                            }}
-                          >
-                            -
-                          </button>
-                          <span className={styles.counterValue}>{additionalImagesCount}</span>
-                          <button
-                            type="button"
-                            className={styles.counterButton}
-                            onClick={() => {
-                              const maxAdditional = Math.max(0, 8 - selectedStandardCount);
-                              if (additionalImagesCount < maxAdditional) {
-                                updateSettings({ additionalImagesCount: additionalImagesCount + 1 });
-                              }
-                            }}
-                          >
-                            +
-                          </button>
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div className={styles.icon}>
+                          <ModelIcon />
                         </div>
-                      ) : null}
+                        <div>
+                          <h5>Model Consistency</h5>
+                          <p>Keep same model across images</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={Boolean(settings.modelConsistency)}
+                        disabled={settings.resolution === "1k"}
+                        onChange={(checked) => updateSettings({ modelConsistency: checked })}
+                      />
+                    </div>
+
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div className={styles.icon}>
+                          <SettingIcon />
+                        </div>
+                        <div>
+                          <h5>Unified Background</h5>
+                          <p>Same setting for all products</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={Boolean(settings.sameBackground)}
+                        disabled={settings.resolution === "1k"}
+                        onChange={(checked) => updateSettings({ sameBackground: checked })}
+                      />
                     </div>
                   </div>
-                </div>
-              ) : null}
 
-              <div className={styles.subbox}>
-                <div className={styles.items}>
-                  <div className={styles.icontext}>
-                    <div className={styles.icon}>
-                      <ShopIcon />
-                    </div>
-                    <div>
-                      <h5>Ecommerce Image</h5>
-                      <p>Specialized for product listings</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={Boolean(settings.isEcommerce)}
-                    onChange={(checked) => {
-                      if (!checked) {
-                        updateSettings({
-                          isEcommerce: false,
-                          ecommerceViewTypes: [],
-                          additionalImagesCount: 0,
-                          imagesPerProduct: 2,
-                        });
-                        return;
-                      }
-
-                      updateSettings({
-                        isEcommerce: true,
-                        ecommerceViewTypes: settings.ecommerceViewTypes || [],
-                        additionalImagesCount: settings.additionalImagesCount || 0,
-                      });
-                    }}
-                  />
-                </div>
-
-                <div className={styles.items}>
-                  <div className={styles.icontext}>
-                    <div className={styles.icon}>
-                      <ModelIcon />
-                    </div>
-                    <div>
-                      <h5>Model Consistency</h5>
-                      <p>Keep same model across images</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={Boolean(settings.modelConsistency)}
-                    disabled={settings.resolution === "1k"}
-                    onChange={(checked) => updateSettings({ modelConsistency: checked })}
-                  />
-                </div>
-
-                <div className={styles.items}>
-                  <div className={styles.icontext}>
-                    <div className={styles.icon}>
-                      <SettingIcon />
-                    </div>
-                    <div>
-                      <h5>Unified Background</h5>
-                      <p>Same setting for all products</p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={Boolean(settings.sameBackground)}
-                    disabled={settings.resolution === "1k"}
-                    onChange={(checked) => updateSettings({ sameBackground: checked })}
-                  />
                 </div>
               </div>
             </div>
+            <div className={styles.items}>
+              <div className={styles.productDetails}>
+                <div className={styles.boxtitle}>
+                  <h2>
+                    Product Details
+                  </h2>
+                </div>
+                <div className={styles.lightbox}>
+                  <div ref={productsSectionRef}>
+                    {products.map((product, index) => {
+                      const productErrors = formErrors.products?.[index] || {};
+                      const categoryName = normalizeCategoryName(getCategoryNameById(product.clothingType));
+                      const uploadFields = getUploadFields(categoryName);
+                      const hasSubCategoryOptions = (subCategories[Number(product.clothingType)] || []).length > 0;
+                      const showSubCategoryField = !shouldDisableSubCategory(categoryName) && (product.clothingType === "other" || hasSubCategoryOptions);
+                      const isCategoryLocked = index > 0 && Boolean(products[0]?.clothingType);
+                      const isLastProduct = index === products.length - 1;
+                      const clothingTypeOptions = [
+                        ...(categories || []).map((category) => ({ value: String(category.id), label: category.category_name })),
+                        { value: "other", label: "Other" },
+                      ];
+                      const selectedSubOptions = (subCategories[Number(product.clothingType)] || []).map((subCategory) => ({
+                        value: String(subCategory.id),
+                        label: subCategory.subcategory_name,
+                      }));
+                      const subCategoryOptions = [...selectedSubOptions, { value: "none", label: "None" }, { value: "other", label: "Other" }];
 
-            <div className={styles.title}>
-              <h3>Product Details</h3>
-            </div>
+                      return (
+                        <div key={product.id} className={styles.productInformation} style={index > 0 ? { marginTop: "16px" } : undefined}>
+                          {products.length > 1 ? (
+                            <div className={styles.productHeader}>
+                              <p>Product {index + 1}</p>
+                              {index > 0 ? (
+                                <button type="button" onClick={() => removeProduct(product.id)} className={styles.removeProductBtn}>
+                                  Remove
+                                </button>
+                              ) : null}
+                            </div>
+                          ) : null}
 
-            <div ref={productsSectionRef}>
-              {products.map((product, index) => {
-                const productErrors = formErrors.products?.[index] || {};
-                const categoryName = normalizeCategoryName(getCategoryNameById(product.clothingType));
-                const uploadFields = getUploadFields(categoryName);
-                const hasSubCategoryOptions = (subCategories[Number(product.clothingType)] || []).length > 0;
-                const showSubCategoryField = !shouldDisableSubCategory(categoryName) && (product.clothingType === "other" || hasSubCategoryOptions);
-                const isCategoryLocked = index > 0 && Boolean(products[0]?.clothingType);
-                const isLastProduct = index === products.length - 1;
-                const clothingTypeOptions = [
-                  ...(categories || []).map((category) => ({ value: String(category.id), label: category.category_name })),
-                  { value: "other", label: "Other" },
-                ];
-                const selectedSubOptions = (subCategories[Number(product.clothingType)] || []).map((subCategory) => ({
-                  value: String(subCategory.id),
-                  label: subCategory.subcategory_name,
-                }));
-                const subCategoryOptions = [...selectedSubOptions, { value: "none", label: "None" }, { value: "other", label: "Other" }];
-
-                return (
-                  <div key={product.id} className={styles.productInformation} style={index > 0 ? { marginTop: "16px" } : undefined}>
-                    {products.length > 1 ? (
-                      <div className={styles.productHeader}>
-                        <p>Product {index + 1}</p>
-                        {index > 0 ? (
-                          <button type="button" onClick={() => removeProduct(product.id)} className={styles.removeProductBtn}>
-                            Remove
-                          </button>
-                        ) : null}
-                      </div>
-                    ) : null}
-
-                    <div className={styles.twoCol}>
-                      <Dropdown
-                        label="Clothing Type *"
-                        instanceId={`clothing-type-${product.id}-${index}`}
-                        options={clothingTypeOptions}
-                        value={clothingTypeOptions.find((option) => option.value === product.clothingType) || null}
-                        onChange={(option) => handleClothingTypeChange(product, option)}
-                        isDisabled={isCategoryLocked}
-                        error={productErrors.clothingType}
-                        placeholder="Select type"
-                      />
-
-                      {showSubCategoryField ? (
-                        product.clothingType === "other" ? (
-                          <Input
-                            label="Specify Category"
-                            placeholder="Enter category"
-                            value={product.otherCategory || ""}
-                            onChange={(event) => {
-                              updateProduct(product.id, "otherCategory", event.target.value);
-                              setProductError(index, "subCategory", undefined);
-                              setProductError(index, "otherCategory", undefined);
-                            }}
-                            error={productErrors.subCategory}
-                            disabled={index > 0 && !products[0]?.subCategory}
-                          />
-                        ) : (
-                          <Dropdown
-                            label="Sub-Category *"
-                            instanceId={`sub-category-${product.id}-${index}`}
-                            options={subCategoryOptions}
-                            value={subCategoryOptions.find((option) => option.value === product.subCategory) || null}
-                            onChange={(option) => handleSubCategoryChange(product, option)}
-                            isDisabled={isCategoryLocked}
-                            error={productErrors.subCategory}
-                            placeholder="Select sub-category"
-                          />
-                        )
-                      ) : null}
-                    </div>
-
-                    {product.subCategory === "other" ? (
-                      <div style={{ paddingBottom: "8px" }}>
-                        <Input
-                          label="Specify Sub-Category *"
-                          placeholder="Specify sub-category"
-                          value={product.otherCategory || ""}
-                          onChange={(event) => {
-                            updateProduct(product.id, "otherCategory", event.target.value);
-                            setProductError(index, "otherCategory", undefined);
-                          }}
-                          error={productErrors.otherCategory}
-                          disabled={index > 0 && !products[0]?.subCategory}
-                        />
-                      </div>
-                    ) : null}
-
-                    <div className={styles.uploadGrid}>
-                      {uploadFields.map((field) => {
-                        const fieldError = productErrors[field.key];
-                        return (
-                          <div key={field.key}>
-                            <label>{field.label}</label>
-                            <UploadPhoto
-                              file={product[field.key]}
-                              hasError={Boolean(fieldError)}
-                              error={fieldError && fieldError !== "border_only" ? fieldError : ""}
-                              onFileChange={(selectedFile) => handleImageChange(product, index, field.key, selectedFile)}
-                              onRemove={() => updateProduct(product.id, field.key, null)}
+                          <div >
+                            <Dropdown
+                              label="Clothing Type *"
+                              instanceId={`clothing-type-${product.id}-${index}`}
+                              options={clothingTypeOptions}
+                              value={clothingTypeOptions.find((option) => option.value === product.clothingType) || null}
+                              onChange={(option) => handleClothingTypeChange(product, option)}
+                              isDisabled={isCategoryLocked}
+                              error={productErrors.clothingType}
+                              placeholder="Select type"
                             />
-                          </div>
-                        );
-                      })}
-                    </div>
 
-                    {productErrors.imageError ? <p className={styles.inlineError}>{productErrors.imageError}</p> : null}
-
-                    <div className={styles.title}>
-                      <h3>Additional Instructions</h3>
-                    </div>
-
-                    <div className={styles.textareaGrid}>
-                      {settings.isEcommerce
-                        ? (() => {
-                          const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
-                          const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
-                          const standardCount = standardViews.length;
-                          const totalImages = settings.imagesPerProduct || 1;
-
-                          if (totalImages <= 0) {
-                            return (
-                              <div>
-                                <label>Instructions</label>
-                                <textarea
-                                  placeholder="Instructions..."
-                                  value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                            {showSubCategoryField ? (
+                              product.clothingType === "other" ? (
+                                <Input
+                                  label="Specify Category"
+                                  placeholder="Enter category"
+                                  value={product.otherCategory || ""}
                                   onChange={(event) => {
-                                    updateProduct(product.id, "additionalInstructions", [event.target.value]);
+                                    updateProduct(product.id, "otherCategory", event.target.value);
+                                    setProductError(index, "subCategory", undefined);
+                                    setProductError(index, "otherCategory", undefined);
                                   }}
+                                  error={productErrors.subCategory}
+                                  disabled={index > 0 && !products[0]?.subCategory}
                                 />
-                              </div>
-                            );
-                          }
+                              ) : (
+                                <Dropdown
+                                  label="Sub-Category *"
+                                  instanceId={`sub-category-${product.id}-${index}`}
+                                  options={subCategoryOptions}
+                                  value={subCategoryOptions.find((option) => option.value === product.subCategory) || null}
+                                  onChange={(option) => handleSubCategoryChange(product, option)}
+                                  isDisabled={isCategoryLocked}
+                                  error={productErrors.subCategory}
+                                  placeholder="Select sub-category"
+                                />
+                              )
+                            ) : null}
+                          </div>
 
-                          return (
-                            <>
-                              {standardCount > 0 ? (
-                                <div>
-                                  <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
+                          {product.subCategory === "other" ? (
+                            <div style={{ paddingBottom: "8px" }}>
+                              <Input
+                                label="Specify Sub-Category *"
+                                placeholder="Specify sub-category"
+                                value={product.otherCategory || ""}
+                                onChange={(event) => {
+                                  updateProduct(product.id, "otherCategory", event.target.value);
+                                  setProductError(index, "otherCategory", undefined);
+                                }}
+                                error={productErrors.otherCategory}
+                                disabled={index > 0 && !products[0]?.subCategory}
+                              />
+                            </div>
+                          ) : null}
+
+                          <div className={styles.uploadGrid}>
+                            {uploadFields.map((field) => {
+                              const fieldError = productErrors[field.key];
+                              return (
+                                <div key={field.key}>
+                                  <label>{field.label}</label>
+                                  <UploadPhoto
+                                    file={product[field.key]}
+                                    hasError={Boolean(fieldError)}
+                                    error={fieldError && fieldError !== "border_only" ? fieldError : ""}
+                                    onFileChange={(selectedFile) => handleImageChange(product, index, field.key, selectedFile)}
+                                    onRemove={() => updateProduct(product.id, field.key, null)}
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          {productErrors.imageError ? <p className={styles.inlineError}>{productErrors.imageError}</p> : null}
+
+                          <div className={styles.boxtitle}>
+                            <h2>Additional Instructions</h2>
+                          </div>
+
+                          <div className={styles.textareaGrid}>
+                            {settings.isEcommerce
+                              ? (() => {
+                                const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
+                                const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
+                                const standardCount = standardViews.length;
+                                const totalImages = settings.imagesPerProduct || 1;
+
+                                if (totalImages <= 0) {
+                                  return (
+                                    <div>
+                                      <label>Instructions</label>
+                                      <textarea
+                                        placeholder="Instructions..."
+                                        value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                        onChange={(event) => {
+                                          updateProduct(product.id, "additionalInstructions", [event.target.value]);
+                                        }}
+                                      />
+                                    </div>
+                                  );
+                                }
+
+                                return (
+                                  <>
+                                    {standardCount > 0 ? (
+                                      <div>
+                                        <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
+                                        <textarea
+                                          placeholder="Instructions for selected views..."
+                                          value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                          onChange={(event) => {
+                                            const next = resizeInstructions(product.additionalInstructions, totalImages);
+                                            for (let i = 0; i < standardCount; i += 1) {
+                                              next[i] = event.target.value;
+                                            }
+                                            updateProduct(product.id, "additionalInstructions", next);
+                                          }}
+                                        />
+                                      </div>
+                                    ) : null}
+
+                                    {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
+                                      const realIndex = standardCount + additionalIndex;
+                                      return (
+                                        <div key={`additional-${product.id}-${additionalIndex}`}>
+                                          <label>Additional Image {additionalIndex + 1}</label>
+                                          <textarea
+                                            placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
+                                            value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""}
+                                            onChange={(event) => {
+                                              const next = resizeInstructions(product.additionalInstructions, totalImages);
+                                              next[realIndex] = event.target.value;
+                                              updateProduct(product.id, "additionalInstructions", next);
+                                            }}
+                                          />
+                                        </div>
+                                      );
+                                    })}
+                                  </>
+                                );
+                              })()
+                              : Array.from({ length: settings.imagesPerProduct || 1 }).map((_, imageIndex) => (
+                                <div key={`${product.id}-${imageIndex}`}>
+                                  <label>Image {imageIndex + 1}</label>
                                   <textarea
-                                    placeholder="Instructions for selected views..."
-                                    value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                    placeholder={`Instruction image ${imageIndex + 1}...`}
+                                    value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
                                     onChange={(event) => {
-                                      const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                      for (let i = 0; i < standardCount; i += 1) {
-                                        next[i] = event.target.value;
-                                      }
+                                      const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
+                                      next[imageIndex] = event.target.value;
                                       updateProduct(product.id, "additionalInstructions", next);
                                     }}
                                   />
                                 </div>
+                              ))}
+                          </div>
+
+                          {isLastProduct ? (
+                            <>
+                              <div
+                                className={styles.addanother}
+                                style={{ cursor: canAddProduct ? "pointer" : "not-allowed", opacity: canAddProduct ? 0.9 : 0.6 }}
+                                onClick={handleAddProduct}
+                              >
+                                <div className={styles.iconcenter}>
+                                  <img src={PlusIcon} alt="PlusIcon" />
+                                </div>
+                                <p>Add another product</p>
+                              </div>
+
+                              {!canAddProduct ? (
+                                <div className={styles.importantMessage}>
+                                  <p>Please complete all required fields (at least one image) in the current product before adding another.</p>
+                                </div>
                               ) : null}
 
-                              {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
-                                const realIndex = standardCount + additionalIndex;
-                                return (
-                                  <div key={`additional-${product.id}-${additionalIndex}`}>
-                                    <label>Additional Image {additionalIndex + 1}</label>
-                                    <textarea
-                                      placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
-                                      value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""}
-                                      onChange={(event) => {
-                                        const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                        next[realIndex] = event.target.value;
-                                        updateProduct(product.id, "additionalInstructions", next);
-                                      }}
-                                    />
+                              <div className={styles.estimateBox}>
+                                <div className={styles.contentAlignment}>
+                                  <div className={styles.leftAlignment}>
+                                    <p>Estimated Cost</p>
+                                    <button>{estimatedCost} credits</button>
                                   </div>
-                                );
-                              })}
+                                  <div className={styles.line}>
+                                    <img src={LineIcon} alt="LineIcon" />
+                                  </div>
+                                  <div className={styles.leftAlignment}>
+                                    <p>Available Balance</p>
+                                    <button>{creditsLoading ? "..." : `${availableCredits} credits`}</button>
+                                  </div>
+                                </div>
+
+                                <div className={styles.buttonDesign}>
+                                  {(availableCredits || 0) < estimatedCost ? (
+                                    <button type="button" onClick={() => router.push("/profile")}>
+                                      Upgrade to Pro
+                                      <RightWhiteIcon />
+                                    </button>
+                                  ) : (
+                                    <button type="button" onClick={handleGenerate} disabled={isGenerating}>
+                                      {isGenerating ? "Generating..." : "Generate Photoshoot"}
+                                      {!isGenerating ? <RightWhiteIcon /> : null}
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className={styles.noteAlignment}>
+                                <div className={styles.note}>
+                                  <img src={DangerIcon} alt="DangerIcon" />
+                                  <p>
+                                    <span>Note: </span> Generated images will be automatically deleted from history after 3 day.
+                                  </p>
+                                </div>
+                              </div>
                             </>
-                          );
-                        })()
-                        : Array.from({ length: settings.imagesPerProduct || 1 }).map((_, imageIndex) => (
-                          <div key={`${product.id}-${imageIndex}`}>
-                            <label>Image {imageIndex + 1}</label>
-                            <textarea
-                              placeholder={`Instruction image ${imageIndex + 1}...`}
-                              value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
-                              onChange={(event) => {
-                                const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
-                                next[imageIndex] = event.target.value;
-                                updateProduct(product.id, "additionalInstructions", next);
-                              }}
-                            />
-                          </div>
-                        ))}
-                    </div>
-
-                    {isLastProduct ? (
-                      <>
-                        <div
-                          className={styles.addanother}
-                          style={{ cursor: canAddProduct ? "pointer" : "not-allowed", opacity: canAddProduct ? 0.9 : 0.6 }}
-                          onClick={handleAddProduct}
-                        >
-                          <div className={styles.iconcenter}>
-                            <img src={PlusIcon} alt="PlusIcon" />
-                          </div>
-                          <p>Add another product</p>
+                          ) : null}
                         </div>
-
-                        {!canAddProduct ? (
-                          <div className={styles.importantMessage}>
-                            <p>Please complete all required fields (at least one image) in the current product before adding another.</p>
-                          </div>
-                        ) : null}
-
-                        <div className={styles.estimateBox}>
-                          <div className={styles.contentAlignment}>
-                            <div className={styles.leftAlignment}>
-                              <p>Estimated Cost</p>
-                              <button>{estimatedCost} credits</button>
-                            </div>
-                            <div className={styles.line}>
-                              <img src={LineIcon} alt="LineIcon" />
-                            </div>
-                            <div className={styles.leftAlignment}>
-                              <p>Available Balance</p>
-                              <button>{creditsLoading ? "..." : `${availableCredits} credits`}</button>
-                            </div>
-                          </div>
-
-                          <div className={styles.buttonDesign}>
-                            {(availableCredits || 0) < estimatedCost ? (
-                              <button type="button" onClick={() => router.push("/profile")}>
-                                Upgrade to Pro
-                                <RightWhiteIcon />
-                              </button>
-                            ) : (
-                              <button type="button" onClick={handleGenerate} disabled={isGenerating}>
-                                {isGenerating ? "Generating..." : "Generate Photoshoot"}
-                                {!isGenerating ? <RightWhiteIcon /> : null}
-                              </button>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className={styles.noteAlignment}>
-                          <div className={styles.note}>
-                            <img src={DangerIcon} alt="DangerIcon" />
-                            <p>
-                              <span>Note: </span> Generated images will be automatically deleted from history after 3 day.
-                            </p>
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
+                      );
+                    })}
                   </div>
-                );
-              })}
+                </div>
+              </div>
             </div>
           </div>
         </div>
