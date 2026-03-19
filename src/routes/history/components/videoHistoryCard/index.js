@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import styles from "../../history.module.scss";
-import { getStatusBadgeClass, getStatusIcon } from "@/utils/statusUtils";
+import { getStatusBadgeClass, getStatusIcon, getStatusLabel, normalizeStatus } from "@/utils/statusUtils";
 import CalendarIcon from "@/icons/calendarIcon";
 import ClockIcon from "@/icons/clockIcon";
 import SizeIcon from "@/icons/sizeIcon";
@@ -99,7 +99,8 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
   };
 
   const thumbnailUrl = getThumbnail();
-  const statusText = item?.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : "Processing";
+  const normalizedStatus = normalizeStatus(item?.status);
+  const statusText = getStatusLabel(item?.status);
   const productName = item?.settings?.product_name || item?.settings?.user_input || "Untitled Video";
   const dateFormatted = new Date(item.created_at).toLocaleString();
 
@@ -267,7 +268,7 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
                 <video src={videoUrl} controls style={{ width: "100%", height: "100%", objectFit: "contain" }} />
               ) : (
                 <div style={{ color: "#fff", textAlign: "center" }}>
-                   {item?.status === "failed" ? (
+                   {normalizedStatus === "failed" ? (
                      <>
                        <div style={{ display: "flex", justifyContent: "center", marginBottom: "8px" }}>
                          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
