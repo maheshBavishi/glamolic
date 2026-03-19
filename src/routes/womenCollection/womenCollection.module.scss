@@ -9,9 +9,6 @@
     padding: 140px 0 100px 0;
 
     .boxCenteralignment {
-        max-width: 1080px;
-        margin: 0 auto;
-
         .boxHeaderAlignment {
             display: flex;
             align-items: flex-start;
@@ -22,8 +19,8 @@
                 border: 1px solid rgba(0, 0, 0, 0.08);
                 background: #FFF;
                 border-radius: 12px;
-                width: 44px;
-                height: 44px;
+                width: 40px;
+                height: 40px;
                 padding: 0;
                 cursor: pointer;
                 display: flex;
@@ -31,6 +28,11 @@
                 justify-content: center;
                 box-shadow: 0 0 23.9px 0 rgba(0, 0, 0, 0.08);
                 flex-shrink: 0;
+
+                svg {
+                    width: 16px;
+                    height: 16px;
+                }
             }
 
             .headerText {
@@ -41,7 +43,7 @@
 
                 h2 {
                     color: #121212;
-                    font-size: 50px;
+                    font-size: 34px;
                     text-align: left;
                     font-style: normal;
                     font-weight: 600;
@@ -53,58 +55,10 @@
                     color: #727272;
                     font-size: 18px;
                     font-style: normal;
-                    font-weight: 600;
+                    font-weight: 500;
                     line-height: 1.35;
                     text-align: left;
                     margin-top: 6px;
-                }
-            }
-        }
-
-        @include respond-to("md") {
-            .boxHeaderAlignment {
-                .headerText {
-                    h2 {
-                        font-size: 40px;
-                    }
-                }
-            }
-        }
-
-        @include respond-to("tab") {
-            .boxHeaderAlignment {
-                align-items: center;
-                gap: 12px;
-
-                .backIcon {
-                    width: 40px;
-                    height: 40px;
-                }
-
-                .headerText {
-                    h2 {
-                        font-size: 34px;
-                    }
-
-                    p {
-                        font-size: 16px;
-                    }
-                }
-            }
-        }
-
-        @include respond-to("sm") {
-            .boxHeaderAlignment {
-                padding: 0 0 20px 0;
-
-                .headerText {
-                    h2 {
-                        font-size: 28px;
-                    }
-
-                    p {
-                        font-size: 14px;
-                    }
                 }
             }
         }
@@ -121,6 +75,7 @@
                 background: #F7F7F7;
                 margin: 0 0 32px 0;
                 padding: 24px;
+
                 .viewSelection {
                     margin: 0 0 16px 0;
 
@@ -150,443 +105,444 @@
                     }
                 }
 
-                    .viewOptions {
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                        flex-wrap: wrap;
-                        border-radius: 10px;
-                        border: 1px solid rgba(18, 18, 18, 0.12);
-                        background: #fff;
-                        padding: 10px 16px;
-                        width: 100%;
-                    }
+                .viewOptions {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                    border-radius: 10px;
+                    border: 1px solid rgba(18, 18, 18, 0.12);
+                    background: #fff;
+                    padding: 10px 16px;
+                    width: 100%;
+                }
 
-                    .viewChip {
-                        border-radius: 8px;
-                        border: 1px solid rgba(18, 18, 18, 0.14);
-                        background: #fff;
-                        padding: 0;
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 6px;
+                .viewChip {
+                    border-radius: 8px;
+                    border: 1px solid rgba(18, 18, 18, 0.14);
+                    background: #fff;
+                    padding: 0;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    color: rgba(18, 18, 18, 0.70);
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    font-family: var(--font-heebo);
+                    cursor: pointer;
+                    padding: 8px 12px;
+
+                    .viewChipButton,
+                    >button {
+                        border: none;
+                        background: transparent;
                         color: rgba(18, 18, 18, 0.70);
-                        font-size: 12px;
+                        cursor: pointer;
+                        font-size: 15px;
                         font-style: normal;
                         font-weight: 500;
                         line-height: normal;
-                        font-family: var(--font-heebo);
-                        cursor: pointer;
-                        padding: 8px 12px;
-                        .viewChipButton,
-                        >button {
-                            border: none;
-                            background: transparent;
-                            color: rgba(18, 18, 18, 0.70);
-                            cursor: pointer;
-                            font-size: 15px;
-                            font-style: normal;
-                            font-weight: 500;
-                            line-height: normal;
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 6px;
-                            font-family: var(--font-heebo);
-                        }
-
-                        .chipDot {
-                            width: 14px;
-                            height: 14px;
-                            border-radius: 999px;
-                            border: 1px solid rgba(18, 18, 18, 0.30);
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 9px;
-                            line-height: 1;
-                            color: #FFF;
-                            flex-shrink: 0;
-                            background: #FFF;
-                        }
-
-                        .chipDotActive {
-                            border-color: #527475;
-                            background: #527475;
-                        }
-                    }
-
-                    .viewChipActive {
-                        border: 1px solid rgba(18, 18, 18, 0.16);
-                        background: #F3F3F3;
-
-                        .viewChipButton,
-                        >button {
-                            color: rgba(18, 18, 18, 0.90);
-                        }
-                    }
-
-                    .additionalChip {
-                        overflow: hidden;
-                        white-space: nowrap;
-                    }
-
-                    .additionalToggle {
-                        white-space: nowrap;
-                    }
-
-                    .additionalSeparator {
-                        width: 1px;
-                        height: 16px;
-                        background: rgba(18, 18, 18, 0.10);
-                    }
-
-                    .additionalCounter {
                         display: inline-flex;
                         align-items: center;
                         gap: 6px;
-                        padding: 0 8px 0 0;
-                        height: 100%;
+                        font-family: var(--font-heebo);
+                    }
 
-                        .counterButton {
-                            width: 18px;
-                            height: 18px;
-                            border-radius: 4px;
-                            border: 1px solid rgba(18, 18, 18, 0.10);
-                            background: #FFF;
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 12px;
-                            line-height: 1;
-                            color: rgba(18, 18, 18, 0.70);
-                            padding: 0;
-                            cursor: pointer;
-                        }
+                    .chipDot {
+                        width: 14px;
+                        height: 14px;
+                        border-radius: 999px;
+                        border: 1px solid rgba(18, 18, 18, 0.30);
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 9px;
+                        line-height: 1;
+                        color: #FFF;
+                        flex-shrink: 0;
+                        background: #FFF;
+                    }
 
-                        .counterValue {
-                            color: #121212;
-                            font-size: 12px;
-                            font-style: normal;
-                            font-weight: 600;
-                            line-height: normal;
-                            min-width: 12px;
-                            text-align: center;
-                        }
+                    .chipDotActive {
+                        border-color: #527475;
+                        background: #527475;
+                    }
+                }
+
+                .viewChipActive {
+                    border: 1px solid rgba(18, 18, 18, 0.16);
+                    background: #F3F3F3;
+
+                    .viewChipButton,
+                    >button {
+                        color: rgba(18, 18, 18, 0.90);
+                    }
+                }
+
+                .additionalChip {
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+
+                .additionalToggle {
+                    white-space: nowrap;
+                }
+
+                .additionalSeparator {
+                    width: 1px;
+                    height: 16px;
+                    background: rgba(18, 18, 18, 0.10);
+                }
+
+                .additionalCounter {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 0 8px 0 0;
+                    height: 100%;
+
+                    .counterButton {
+                        width: 18px;
+                        height: 18px;
+                        border-radius: 4px;
+                        border: 1px solid rgba(18, 18, 18, 0.10);
+                        background: #FFF;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 12px;
+                        line-height: 1;
+                        color: rgba(18, 18, 18, 0.70);
+                        padding: 0;
+                        cursor: pointer;
+                    }
+
+                    .counterValue {
+                        color: #121212;
+                        font-size: 12px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                        min-width: 12px;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+
+        .productInformation {
+            position: relative;
+            border-radius: 24px;
+            background: #F7F7F7;
+            padding: 24px;
+
+            .productHeader {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 0 12px 0;
+
+                p {
+                    color: #3F4153;
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                }
+
+                .removeProductBtn {
+                    border: none;
+                    cursor: pointer;
+                    border-radius: 1000px;
+                    background: rgba(226, 48, 48, 0.10);
+                    color: #E23030;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    padding: 8px 14px;
+                }
+            }
+
+            .inlineError {
+                color: #E23030;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                padding: 0 0 10px 0;
+            }
+
+            .textareaGrid {
+                padding: 0 0 16px 0;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+
+                label {
+                    display: block;
+                    color: #121212;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    padding: 0 0 6px 0;
+                }
+
+                textarea {
+                    padding: 14px 16px;
+                    width: 100%;
+                    color: rgba(18, 18, 18, 0.60);
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    font-family: var(--font-heebo);
+                    height: 134px;
+                    resize: none;
+                    border-radius: 12px;
+                    border: 1px solid rgba(18, 18, 18, 0.10);
+                    background: #FFF;
+                    outline: none;
+                }
+
+                ::placeholder {
+                    color: rgba(18, 18, 18, 0.60);
+                    font-size: 18px;
+                    font-style: normal;
+                    font-family: var(--font-heebo);
+                    font-weight: 500;
+                    line-height: normal;
+                }
+            }
+
+            .addanother {
+                border-radius: 12px;
+                border: 1px solid rgba(18, 18, 18, 0.10);
+                opacity: 0.7;
+                background: #FFF;
+                padding: 24px;
+
+                .iconcenter {
+                    display: flex;
+                    justify-content: center;
+                    padding: 0 0 6px 0;
+
+                    img {
+                        display: block;
+                    }
+                }
+
+                p {
+                    color: rgba(18, 18, 18, 0.60);
+                    font-size: 18px;
+                    font-style: normal;
+                    text-align: center;
+                    font-weight: 500;
+                    line-height: normal;
+                }
+            }
+
+            .estimateBox {
+                border-radius: 12px;
+                background: linear-gradient(90deg, #527475 0.02%, rgba(82, 116, 117, 0.66) 50.85%, rgba(255, 255, 255, 0.00) 99.97%);
+                padding: 14px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .buttonDesign {
+                    button {
+                        border-radius: 1000px;
+                        border: 1px solid rgba(18, 18, 18, 0.10);
+                        background: #527475;
+                        padding: 10px 24px;
+                        color: #FFF;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        line-height: normal;
+                    }
+                }
+
+                .line {
+                    width: 1px;
+                    height: 25px;
+                }
+
+                .contentAlignment {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                }
+
+                .leftAlignment {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+
+                    p {
+                        color: #FFF;
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                    }
+
+                    button {
+                        padding: 2px 12px;
+                        border-radius: 1000px;
+                        border-radius: 1000px;
+                        border: 1px solid #FFF;
+                        background: rgba(255, 255, 255, 0.10);
+                        border: 1px solid #FFF;
+                        color: #FFF;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                        background: rgba(255, 255, 255, 0.10);
                     }
                 }
             }
 
-            .productInformation {
-                position: relative;
-                border-radius: 24px;
-                background: #F7F7F7;
-                padding: 24px;
+            .noteAlignment {
+                padding: 16px 0 0 0;
 
-                .productHeader {
+                .note {
+                    padding: 6px 13px;
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
-                    padding: 0 0 12px 0;
+                    width: fit-content;
+                    border-radius: 1000px;
+                    border: 1px solid #FF4747;
+                    background: rgba(255, 71, 71, 0.05);
+                    gap: 6px;
 
                     p {
                         color: #3F4153;
+                        font-size: 18px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+
+                        span {
+                            color: #FF4747;
+                        }
+
+                    }
+                }
+            }
+
+            .importantMessage {
+                padding: 8px 0 32px 0;
+
+                p {
+                    color: #E23030;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                }
+            }
+
+            .uploadGrid {
+                padding: 16px 0;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+
+                label {
+                    padding: 0 0 6px 0;
+                    display: block;
+                    color: #121212;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                }
+            }
+        }
+
+        .title {
+            padding: 0 0 12px 0;
+
+            h3 {
+                color: #3F4153;
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+            }
+        }
+
+        .twoCol {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 16px 0;
+        }
+
+        .subbox {
+            border-radius: 20px;
+            border: 1px solid rgba(18, 18, 18, 0.10);
+            background: #FFF;
+            padding: 24px;
+
+            .items {
+                padding: 24px 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+
+                .icontext {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+
+                    h5 {
+                        color: #121212;
                         font-size: 20px;
                         font-style: normal;
                         font-weight: 600;
                         line-height: normal;
                     }
 
-                    .removeProductBtn {
-                        border: none;
-                        cursor: pointer;
-                        border-radius: 1000px;
-                        background: rgba(226, 48, 48, 0.10);
-                        color: #E23030;
-                        font-size: 14px;
-                        font-style: normal;
-                        font-weight: 600;
-                        line-height: normal;
-                        padding: 8px 14px;
-                    }
-                }
-
-                .inlineError {
-                    color: #E23030;
-                    font-size: 14px;
-                    font-style: normal;
-                    font-weight: 500;
-                    line-height: normal;
-                    padding: 0 0 10px 0;
-                }
-
-                .textareaGrid {
-                    padding: 0 0 16px 0;
-                    display: grid;
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 16px;
-
-                    label {
-                        display: block;
-                        color: #121212;
-                        font-size: 18px;
+                    p {
+                        color: rgba(18, 18, 18, 0.50);
+                        font-size: 16px;
                         font-style: normal;
                         font-weight: 500;
                         line-height: normal;
-                        padding: 0 0 6px 0;
                     }
 
-                    textarea {
-                        padding: 14px 16px;
-                        width: 100%;
-                        color: rgba(18, 18, 18, 0.60);
-                        font-size: 18px;
-                        font-style: normal;
-                        font-weight: 500;
-                        line-height: normal;
-                        font-family: var(--font-heebo);
-                        height: 134px;
-                        resize: none;
+                    .icon {
                         border-radius: 12px;
-                        border: 1px solid rgba(18, 18, 18, 0.10);
-                        background: #FFF;
-                        outline: none;
-                    }
-
-                    ::placeholder {
-                        color: rgba(18, 18, 18, 0.60);
-                        font-size: 18px;
-                        font-style: normal;
-                        font-family: var(--font-heebo);
-                        font-weight: 500;
-                        line-height: normal;
-                    }
-                }
-
-                .addanother {
-                    border-radius: 12px;
-                    border: 1px solid rgba(18, 18, 18, 0.10);
-                    opacity: 0.7;
-                    background: #FFF;
-                    padding: 24px;
-
-                    .iconcenter {
+                        border: 1px solid #E5E5E5;
+                        background: #EDEDED;
+                        width: 48px;
+                        height: 48px;
                         display: flex;
+                        align-items: center;
                         justify-content: center;
-                        padding: 0 0 6px 0;
-
-                        img {
-                            display: block;
-                        }
-                    }
-
-                    p {
-                        color: rgba(18, 18, 18, 0.60);
-                        font-size: 18px;
-                        font-style: normal;
-                        text-align: center;
-                        font-weight: 500;
-                        line-height: normal;
                     }
                 }
 
-                .estimateBox {
-                    border-radius: 12px;
-                    background: linear-gradient(90deg, #527475 0.02%, rgba(82, 116, 117, 0.66) 50.85%, rgba(255, 255, 255, 0.00) 99.97%);
-                    padding: 14px 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-
-                    .buttonDesign {
-                        button {
-                            border-radius: 1000px;
-                            border: 1px solid rgba(18, 18, 18, 0.10);
-                            background: #527475;
-                            padding: 10px 24px;
-                            color: #FFF;
-                            font-size: 14px;
-                            font-style: normal;
-                            font-weight: 500;
-                            display: flex;
-                            align-items: center;
-                            gap: 4px;
-                            line-height: normal;
-                        }
-                    }
-
-                    .line {
-                        width: 1px;
-                        height: 25px;
-                    }
-
-                    .contentAlignment {
-                        display: flex;
-                        align-items: center;
-                        gap: 20px;
-                    }
-
-                    .leftAlignment {
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-
-                        p {
-                            color: #FFF;
-                            font-size: 16px;
-                            font-style: normal;
-                            font-weight: 500;
-                            line-height: normal;
-                        }
-
-                        button {
-                            padding: 2px 12px;
-                            border-radius: 1000px;
-                            border-radius: 1000px;
-                            border: 1px solid #FFF;
-                            background: rgba(255, 255, 255, 0.10);
-                            border: 1px solid #FFF;
-                            color: #FFF;
-                            font-size: 14px;
-                            font-style: normal;
-                            font-weight: 500;
-                            line-height: normal;
-                            background: rgba(255, 255, 255, 0.10);
-                        }
-                    }
+                &:first-child {
+                    padding-top: 0;
                 }
 
-                .noteAlignment {
-                    padding: 16px 0 0 0;
-
-                    .note {
-                        padding: 6px 13px;
-                        display: flex;
-                        align-items: center;
-                        width: fit-content;
-                        border-radius: 1000px;
-                        border: 1px solid #FF4747;
-                        background: rgba(255, 71, 71, 0.05);
-                        gap: 6px;
-
-                        p {
-                            color: #3F4153;
-                            font-size: 18px;
-                            font-style: normal;
-                            font-weight: 500;
-                            line-height: normal;
-
-                            span {
-                                color: #FF4747;
-                            }
-
-                        }
-                    }
-                }
-
-                .importantMessage {
-                    padding: 8px 0 32px 0;
-
-                    p {
-                        color: #E23030;
-                        font-size: 18px;
-                        font-style: normal;
-                        font-weight: 500;
-                        line-height: normal;
-                    }
-                }
-
-                .uploadGrid {
-                    padding: 16px 0;
-                    display: grid;
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 16px;
-
-                    label {
-                        padding: 0 0 6px 0;
-                        display: block;
-                        color: #121212;
-                        font-size: 18px;
-                        font-style: normal;
-                        font-weight: 500;
-                        line-height: normal;
-                    }
-                }
-            }
-
-            .title {
-                padding: 0 0 12px 0;
-
-                h3 {
-                    color: #3F4153;
-                    font-size: 24px;
-                    font-style: normal;
-                    font-weight: 600;
-                    line-height: normal;
-                }
-            }
-
-            .twoCol {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
-                padding: 16px 0;
-            }
-
-            .subbox {
-                border-radius: 20px;
-                border: 1px solid rgba(18, 18, 18, 0.10);
-                background: #FFF;
-                padding: 24px;
-
-                .items {
-                    padding: 24px 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.10);
-
-                    .icontext {
-                        display: flex;
-                        align-items: center;
-                        gap: 14px;
-
-                        h5 {
-                            color: #121212;
-                            font-size: 20px;
-                            font-style: normal;
-                            font-weight: 600;
-                            line-height: normal;
-                        }
-
-                        p {
-                            color: rgba(18, 18, 18, 0.50);
-                            font-size: 16px;
-                            font-style: normal;
-                            font-weight: 500;
-                            line-height: normal;
-                        }
-
-                        .icon {
-                            border-radius: 12px;
-                            border: 1px solid #E5E5E5;
-                            background: #EDEDED;
-                            width: 48px;
-                            height: 48px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                        }
-                    }
-
-                    &:first-child {
-                        padding-top: 0;
-                    }
-
-                    &:last-child {
-                        padding-bottom: 0;
-                        border: none;
-                    }
+                &:last-child {
+                    padding-bottom: 0;
+                    border: none;
                 }
             }
         }
     }
+}

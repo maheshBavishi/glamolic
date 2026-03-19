@@ -606,8 +606,8 @@ export default function WomenCollection() {
             additionalInstructions: Array.isArray(product.additionalInstructions) ? product.additionalInstructions : [],
             poses: settings.isEcommerce
               ? getSortedViews(settings.ecommerceViewTypes || [])
-                  .filter((viewType) => VIEW_ORDER.includes(viewType))
-                  .map(formatViewLabel)
+                .filter((viewType) => VIEW_ORDER.includes(viewType))
+                .map(formatViewLabel)
               : [],
           };
 
@@ -706,7 +706,7 @@ export default function WomenCollection() {
   return (
     <div className={styles.womenCollection}>
       <div className="container-md">
-          <div className={styles.boxCenteralignment}>
+        <div className={styles.boxCenteralignment}>
           <div className={styles.boxHeaderAlignment}>
             <button
               type="button"
@@ -1095,79 +1095,79 @@ export default function WomenCollection() {
                     <div className={styles.textareaGrid}>
                       {settings.isEcommerce
                         ? (() => {
-                            const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
-                            const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
-                            const standardCount = standardViews.length;
-                            const totalImages = settings.imagesPerProduct || 1;
+                          const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
+                          const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
+                          const standardCount = standardViews.length;
+                          const totalImages = settings.imagesPerProduct || 1;
 
-                            if (totalImages <= 0) {
-                              return (
+                          if (totalImages <= 0) {
+                            return (
+                              <div>
+                                <label>Instructions</label>
+                                <textarea
+                                  placeholder="Instructions..."
+                                  value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                  onChange={(event) => {
+                                    updateProduct(product.id, "additionalInstructions", [event.target.value]);
+                                  }}
+                                />
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <>
+                              {standardCount > 0 ? (
                                 <div>
-                                  <label>Instructions</label>
+                                  <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
                                   <textarea
-                                    placeholder="Instructions..."
+                                    placeholder="Instructions for selected views..."
                                     value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
                                     onChange={(event) => {
-                                      updateProduct(product.id, "additionalInstructions", [event.target.value]);
+                                      const next = resizeInstructions(product.additionalInstructions, totalImages);
+                                      for (let i = 0; i < standardCount; i += 1) {
+                                        next[i] = event.target.value;
+                                      }
+                                      updateProduct(product.id, "additionalInstructions", next);
                                     }}
                                   />
                                 </div>
-                              );
-                            }
+                              ) : null}
 
-                            return (
-                              <>
-                                {standardCount > 0 ? (
-                                  <div>
-                                    <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
+                              {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
+                                const realIndex = standardCount + additionalIndex;
+                                return (
+                                  <div key={`additional-${product.id}-${additionalIndex}`}>
+                                    <label>Additional Image {additionalIndex + 1}</label>
                                     <textarea
-                                      placeholder="Instructions for selected views..."
-                                      value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                      placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
+                                      value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""}
                                       onChange={(event) => {
                                         const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                        for (let i = 0; i < standardCount; i += 1) {
-                                          next[i] = event.target.value;
-                                        }
+                                        next[realIndex] = event.target.value;
                                         updateProduct(product.id, "additionalInstructions", next);
                                       }}
                                     />
                                   </div>
-                                ) : null}
-
-                                {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
-                                  const realIndex = standardCount + additionalIndex;
-                                  return (
-                                    <div key={`additional-${product.id}-${additionalIndex}`}>
-                                      <label>Additional Image {additionalIndex + 1}</label>
-                                      <textarea
-                                        placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
-                                        value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""}
-                                        onChange={(event) => {
-                                          const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                          next[realIndex] = event.target.value;
-                                          updateProduct(product.id, "additionalInstructions", next);
-                                        }}
-                                      />
-                                    </div>
-                                  );
-                                })}
-                              </>
-                            );
-                          })()
+                                );
+                              })}
+                            </>
+                          );
+                        })()
                         : Array.from({ length: settings.imagesPerProduct || 1 }).map((_, imageIndex) => (
-                            <div key={`${product.id}-${imageIndex}`}>
-                              <label>Image {imageIndex + 1}</label>
-                              <textarea
-                                placeholder={`Instruction image ${imageIndex + 1}...`}
-                                value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
-                                onChange={(event) => {
-                                  const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
-                                  next[imageIndex] = event.target.value;
-                                  updateProduct(product.id, "additionalInstructions", next);
-                                }}
-                              />
-                            </div>
-                          ))}
+                          <div key={`${product.id}-${imageIndex}`}>
+                            <label>Image {imageIndex + 1}</label>
+                            <textarea
+                              placeholder={`Instruction image ${imageIndex + 1}...`}
+                              value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
+                              onChange={(event) => {
+                                const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
+                                next[imageIndex] = event.target.value;
+                                updateProduct(product.id, "additionalInstructions", next);
+                              }}
+                            />
+                          </div>
+                        ))}
                     </div>
 
                     {isLastProduct ? (

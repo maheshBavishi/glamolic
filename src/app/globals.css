@@ -56,6 +56,12 @@ button {
   margin: 0 auto;
 }
 
+.container-xs {
+  max-width: 1400px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
 .font {
   font-family: var(--font-el-messiri);
 }
