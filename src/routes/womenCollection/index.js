@@ -1,82 +1,40 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
+import { generateImage } from "@/api/generateImage";
 import Dropdown from "@/components/dropdown";
 import Input from "@/components/input";
 import Switch from "@/components/switch";
 import UploadPhoto from "@/components/uploadPhoto";
-import RightWhiteIcon from "@/icons/rightWhiteIcon";
-import LeftIcon from "@/icons/leftIcon";
-import ShopIcon from "@/icons/shopIcon";
-import ModelIcon from "@/icons/modelIcon";
-import SettingIcon from "@/icons/settingIcon";
 import { useAuth } from "@/context/AuthContext";
 import { useCreditsStore } from "@/hooks/useCreditsStore";
 import { useGenerateStore } from "@/hooks/useGenerateStore";
+import LeftIcon from "@/icons/leftIcon";
+import ModelIcon from "@/icons/modelIcon";
+import RightWhiteIcon from "@/icons/rightWhiteIcon";
+import SettingIcon from "@/icons/settingIcon";
+import ShopIcon from "@/icons/shopIcon";
 import { supabase } from "@/integrations/supabase/client";
-import { generateImage } from "@/api/generateImage";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import styles from "./womenCollection.module.scss";
 
 const PlusIcon = "/assets/icons/plus.svg";
 const LineIcon = "/assets/icons/line.svg";
 const DangerIcon = "/assets/icons/danger.svg";
 
-const CREDITS_PER_IMAGE = {
-  "1k": 1,
-  "2k": 2,
-  "4k": 3,
-};
-
-const VIEW_ORDER = ["front", "back", "left", "right", "close_up"];
-const IMAGE_FIELD_KEYS = ["frontImage", "backImage", "topImage", "bottomImage", "blouseImage", "dupattaImage", "bottomBackImage"];
-
-const resolutionOptions = [
-  { value: "1k", label: "1K" },
-  { value: "2k", label: "2K" },
-  { value: "4k", label: "4K" },
-];
-
-const imageOrientationOptions = [
-  { value: "portrait", label: "Portrait" },
-  { value: "landscape", label: "Landscape" },
-];
-
-const portraitImageSizeOptions = [
-  { value: "6x9", label: "6 x 9 inch" },
-  { value: "12x18", label: "12 x 18 inch" },
-  { value: "13x20", label: "13 x 20 inch" },
-  { value: "24x36", label: "24 x 36 inch" },
-];
-
-const landscapeImageSizeOptions = [
-  { value: "9x6", label: "9 x 6 inch" },
-  { value: "18x12", label: "18 x 12 inch" },
-  { value: "36x24", label: "36 x 24 inch" },
-];
-
-const imagesPerProductOptions = [
-  { value: 1, label: "1 image per product" },
-  { value: 2, label: "2 images per product" },
-  { value: 4, label: "4 images per product" },
-];
-
-const backgroundTypeOptions = [
-  { value: "solid_white", label: "Solid White" },
-  { value: "solid_black", label: "Solid Black" },
-  { value: "studio", label: "Professional Studio" },
-  { value: "gradient", label: "Gradient" },
-  { value: "lifestyle", label: "Lifestyle (Outdoor)" },
-];
-
-const ecommerceViewOptions = [
-  { value: "front", label: "Front" },
-  { value: "back", label: "Back" },
-  { value: "left", label: "Left" },
-  { value: "right", label: "Right" },
-  { value: "close_up", label: "Close up" },
-];
+import {
+  backgroundTypeOptions,
+  CREDITS_PER_IMAGE,
+  ecommerceViewOptions,
+  IMAGE_FIELD_KEYS,
+  imageOrientationOptions,
+  imagesPerProductOptions,
+  landscapeImageSizeOptions,
+  portraitImageSizeOptions,
+  resolutionOptions,
+  VIEW_ORDER,
+} from "@/utils/generateImageUtils";
 
 const normalizeCategoryName = (value) =>
   String(value || "")
@@ -672,7 +630,7 @@ export default function WomenCollection() {
 
       const loadingToast = toast.loading("Starting generation...");
       const response = await generateImage(payload);
-      console.log("🚀 ~ handleGenerate ~ response:", response)
+      console.log("🚀 ~ handleGenerate ~ response:", response);
 
       if (response?.status === "failed") {
         toast.dismiss(loadingToast);

@@ -94,6 +94,12 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
 
             button {
                 border: none;
@@ -104,13 +110,14 @@
                 font-weight: 600;
                 line-height: 120%;
                 text-transform: capitalize;
-                padding: 15px 34px;
+                padding: 15px 28px;
                 background-color: transparent;
                 border-radius: 99px;
+                white-space: nowrap;
 
                 @include respond-to("sm") {
-                    font-size: 16px;
-                    padding: 12px 24px;
+                    font-size: 14px;
+                    padding: 10px 18px;
                 }
 
                 &.active {
@@ -122,28 +129,58 @@
         }
     }
 
+    .carouselWrap {
+        position: relative;
+    }
+
     .grid {
         max-width: 1274px;
         margin: 0 auto;
-        display: grid;
+        display: flex;
+        align-items: stretch;
         gap: 30px;
-        grid-template-columns: repeat(3, 1fr);
+        overflow-x: auto;
+        overflow-y: visible;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 0 0 30px 0;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
 
         @include respond-to("xl") {
             gap: 20px;
         }
 
         @include respond-to("md") {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 60px 20px;
+            gap: 20px;
         }
 
         @include respond-to("sm") {
-            display: flex;
-            overflow: auto;
             padding: 0 20px;
-            scrollbar-width: none;
             gap: 12px;
+        }
+
+        .cardSlide {
+            flex: 0 0 calc((100% - 60px) / 3);
+            min-width: 300px;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+
+            @include respond-to("xl") {
+                flex: 0 0 calc((100% - 40px) / 3);
+            }
+
+            @include respond-to("md") {
+                flex: 0 0 calc((100% - 20px) / 2);
+            }
+
+            @include respond-to("sm") {
+                flex: 0 0 310px;
+                min-width: 310px;
+            }
         }
 
         .items {
@@ -153,12 +190,10 @@
             padding: 30px 20px 20px 20px;
             position: relative;
             transition: border-color 0.3s ease;
+            height: 100%;
 
             @include respond-to("sm") {
                 border-radius: 12px;
-                max-width: 310px;
-                min-width: 310px;
-                width: 310px;
             }
 
             &:hover {
@@ -371,4 +406,130 @@
         }
     }
 
+    .navArrows {
+        position: absolute;
+        top: 50%;
+        left: 72px;
+        right: 72px;
+        transform: translateY(-50%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        pointer-events: none;
+
+        @include respond-to("md") {
+            position: static;
+            transform: none;
+            left: auto;
+            right: auto;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+    }
+
+    .navButton {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        border: 1px solid #C5CACE;
+        background: #FFF;
+        color: #141414;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: .2s ease-in-out;
+
+        &:not(:disabled) {
+            background: rgba(100, 127, 128, 1);
+            border-color: rgba(100, 127, 128, 1);
+            color: #FFF;
+        }
+
+        &:hover:not(:disabled) {
+            transform: translateY(-1px);
+            border-color: rgba(100, 127, 128, 1);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            color: #141414;
+            border-color: #C5CACE;
+            background: #FFF;
+        }
+    }
+
+    .rightButton {
+        // State colors controlled by .navButton
+    }
+
+    .leftButton {
+        // State colors controlled by .navButton
+    }
+
+    .navIcon {
+        width: 24px;
+        height: 24px;
+        stroke-width: 2.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+
+        path {
+            fill: none;
+        }
+    }
+
+    .navButton:not(:disabled) .navIcon path {
+        stroke: #FFF;
+    }
+
+    .navButton:disabled .navIcon path {
+        stroke: #141414;
+    }
+
+    .loadingState {
+        min-height: 260px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+
+        p {
+            margin: 0;
+            color: #5B6768;
+            font-size: 15px;
+            font-weight: 500;
+        }
+    }
+
+    .loader {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        border: 3px solid rgba(82, 116, 117, 0.2);
+        border-top-color: #527475;
+        animation: spin 0.9s linear infinite;
+    }
+
+    .emptyState {
+        width: 100%;
+        text-align: center;
+        color: #5B6768;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 40px 20px 20px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px dashed #C7CED0;
+        border-radius: 16px;
+    }
+
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

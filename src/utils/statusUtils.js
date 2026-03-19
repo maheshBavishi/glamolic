@@ -5,8 +5,39 @@
  * @param {string} status - The status string (e.g. "completed", "processing")
  * @param {object} styles - CSS module styles object
  */
+export const normalizeStatus = (status) => {
+  const value = (status || "").toLowerCase().trim();
+  if (!value) return "processing";
+
+  if (value.includes("fail") || value.includes("error") || value.includes("cancelled") || value.includes("canceled")) {
+    return "failed";
+  }
+  if (value.includes("complete") || value.includes("success")) {
+    return "completed";
+  }
+  if (value.includes("queue") || value.includes("pending") || value.includes("waiting")) {
+    return "queued";
+  }
+  if (value.includes("process") || value.includes("in_progress") || value.includes("running") || value.includes("generat")) {
+    return "processing";
+  }
+
+  return value;
+};
+
+export const getStatusLabel = (status) => {
+  const normalized = normalizeStatus(status);
+  if (normalized === "completed") return "Completed";
+  if (normalized === "processing") return "Processing";
+  if (normalized === "failed") return "Failed";
+  if (normalized === "queued") return "Queued";
+
+  if (!status) return "Processing";
+  return status.charAt(0).toUpperCase() + status.slice(1);
+};
+
 export const getStatusBadgeClass = (status, styles) => {
-  switch ((status || "").toLowerCase()) {
+  switch (normalizeStatus(status)) {
     case "completed": return styles.chipCompleted;
     case "processing": return styles.chipProcessing;
     case "failed": return styles.chipFailed;
@@ -20,7 +51,7 @@ export const getStatusBadgeClass = (status, styles) => {
  * @param {string} status
  */
 export const getStatusIcon = (status) => {
-  const s = (status || "").toLowerCase();
+  const s = normalizeStatus(status);
   if (s === "completed") {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
