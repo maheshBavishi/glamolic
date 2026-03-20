@@ -4,7 +4,7 @@ import Pagination from "@/components/pagination";
 import { useAuth } from "@/context/AuthContext";
 import { useHistoryData } from "@/hooks/useHistoryData";
 import { useVideoHistoryData } from "@/hooks/useVideoHistoryData";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import HistoryCard from "./components/historyCard";
 import VideoHistoryCard from "./components/videoHistoryCard";
@@ -13,9 +13,8 @@ import Link from "next/link";
 
 const GenrationIcon = "/assets/icons/genration.svg";
 
-export default function History() {
-  const searchParams = useSearchParams();
-  const requestedTab = searchParams.get("tab") === "videos" ? "videos" : "images";
+export default function History({ initialTab = "images" }) {
+  const requestedTab = initialTab === "videos" ? "videos" : "images";
   const [activeTab, setActiveTab] = useState(() => requestedTab);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);

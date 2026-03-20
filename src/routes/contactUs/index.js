@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import styles from "./contactUs.module.scss";
 import Input from "@/components/input";

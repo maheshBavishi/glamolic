@@ -14,7 +14,7 @@ import MobileIcon from "@/icons/mobileIcon";
 import RightWhiteIcon from "@/icons/rightWhiteIcon";
 import TopLeftIcon from "@/icons/topLeftIcon";
 import TopRightIcon from "@/icons/topRightIcon";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import styles from "./videoGeneration.module.scss";
@@ -38,13 +38,10 @@ const getEstimatedCostByDuration = (duration) => {
 
 const normalizeLogoPosition = (position) => (position === "center" ? "right_top" : position);
 
-export default function VideoGeneration() {
+export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user, profile } = useAuth();
   const { loading: creditsLoading, credits, fetchCredits } = useCreditsStore();
-  const imageUrl = searchParams.get("imageUrl") || "";
-  const productName = searchParams.get("productName") || "";
 
   const [logoFile, setLogoFile] = useState(null);
   const [formData, setFormData] = useState({
