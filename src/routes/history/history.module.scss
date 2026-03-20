@@ -81,11 +81,57 @@
             }
         }
 
+        .cardsList {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .emptyState {
+            text-align: center;
+            padding: 60px 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: #FFF;
+
+            .emptyStateIcon {
+                width: 72px;
+                height: 72px;
+                border-radius: 50%;
+                background: rgba(82, 116, 117, 0.10);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 20px;
+                color: #527475;
+            }
+
+            h3 {
+                color: #121212;
+                font-size: 22px;
+                font-weight: 600;
+                margin: 0 0 10px;
+            }
+
+            p {
+                color: #727272;
+                font-size: 16px;
+                font-weight: 500;
+                max-width: 380px;
+                margin: 0 auto 28px;
+                line-height: 1.6;
+            }
+        }
+
         .detailsBox {
             border-radius: 24px;
             border: 1px solid rgba(0, 0, 0, 0.10);
             background: #FFF;
             padding: 32px;
+
+            .expandedContent {
+                padding-top: 32px;
+            }
 
             .additionalInstructions {
                 border-radius: 24px;
@@ -147,10 +193,33 @@
 
             .detailsboxHeader {
                 display: grid;
-                grid-template-columns: 166px 1fr;
-                padding: 0 0 32px 0;
+                grid-template-columns: 166px 1fr 40px;
+                padding: 0;
                 gap: 20px;
                 align-items: center;
+                cursor: pointer;
+
+                .toggleIcon {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background: #ECF1F1;
+                    border: 1px solid #D4D8D8;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    color: #3F4153;
+                    transition: transform 0.3s ease, background 0.2s ease;
+
+                    &:hover {
+                        background: #D4D8D8;
+                    }
+                }
+
+                .toggleIconOpen {
+                    transform: rotate(180deg);
+                }
 
                 .allToogleAlignment {
                     display: flex;
@@ -184,16 +253,68 @@
                     text-transform: capitalize;
                 }
 
-                .chip {
+                // Base chip style shared across all status chips
+                %chipBase {
                     padding: 2px 12px;
                     border-radius: 1000px;
-                    border: 1px solid #0FB12D;
-                    background: rgba(15, 177, 45, 0.10);
                     width: fit-content;
-                    border-radius: 99px;
+                    border: 1px solid;
 
                     span {
-                        color: #0FB12D;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                    }
+                }
+
+                .chip {
+                    @extend %chipBase;
+                    border-color: rgba(107, 114, 128, 0.3);
+                    background: rgba(107, 114, 128, 0.10);
+                    span { color: #6B7280; }
+                }
+
+                .chipCompleted {
+                    @extend %chipBase;
+                    border-color: rgba(15, 177, 45, 0.25);
+                    background: rgba(15, 177, 45, 0.10);
+                    span { color: #0FB12D; }
+                }
+
+                .chipProcessing {
+                    @extend %chipBase;
+                    border-color: rgba(234, 179, 8, 0.25);
+                    background: rgba(234, 179, 8, 0.10);
+                    span { color: #CA8A04; }
+                }
+
+                .chipFailed {
+                    @extend %chipBase;
+                    border-color: rgba(239, 68, 68, 0.25);
+                    background: rgba(239, 68, 68, 0.10);
+                    span { color: #EF4444; }
+                }
+
+                .chipQueued {
+                    @extend %chipBase;
+                    border-color: rgba(59, 130, 246, 0.25);
+                    background: rgba(59, 130, 246, 0.10);
+                    span { color: #3B82F6; }
+                }
+
+                .primaryChip {
+                    padding: 4px 16px;
+                    border-radius: 1000px;
+                    border: 1px solid #527475;
+                    background: #527475;
+                    width: fit-content;
+
+                    span {
+                        color: #FFF;
                         font-size: 14px;
                         font-style: normal;
                         font-weight: 500;
@@ -205,10 +326,32 @@
                 .image {
                     width: 100%;
                     height: 166px;
+                    position: relative;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    background: #EEF2F2;
+
+                    .imgSkeleton {
+                        position: absolute;
+                        inset: 0;
+                        border-radius: 16px;
+                        background: linear-gradient(90deg, #E8ECEC 25%, #D4DADB 50%, #E8ECEC 75%);
+                        background-size: 800px 100%;
+                        animation: shimmer 1.4s infinite linear;
+                    }
+
+                    .imgPlaceholder {
+                        position: absolute;
+                        inset: 0;
+                        border-radius: 16px;
+                        background: #E9EEEF;
+                        border: 1px solid #DCE3E4;
+                    }
 
                     img {
                         display: block;
                         object-fit: cover;
+                        object-position: top;
                         width: 100%;
                         height: 100%;
                         border-radius: 16px;
@@ -217,4 +360,8 @@
             }
         }
     }
+@keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
 }

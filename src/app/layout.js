@@ -1,7 +1,9 @@
-import { El_Messiri, Geist, Geist_Mono, Heebo } from "next/font/google";
+import ClientProviders from "@/components/providers/ClientProviders";
+import SmoothScroll from "@/components/smoothScroll";
+import { El_Messiri, Heebo } from "next/font/google"; // Removed unused Geist completely to prevent eslint errors
+import { Toaster } from "react-hot-toast";
+import "../scss/main.scss";
 import "./globals.css";
-import '../scss/main.scss';
-import SmoothScroll from '@/components/smoothScroll';
 
 const elMessiri = El_Messiri({
   variable: "--font-el-messiri",
@@ -13,7 +15,7 @@ const elMessiri = El_Messiri({
 const heebo = Heebo({
   variable: "--font-heebo",
   subsets: ["latin"],
-  weight: ["400", "600", "500", "700", "800"]
+  weight: ["400", "600", "500", "700", "800"],
 });
 
 export const metadata = {
@@ -25,9 +27,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${elMessiri.variable} ${heebo.variable}`}>
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <ClientProviders>
+          <Toaster position="bottom-right" />
+          <SmoothScroll>{children}</SmoothScroll>
+        </ClientProviders>
       </body>
     </html>
   );

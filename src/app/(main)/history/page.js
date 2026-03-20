@@ -1,10 +1,13 @@
-import History from '@/routes/history'
-import React from 'react'
+import History from "@/routes/history";
+import React from "react";
 
-export default function page() {
-    return (
-        <div>
-            <History />
-        </div>
-    )
+export default async function page({ searchParams }) {
+  const params = (await searchParams) || {};
+  const initialTab = params?.tab === "videos" ? "videos" : "images";
+
+  return (
+    <div>
+      <History initialTab={initialTab} />
+    </div>
+  );
 }

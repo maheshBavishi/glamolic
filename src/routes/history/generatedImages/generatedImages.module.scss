@@ -41,11 +41,17 @@
         .items {
             position: relative;
 
-            &:hover {
+            &:hover,
+            &:focus-within {
 
                 .centerAlignment,
                 .topAlignment {
                     opacity: 1;
+                }
+
+                .viewFullHint {
+                    opacity: 1;
+                    transform: translate(-50%, -50%);
                 }
             }
 
@@ -77,24 +83,96 @@
                 justify-content: space-between;
                 padding: 12px;
 
-                img {
+                .actionIcon {
                     display: block;
                     cursor: pointer;
                 }
             }
 
             .image {
-                height: 395px;
+                aspect-ratio: 2 / 3;
+                position: relative;
+                overflow: hidden;
+                border-radius: 20px;
+                background: #E9ECEC;
+                cursor: pointer;
+                outline: none;
 
-                img {
+                &:focus-visible {
+                    box-shadow: 0 0 0 3px rgba(82, 116, 117, 0.45);
+                }
+
+                .imageSkeleton {
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(90deg, #E8ECEC 25%, #D4DADB 50%, #E8ECEC 75%);
+                    background-size: 800px 100%;
+                    animation: shimmer 1.4s infinite linear;
+                    z-index: 1;
+                }
+
+                .imageFallback {
+                    position: absolute;
+                    inset: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #EEF2F2;
+                    color: #6B7280;
+                    font-size: 14px;
+                    font-weight: 500;
+                    text-align: center;
+                    padding: 12px;
+                    z-index: 2;
+                }
+
+                .generatedImage {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    border-radius: 20px;
+                    object-position: top;
                     display: block;
+                    transition: opacity 0.2s ease-in-out;
+                }
+
+                .viewFullHint {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -42%);
+                    border-radius: 10px;
+                    padding: 10px 16px;
+                    background: rgba(0, 0, 0, 0.45);
+                    color: #FFF;
+                    font-size: 26px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 1.2;
+                    text-align: center;
+                    white-space: nowrap;
+                    pointer-events: none;
+                    opacity: 0;
+                    transition: opacity 0.2s ease, transform 0.2s ease;
+                    z-index: 3;
+                    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
                 }
             }
         }
+    }
+
+    .loadMoreTrigger {
+        height: 12px;
+        margin-top: 8px;
+    }
+
+    .loadMoreSkeleton {
+        width: 100%;
+        height: 12px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #E8ECEC 25%, #D4DADB 50%, #E8ECEC 75%);
+        background-size: 800px 100%;
+        animation: shimmer 1.4s infinite linear;
+        opacity: 0.8;
     }
 
     .noteAlignment {
@@ -123,5 +201,333 @@
 
             }
         }
+    }
+}
+
+.viewerBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.86);
+    backdrop-filter: blur(2px);
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.viewerPanel {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    border: 0;
+    background: #020307;
+    position: relative;
+    overflow: hidden;
+}
+
+.viewerHeader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 28px 12px;
+    background: linear-gradient(180deg, rgba(2, 3, 7, 0.9) 0%, rgba(2, 3, 7, 0) 100%);
+}
+
+.viewerTitle {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.96);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.viewerCloseButton {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFF;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.34);
+    }
+}
+
+.viewerBody {
+    width: 100%;
+    height: 100%;
+    padding: 92px 28px 28px;
+    background: #000;
+    position: relative;
+}
+
+.viewerBodyDefault {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.viewerBodyZoomed {
+    display: block;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+}
+
+.viewerLoader {
+    position: absolute;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.22);
+    border-top-color: rgba(255, 255, 255, 0.95);
+    animation: viewer-spin 0.85s linear infinite;
+    z-index: 2;
+}
+
+.viewerImageCanvas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform-origin: top left;
+    transition: width 0.3s ease-out, height 0.3s ease-out;
+}
+
+.viewerImageCanvasDefault {
+    width: 100%;
+    height: 100%;
+}
+
+.viewerImageCanvasZoomed {
+    margin: auto;
+    padding: 28px;
+}
+
+.viewerImage {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    user-select: none;
+    -webkit-user-drag: none;
+    display: block;
+    cursor: zoom-in;
+}
+
+.viewerImageZoomed {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    cursor: zoom-out;
+}
+
+.viewerImageLoaded {
+    opacity: 1;
+}
+
+.viewerHint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.42);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.viewerFallback {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.viewerNavButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    background: rgba(8, 10, 16, 0.6);
+    color: #FFF;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+}
+
+.viewerNavLeft {
+    left: 24px;
+}
+
+.viewerNavRight {
+    right: 24px;
+}
+
+@include respond-to("md") {
+    .generatedImages {
+        .imageGrid {
+            grid-template-columns: repeat(2, 1fr);
+
+            .items {
+                .image {
+                    .viewFullHint {
+                        font-size: 20px;
+                        padding: 8px 12px;
+                    }
+                }
+            }
+        }
+    }
+
+    .viewerTitle {
+        font-size: 24px;
+    }
+}
+
+@include respond-to("tab") {
+    .generatedImages {
+        padding: 18px;
+
+        .subboxHeaderAlignment {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            padding-bottom: 20px;
+
+            .iconText h3 {
+                font-size: 20px;
+            }
+        }
+
+        .imageGrid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+
+            .items {
+                .topAlignment,
+                .centerAlignment {
+                    opacity: 1;
+                }
+
+                .image {
+                    .viewFullHint {
+                        opacity: 1;
+                        font-size: 18px;
+                        padding: 8px 10px;
+                    }
+                }
+            }
+        }
+
+        .noteAlignment {
+            padding-top: 20px;
+
+            .note p {
+                font-size: 15px;
+            }
+        }
+    }
+
+    .viewerPanel {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .viewerHeader {
+        padding: 18px 14px 8px;
+    }
+
+    .viewerTitle {
+        font-size: 17px;
+        max-width: calc(100% - 60px);
+    }
+
+    .viewerCloseButton {
+        width: 36px;
+        height: 36px;
+    }
+
+    .viewerBody {
+        padding: 62px 8px 12px;
+    }
+
+    .viewerImageCanvasZoomed {
+        padding: 12px;
+    }
+
+    .viewerNavButton {
+        width: 44px;
+        height: 44px;
+    }
+
+    .viewerNavLeft {
+        left: 8px;
+    }
+
+    .viewerNavRight {
+        right: 8px;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+@keyframes viewer-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }

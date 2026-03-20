@@ -5,10 +5,19 @@
     label {
         display: block;
         color: #121212;
-        font-size: 18px;
+        font-size: 16px;
         font-style: normal;
         font-weight: 500;
         line-height: normal;
-        padding: 0 0 6px 0;
+        padding: 0 0 4px 0;
+    }
+
+    .errorText {
+        color: #E23030;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        margin-top: 4px;
     }
 }
