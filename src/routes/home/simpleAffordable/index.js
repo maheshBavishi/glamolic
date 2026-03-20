@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { supabaseClient } from "@/integrations/supabase/supabaseClient";
 import { fetchPlansByCategory, formatPrice, generatePlanFeatures, getPlanName, normalizePlanCategory } from "@/services/plans-service";
+import PhoneRequiredModal from "@/components/phoneRequiredModal";
 
 const FlowerImage = "/assets/images/flower.png";
 const LineBoxOne = "/assets/images/linebox1.png";
@@ -16,17 +17,26 @@ const LineBoxTwo = "/assets/images/linebox2.png";
 
 export default function SimpleAffordable() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
 
   const [plans, setPlans] = useState([]);
   const [isLoadingPlans, setIsLoadingPlans] = useState(true);
   const [activePlanTab, setActivePlanTab] = useState("regular");
   const [isProcessingPlan, setIsProcessingPlan] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState(null);
+  const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
+  const [pendingPlan, setPendingPlan] = useState(null);
 
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const normalizePhone = (value) =>
+    String(value || "")
+      .replace(/\D/g, "")
+      .slice(0, 10);
+  const isValidPhone = (value) => normalizePhone(value).length === 10;
+  const savedPhoneNumber = normalizePhone(profile?.phone || user?.phone || "");
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -167,7 +177,14 @@ export default function SimpleAffordable() {
     setActivePlanTab(tab);
   };
 
-  const handlePlanSelect = async (plan) => {
+  const closePhoneModal = () => {
+    setIsPhoneModalOpen(false);
+    setPendingPlan(null);
+  };
+
+  const createOrderForPlan = async (plan, customerPhone) => {
+    if (!plan) return;
+
     if (!user) {
       toast.error("Please log in to upgrade your plan");
       router.push("/login");
@@ -183,10 +200,11 @@ export default function SimpleAffordable() {
           currency: plan?.currency_type,
           planName: getPlanName(plan?.display_name),
           user_email: user?.email,
-          customer_name: user?.name,
-          customer_phone: user?.phone,
+          customer_name: profile?.name || user?.name,
+          customer_phone: customerPhone,
         },
       });
+
       if (data?.payment_url) {
         window.open(data.payment_url, "_blank", "noopener,noreferrer");
       } else {
@@ -198,6 +216,41 @@ export default function SimpleAffordable() {
     } finally {
       setIsProcessingPlan(false);
       setSelectedPlanId(null);
+    }
+  };
+
+  const handlePlanSelect = async (plan) => {
+    if (!user) {
+      toast.error("Please log in to upgrade your plan");
+      router.push("/login");
+      return;
+    }
+    if (!isValidPhone(savedPhoneNumber)) {
+      setPendingPlan(plan);
+      setIsPhoneModalOpen(true);
+      return;
+    }
+    await createOrderForPlan(plan, savedPhoneNumber);
+  };
+
+  const handlePhoneConfirm = async (sanitizedPhone) => {
+    if (!pendingPlan) {
+      return { error: "Please select your plan again and continue." };
+    }
+    try {
+      const { error } = await updateProfile({ phone: sanitizedPhone });
+      if (error) {
+        throw error;
+      }
+      const planToPurchase = pendingPlan;
+      setIsPhoneModalOpen(false);
+      setPendingPlan(null);
+      toast.success("Phone number updated");
+      await createOrderForPlan(planToPurchase, sanitizedPhone);
+      return { success: true };
+    } catch (error) {
+      console.error("Phone update failed:", error);
+      return { error: "Unable to update your phone number. Please try again." };
     }
   };
 
@@ -401,6 +454,12 @@ export default function SimpleAffordable() {
           </div>
         )}
       </div>
+      <PhoneRequiredModal
+        isOpen={isPhoneModalOpen}
+        initialPhone={savedPhoneNumber}
+        onClose={closePhoneModal}
+        onConfirm={handlePhoneConfirm}
+      />
     </div>
   );
 }
