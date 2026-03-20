@@ -179,6 +179,7 @@
                         background: #FFF;
                         outline: none;
                         transition: .3s ease-in-out;
+                        cursor: pointer;
 
                         @include respond-to("sm") {
                             font-size: 16px;

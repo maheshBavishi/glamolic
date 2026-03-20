@@ -1,55 +1,43 @@
 import { supabase } from "@/integrations/supabase/client";
+import { useCreditsStore } from "@/hooks/useCreditsStore";
+import { useGenerateStore } from "@/hooks/useGenerateStore";
 
-const DEFAULT_BACKEND_URL = "https://ai-api.glamolic.com/api";
+const DEFAULT_BACKEND_URL = "https://ai-api.glamolic.com";
 
-const normalizeBaseUrl = (value) => String(value || "").trim().replace(/\/+$/, "");
+const normalizeBaseUrl = (value) =>
+  String(value || "")
+    .trim()
+    .replace(/^["']+|["']+$/g, "")
+    .replace(/\/+$/, "");
 
-const getBackendBaseUrls = () => {
-  const envUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_BACKEND_URL);
-  const fallbackUrl = normalizeBaseUrl(DEFAULT_BACKEND_URL);
-  return [...new Set([envUrl, fallbackUrl].filter(Boolean))];
-};
-
-const shouldTryNextUrl = (response) => [404, 502, 503, 504].includes(response.status);
-
-const fetchWithFallback = async (path, options) => {
-  const baseUrls = getBackendBaseUrls();
-  let lastNetworkError = null;
-
-  for (let index = 0; index < baseUrls.length; index += 1) {
-    const baseUrl = baseUrls[index];
-    const requestUrl = `${baseUrl}${path}`;
-
-    try {
-      const response = await fetch(requestUrl, options);
-
-      if (!response.ok && shouldTryNextUrl(response) && index < baseUrls.length - 1) {
-        continue;
-      }
-
-      return { response, requestUrl };
-    } catch (error) {
-      lastNetworkError = error;
-      if (index < baseUrls.length - 1) continue;
-    }
+const handleUnauthorizedError = async () => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("session_expired", "true");
+    localStorage.removeItem("generate-storage");
   }
-
-  throw new Error(
-    `Failed to fetch ${path}. Tried: ${baseUrls.join(", ")}${lastNetworkError?.message ? `. ${lastNetworkError.message}` : ""}`,
-  );
+  useGenerateStore.getState().resetStore();
+  useCreditsStore.getState().resetCredits();
+  await supabase.auth.signOut();
+  if (typeof window !== "undefined") {
+    window.location.href = "/";
+  }
 };
 
 export const regenerateImage = async (payload) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
+
   const token = session?.access_token;
 
   if (!token) {
     throw new Error("No authentication token found. Please log in again.");
   }
 
-  const { response, requestUrl } = await fetchWithFallback("/regenerate", {
+  const baseUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_BACKEND_URL) || DEFAULT_BACKEND_URL;
+  const requestUrl = `${baseUrl}/regenerate`;
+
+  const response = await fetch(requestUrl, {
     method: "POST",
     headers: {
       accept: "application/json",
@@ -61,7 +49,8 @@ export const regenerateImage = async (payload) => {
   });
 
   if (response?.status === 401) {
-    throw new Error("Unauthorized. Please log in again.");
+    await handleUnauthorizedError();
+    return;
   }
 
   if (!response.ok) {
@@ -69,6 +58,5 @@ export const regenerateImage = async (payload) => {
     throw new Error(errorData.detail || errorData.message || `Regenerate API request failed (${response.status}) at ${requestUrl}`);
   }
 
-  const responseData = await response.json();
-  return responseData;
+  return response.json();
 };

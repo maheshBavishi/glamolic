@@ -12,9 +12,10 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userTransactions, setUserTransactions] = useState([]);
 
-  const resetStore = useGenerateStore?.()?.resetStore || (() => { });
-  const resetCredits = useCreditsStore?.()?.resetCredits || (() => { });
+  const resetStore = useGenerateStore?.()?.resetStore || (() => {});
+  const resetCredits = useCreditsStore?.()?.resetCredits || (() => {});
 
   const fetchProfile = async (userId) => {
     try {
@@ -33,6 +34,27 @@ export const AuthProvider = ({ children }) => {
       };
     } catch (error) {
       console.error("Error fetching profile:", error);
+      return null;
+    }
+  };
+
+  const getTransactionsByUser = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from("transactions")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false }) // latest first
+        .limit(1)
+        .single(); // get single object
+
+      if (error) {
+        console.error("Error fetching last transaction:", error);
+        return null;
+      }
+      setUserTransactions(data);
+    } catch (error) {
+      console.error("Error:", error);
       return null;
     }
   };
@@ -205,6 +227,9 @@ export const AuthProvider = ({ children }) => {
         updateProfile,
         resetPassword,
         updatePassword,
+        getTransactionsByUser,
+        userTransactions,
+        setUserTransactions,
       }}
     >
       {children}

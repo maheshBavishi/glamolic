@@ -9,6 +9,7 @@ import { useCreditsStore } from "@/hooks/useCreditsStore";
 import { regenerateImage } from "@/api/regenerateImage";
 import { useHistoryActions } from "@/hooks/useHistoryActions";
 import ImagePreviewModal from "./ImagePreviewModal";
+import { useRouter } from "next/navigation";
 
 const StickIcon = "/assets/icons/stick.svg";
 const PdfIcon = "/assets/icons/pdf.svg";
@@ -192,6 +193,7 @@ export default function GeneratedImages({ item }) {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_IMAGES);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(0);
+  const router = useRouter();
   const loadMoreRef = useRef(null);
   const { user } = useAuth();
   const { credits, fetchCredits } = useCreditsStore();
@@ -208,15 +210,24 @@ export default function GeneratedImages({ item }) {
   );
   const imageSignature = imageItems.map((imageItem) => imageItem.originalUrl).join("|");
   const visibleImageItems = imageItems.slice(0, visibleCount);
-  const allPreviewImages = useMemo(
-    () => imageItems.map((imageItem) => imageItem.originalUrl || imageItem.displayUrl),
-    [imageItems],
-  );
+  const allPreviewImages = useMemo(() => imageItems.map((imageItem) => imageItem.originalUrl || imageItem.displayUrl), [imageItems]);
   const hasMoreImages = visibleCount < imageItems.length;
   const { handleDownloadImage, handleDownloadAll, handleExportPDF } = useHistoryActions();
-  const handleGenerateVideoSoon = useCallback(() => {
-    toast("Video generation coming soon!");
-  }, []);
+  const handleGenerateVideo = useCallback(
+    (sourceUrl) => {
+      if (!sourceUrl) {
+        toast.error("Image not found for video generation.");
+        return;
+      }
+      const params = new URLSearchParams();
+      params.set("imageUrl", sourceUrl);
+      if (item?.productName) {
+        params.set("productName", item.productName);
+      }
+      router.push(`/video-generation?${params.toString()}`);
+    },
+    [item?.productName, router],
+  );
 
   const handleOpenPreview = useCallback((index) => {
     setViewerIndex(index);
@@ -279,94 +290,97 @@ export default function GeneratedImages({ item }) {
     };
   }, [hasMoreImages, imageItems.length, visibleCount]);
 
-  const handleRegenerateImage = useCallback(async (imageUrl, targetIndex) => {
-    try {
-      if (!credits || credits.available_credits < 1) {
-        toast.error("Insufficient credits. Please purchase more credits to regenerate images.");
-        return;
-      }
-      const imagesPerProduct = item.settings?.imagesPerProduct || 1;
-      const productIndex = Math.floor(targetIndex / imagesPerProduct);
-      const imageIndexInProduct = targetIndex % imagesPerProduct;
-
-      const productMetadata = Array.isArray(item.product_metadata)
-        ? item.product_metadata[productIndex] || item.product_metadata[0]
-        : item.product_metadata || {};
-
-      let additionalInstructions = [];
-      let specificInstruction = "";
-
-      if (productMetadata?.additionalInstructions && Array.isArray(productMetadata.additionalInstructions)) {
-        additionalInstructions = productMetadata.additionalInstructions;
-        const allInstructions = [];
-        if (item.product_metadata && Array.isArray(item.product_metadata)) {
-          item.product_metadata.forEach((product) => {
-            if (product.additionalInstructions && Array.isArray(product.additionalInstructions)) {
-              allInstructions.push(...product.additionalInstructions);
-            }
-          });
-        }
-        specificInstruction = allInstructions[targetIndex] || "";
-      } else if (item.settings?.additionalInstructions && Array.isArray(item.settings.additionalInstructions)) {
-        additionalInstructions = item.settings.additionalInstructions;
-        specificInstruction = item.settings.additionalInstructions[targetIndex] || "";
-      }
-
-      const payload = {
-        product: {
-          gender: productMetadata?.gender || "Women",
-          itemType: productMetadata?.itemType || "",
-          subCategory: productMetadata?.subCategory || "",
-          frontPreview: productMetadata?.frontPreview || "",
-          backPreview: productMetadata?.backPreview || "",
-          referenceImage: productMetadata?.referenceImage || productMetadata?.frontPreview || "",
-          blouseImage: productMetadata?.blouseImage || "",
-          topImage: productMetadata?.topImage || "",
-          bottomImage: productMetadata?.bottomImage || "",
-          dupattaImage: productMetadata?.dupattaImage || "",
-        },
-        settings: {
-          productName: item.settings?.productName || "",
-          resolution: item.settings?.resolution || "4K",
-          imageSize: item.settings?.imageSize || "12x18",
-          backgroundType: item.settings?.backgroundType || "Professional Studio",
-          unifiedBackground: item.settings?.sameBackground || false,
-          modelConsistency: item.settings?.modelConsistency || false,
-          additionalInstructions: additionalInstructions,
-          numberOfImages: item.settings?.imagesPerProduct || 1,
-          aspectRatio: "2:3",
-          startingVariationIdx: item.settings?.startingVariationIdx || 0,
-        },
-        imageUrl: imageUrl,
-        targetIndex: imageIndexInProduct,
-        additionalInstruction: specificInstruction,
-      };
-
-      const toastId = toast.loading("Regenerating image...");
-
-      const response = await regenerateImage(payload);
-
-      if (response?.groupedResults && response.groupedResults.length > 0) {
-        const groupedResult = response.groupedResults[0];
-
-        if (!groupedResult?.images || groupedResult.images.length === 0) {
-          toast.dismiss(toastId);
-          toast.error("Failed to regenerate image");
+  const handleRegenerateImage = useCallback(
+    async (imageUrl, targetIndex) => {
+      try {
+        if (!credits || credits.available_credits < 1) {
+          toast.error("Insufficient credits. Please purchase more credits to regenerate images.");
           return;
         }
-        await fetchCredits(user?.id || "");
-        toast.dismiss(toastId);
-        toast.success("Image regenerated successfully!");
-      } else {
-        toast.dismiss(toastId);
-        toast.error("Failed to regenerate image");
+        const imagesPerProduct = item.settings?.imagesPerProduct || 1;
+        const productIndex = Math.floor(targetIndex / imagesPerProduct);
+        const imageIndexInProduct = targetIndex % imagesPerProduct;
+
+        const productMetadata = Array.isArray(item.product_metadata)
+          ? item.product_metadata[productIndex] || item.product_metadata[0]
+          : item.product_metadata || {};
+
+        let additionalInstructions = [];
+        let specificInstruction = "";
+
+        if (productMetadata?.additionalInstructions && Array.isArray(productMetadata.additionalInstructions)) {
+          additionalInstructions = productMetadata.additionalInstructions;
+          const allInstructions = [];
+          if (item.product_metadata && Array.isArray(item.product_metadata)) {
+            item.product_metadata.forEach((product) => {
+              if (product.additionalInstructions && Array.isArray(product.additionalInstructions)) {
+                allInstructions.push(...product.additionalInstructions);
+              }
+            });
+          }
+          specificInstruction = allInstructions[targetIndex] || "";
+        } else if (item.settings?.additionalInstructions && Array.isArray(item.settings.additionalInstructions)) {
+          additionalInstructions = item.settings.additionalInstructions;
+          specificInstruction = item.settings.additionalInstructions[targetIndex] || "";
+        }
+
+        const payload = {
+          product: {
+            gender: productMetadata?.gender || "Women",
+            itemType: productMetadata?.itemType || "",
+            subCategory: productMetadata?.subCategory || "",
+            frontPreview: productMetadata?.frontPreview || "",
+            backPreview: productMetadata?.backPreview || "",
+            referenceImage: productMetadata?.referenceImage || productMetadata?.frontPreview || "",
+            blouseImage: productMetadata?.blouseImage || "",
+            topImage: productMetadata?.topImage || "",
+            bottomImage: productMetadata?.bottomImage || "",
+            dupattaImage: productMetadata?.dupattaImage || "",
+          },
+          settings: {
+            productName: item.settings?.productName || "",
+            resolution: item.settings?.resolution || "4K",
+            imageSize: item.settings?.imageSize || "12x18",
+            backgroundType: item.settings?.backgroundType || "Professional Studio",
+            unifiedBackground: item.settings?.sameBackground || false,
+            modelConsistency: item.settings?.modelConsistency || false,
+            additionalInstructions: additionalInstructions,
+            numberOfImages: item.settings?.imagesPerProduct || 1,
+            aspectRatio: "2:3",
+            startingVariationIdx: item.settings?.startingVariationIdx || 0,
+          },
+          imageUrl: imageUrl,
+          targetIndex: imageIndexInProduct,
+          additionalInstruction: specificInstruction,
+        };
+
+        const toastId = toast.loading("Regenerating image...");
+
+        const response = await regenerateImage(payload);
+
+        if (response?.groupedResults && response.groupedResults.length > 0) {
+          const groupedResult = response.groupedResults[0];
+
+          if (!groupedResult?.images || groupedResult.images.length === 0) {
+            toast.dismiss(toastId);
+            toast.error("Failed to regenerate image");
+            return;
+          }
+          await fetchCredits(user?.id || "");
+          toast.dismiss(toastId);
+          toast.success("Image regenerated successfully!");
+        } else {
+          toast.dismiss(toastId);
+          toast.error("Failed to regenerate image");
+        }
+      } catch (error) {
+        console.error("Error regenerating image:", error);
+        toast.dismiss();
+        toast.error(error?.message || "Failed to regenerate image. Please try again.");
       }
-    } catch (error) {
-      console.error("Error regenerating image:", error);
-      toast.dismiss();
-      toast.error(error?.message || "Failed to regenerate image. Please try again.");
-    }
-  }, [credits, fetchCredits, item, user?.id]);
+    },
+    [credits, fetchCredits, item, user?.id],
+  );
 
   if (!imageItems || imageItems.length === 0) return null;
 
@@ -400,7 +414,7 @@ export default function GeneratedImages({ item }) {
               index={index}
               onRegenerate={handleRegenerateImage}
               onDownload={handleDownloadImage}
-              onGenerateVideo={handleGenerateVideoSoon}
+              onGenerateVideo={() => handleGenerateVideo(sourceUrl)}
               onOpenPreview={handleOpenPreview}
             />
           );

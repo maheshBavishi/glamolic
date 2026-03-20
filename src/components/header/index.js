@@ -7,11 +7,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import styles from "./header.module.scss";
 
 const Logo = "/assets/logo/logo.svg";
 
-// Icons specifically added from standard SVG paths (no lucide-react used)
 const UserIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -117,7 +117,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { user, profile, signOut, loading } = useAuth();
+  const { user, profile, signOut, loading, getTransactionsByUser } = useAuth();
   const { credits, fetchCredits, loading: creditsLoading } = useCreditsStore();
   const dropdownRef = useRef(null);
 
@@ -149,6 +149,7 @@ export default function Header() {
   useEffect(() => {
     if (user?.id) {
       fetchCredits(user.id);
+      getTransactionsByUser(user.id);
     }
   }, [user, fetchCredits]);
 
@@ -170,6 +171,14 @@ export default function Header() {
     }, 120);
     return () => window.clearTimeout(timer);
   }, [pathname]);
+
+  useEffect(() => {
+    const sessionExpired = localStorage.getItem("session_expired");
+    if (sessionExpired === "true") {
+      toast.error("Your session has expired. Please log in again");
+      localStorage.removeItem("session_expired");
+    }
+  }, []);
 
   useOnClickOutside(dropdownRef, () => setDropdownOpen(false));
 
@@ -239,12 +248,10 @@ export default function Header() {
                       <span className={styles.value}>{creditsLoading ? "..." : (credits?.available_credits ?? profile?.tokens ?? 0)}</span>
                     </div>
                   )}
-
                   <div className={styles.userDropdownContainer} ref={dropdownRef}>
                     <div className={styles.userAvatarBtn} onClick={() => setDropdownOpen(!dropdownOpen)}>
                       <span>{profile?.name?.charAt(0) || user?.email?.charAt(0) || "U"}</span>
                     </div>
-
                     <AnimatePresence>
                       {dropdownOpen && (
                         <motion.div
@@ -258,7 +265,6 @@ export default function Header() {
                             {profile?.name && <div className={styles.name}>{profile.name}</div>}
                             <div className={styles.email}>{user.email}</div>
                           </div>
-
                           <Link href="/profile" className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
                             <UserIcon /> Profile
                           </Link>
@@ -266,7 +272,6 @@ export default function Header() {
                           <Link href="/history" className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
                             <HistoryIcon /> History
                           </Link>
-
                           <button className={classNames(styles.dropdownItem, styles.separator)} onClick={handleSignOut}>
                             <LogoutIcon /> Sign Out
                           </button>
@@ -289,7 +294,6 @@ export default function Header() {
                   </Link>
                 </>
               )}
-
               <div className={styles.mobileMenu} onClick={() => setHeaderOpen(!headerOpen)}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                   <path d="M64 160C64 142.3 78.3 128 96 128L480 128C497.7 128 512 142.3 512 160C512 177.7 497.7 192 480 192L96 192C78.3 192 64 177.7 64 160zM128 320C128 302.3 142.3 288 160 288L544 288C561.7 288 576 302.3 576 320C576 337.7 561.7 352 544 352L160 352C142.3 352 128 337.7 128 320zM512 480C512 497.7 497.7 512 480 512L96 512C78.3 512 64 497.7 64 480C64 462.3 78.3 448 96 448L480 448C497.7 448 512 462.3 512 480z" />
@@ -299,7 +303,6 @@ export default function Header() {
           </div>
         </div>
       </header>
-
       <AnimatePresence>
         {headerOpen && (
           <motion.div className={styles.mobileHeader} initial="closed" animate="open" exit="closed" variants={menuVariants}>

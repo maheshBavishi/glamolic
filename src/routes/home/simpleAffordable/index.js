@@ -111,6 +111,12 @@ export default function SimpleAffordable() {
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 5);
   };
 
+  const getCardsPerSlide = () => {
+    if (window.innerWidth <= 568) return 1;
+    if (window.innerWidth <= 1124) return 2;
+    return 3;
+  };
+
   const scrollByAmount = (direction) => {
     const container = scrollRef.current;
     if (!container) return;
@@ -118,32 +124,28 @@ export default function SimpleAffordable() {
     const cards = Array.from(container.querySelectorAll("[data-plan-card='true']"));
     if (cards.length === 0) return;
 
-    const currentLeft = container.scrollLeft;
+    const cardsPerSlide = Math.min(getCardsPerSlide(), cards.length);
+    const currentScrollLeft = container.scrollLeft;
+
     let currentIndex = 0;
     let nearestDistance = Number.POSITIVE_INFINITY;
-
     cards.forEach((card, index) => {
-      const distance = Math.abs(card.offsetLeft - currentLeft);
+      const distance = Math.abs(card.offsetLeft - currentScrollLeft);
       if (distance < nearestDistance) {
         nearestDistance = distance;
         currentIndex = index;
       }
     });
 
-    const delta = direction === "left" ? -3 : 3;
-    const targetIndex = Math.max(0, Math.min(cards.length - 1, currentIndex + delta));
-    const targetLeft = cards[targetIndex].offsetLeft;
+    const delta = direction === "left" ? -cardsPerSlide : cardsPerSlide;
+    const maxStartIndex = Math.max(0, cards.length - cardsPerSlide);
+    const targetIndex = Math.max(0, Math.min(maxStartIndex, currentIndex + delta));
 
-    container.scrollTo({
-      left: targetLeft,
+    cards[targetIndex].scrollIntoView({
       behavior: "smooth",
+      block: "nearest",
+      inline: "start",
     });
-
-    setTimeout(() => {
-      // Lock final position to the exact card boundary to avoid edge clipping.
-      container.scrollTo({ left: targetLeft, behavior: "auto" });
-      updateScrollButtons();
-    }, 520);
   };
 
   useEffect(() => {
@@ -174,15 +176,15 @@ export default function SimpleAffordable() {
     setSelectedPlanId(plan?.id ?? null);
     setIsProcessingPlan(true);
     try {
-      const { data, error } = await supabaseClient.functions.invoke("create-order-prod", {
+      const { data, error } = await supabaseClient.functions.invoke("create-order", {
         body: {
           credits: plan?.credits,
           price: plan?.price,
           currency: plan?.currency_type,
           planName: getPlanName(plan?.display_name),
           user_email: user?.email,
-          customer_name: user?.user_metadata?.full_name,
-          customer_phone: user?.user_metadata?.phone,
+          customer_name: user?.name,
+          customer_phone: user?.phone,
         },
       });
       if (data?.payment_url) {

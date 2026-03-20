@@ -1,18 +1,17 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import styles from "./profile.module.scss";
-import LeftIcon from "@/icons/leftIcon";
-import EditIcon from "@/icons/editIcon";
-import ProfileIcon from "@/icons/profileIcon";
 import Input from "@/components/input";
-import SubscriptionIcon from "@/icons/subscriptionIcon";
-import RightWhiteIcon from "@/icons/rightWhiteIcon";
-import ActiveIcon from "@/icons/activeIcon";
-import ClockIcon from "@/icons/clockIcon";
 import { useAuth } from "@/context/AuthContext";
 import { useCreditsStore } from "@/hooks/useCreditsStore";
-import toast from "react-hot-toast";
+import ActiveIcon from "@/icons/activeIcon";
+import ClockIcon from "@/icons/clockIcon";
+import EditIcon from "@/icons/editIcon";
+import ProfileIcon from "@/icons/profileIcon";
+import RightWhiteIcon from "@/icons/rightWhiteIcon";
+import SubscriptionIcon from "@/icons/subscriptionIcon";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import styles from "./profile.module.scss";
 
 const ProfileImage = "/assets/images/profile.png";
 
@@ -21,7 +20,7 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ fullName: "", phone: "" });
   const [formErrors, setFormErrors] = useState({});
-  const { user, profile, loading, updateProfile } = useAuth();
+  const { user, profile, loading, updateProfile, userTransactions } = useAuth();
   const { loading: creditsLoading, credits, fetchCredits } = useCreditsStore();
 
   useEffect(() => {
@@ -47,7 +46,6 @@ export default function Profile() {
       fullName: formData.fullName.trimStart(),
       phone: formData.phone.trimStart(),
     };
-
     const errors = {};
     if (trimmedData.phone && trimmedData.phone.length !== 10) {
       errors.phone = "Phone number must be exactly 10 digits";
@@ -194,8 +192,11 @@ export default function Profile() {
               <div className={styles.lightbox}>
                 <div className={styles.freeplan}>
                   <div>
-                    <h4>Free Plan</h4>
-                    <p>You are currently on the free tier.</p>
+                    <h4>{userTransactions?.transaction_type === "SIGNUP_BONUS" ? "Free" : userTransactions?.transaction_type}</h4>
+                    <p>
+                      You are currently on the{" "}
+                      {userTransactions?.transaction_type === "SIGNUP_BONUS" ? "Free" : userTransactions?.transaction_type} plan.
+                    </p>
                   </div>
                   <div className={styles.buttonDesign}>
                     <button>

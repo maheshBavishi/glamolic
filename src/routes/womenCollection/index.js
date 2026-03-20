@@ -1,5 +1,4 @@
 "use client";
-
 import { generateImage } from "@/api/generateImage";
 import Dropdown from "@/components/dropdown";
 import Input from "@/components/input";
@@ -18,7 +17,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import styles from "./womenCollection.module.scss";
-
 const PlusIcon = "/assets/icons/plus.svg";
 const LineIcon = "/assets/icons/line.svg";
 const DangerIcon = "/assets/icons/danger.svg";
@@ -240,7 +238,7 @@ const validateProducts = ({ products, getCategoryNameById, subCategories }) => {
 export default function WomenCollection() {
   const params = useParams();
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, userTransactions } = useAuth();
   const { credits, loading: creditsLoading, fetchCredits, resetCredits } = useCreditsStore();
   const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, preserveState, setPreserveState } =
     useGenerateStore();
@@ -266,6 +264,12 @@ export default function WomenCollection() {
   const creditsPerImage = CREDITS_PER_IMAGE[settings.resolution] || 1;
   const estimatedCost = (products?.length || 0) * (settings.imagesPerProduct || 1) * creditsPerImage;
   const availableCredits = credits?.available_credits ?? profile?.tokens ?? 0;
+  const resolutionFieldOptions = useMemo(() => {
+    if (userTransactions?.transaction_type !== "SIGNUP_BONUS") {
+      return resolutionOptions.filter((option) => option.value !== "1k");
+    }
+    return resolutionOptions;
+  }, [userTransactions?.transaction_type]);
 
   const getCategoryNameById = useCallback(
     (id) => {
@@ -310,6 +314,12 @@ export default function WomenCollection() {
       updateSettings({ modelConsistency: false, sameBackground: false });
     }
   }, [settings.resolution, updateSettings]);
+
+  useEffect(() => {
+    if (userTransactions?.transaction_type !== "SIGNUP_BONUS" && settings.resolution === "1k") {
+      updateSettings({ resolution: "2k" });
+    }
+  }, [settings.resolution, updateSettings, userTransactions?.transaction_type]);
 
   useEffect(() => {
     let mounted = true;
@@ -523,6 +533,7 @@ export default function WomenCollection() {
     setIsGenerating(true);
     isSubmittingRef.current = true;
     lastSubmissionTimeRef.current = now;
+    let loadingToast = null;
     try {
       if (!user?.id) {
         toast("Please sign in to generate images");
@@ -564,8 +575,8 @@ export default function WomenCollection() {
             additionalInstructions: Array.isArray(product.additionalInstructions) ? product.additionalInstructions : [],
             poses: settings.isEcommerce
               ? getSortedViews(settings.ecommerceViewTypes || [])
-                .filter((viewType) => VIEW_ORDER.includes(viewType))
-                .map(formatViewLabel)
+                  .filter((viewType) => VIEW_ORDER.includes(viewType))
+                  .map(formatViewLabel)
               : [],
           };
 
@@ -628,7 +639,7 @@ export default function WomenCollection() {
         },
       };
 
-      const loadingToast = toast.loading("Starting generation...");
+      loadingToast = toast.loading("Starting generation...");
       const response = await generateImage(payload);
       console.log("🚀 ~ handleGenerate ~ response:", response);
 
@@ -654,6 +665,7 @@ export default function WomenCollection() {
       toast.dismiss(loadingToast);
       throw new Error(`Unexpected response format: ${JSON.stringify(response)}`);
     } catch (error) {
+      if (loadingToast) toast.dismiss(loadingToast);
       toast.error(`Generation failed: ${error?.message || "Something went wrong"}`);
     } finally {
       setIsGenerating(false);
@@ -683,9 +695,7 @@ export default function WomenCollection() {
             <div className={styles.items}>
               <div className={styles.leftBox}>
                 <div className={styles.boxtitle}>
-                  <h2>
-                    Generation Settings
-                  </h2>
+                  <h2>Generation Settings</h2>
                 </div>
                 <div className={styles.lightbox}>
                   <div className={styles.singleGrid}>
@@ -698,10 +708,22 @@ export default function WomenCollection() {
                     <Dropdown
                       label="Resolution"
                       instanceId="resolution"
-                      options={resolutionOptions}
-                      value={resolutionOptions.find((option) => option.value === settings.resolution) || null}
+                      options={resolutionFieldOptions}
+                      value={resolutionFieldOptions.find((option) => option.value === settings.resolution) || null}
                       onChange={(option) => updateSettings({ resolution: option?.value || "2k" })}
                       placeholder="Select resolution"
+                    />
+                    <Dropdown
+                      label="Orientation"
+                      instanceId="orientation"
+                      options={imageOrientationOptions}
+                      value={imageOrientationOptions.find((option) => option.value === settings.imageOrientation) || null}
+                      onChange={(option) => {
+                        const orientation = option?.value || "portrait";
+                        const defaultSize = orientation === "portrait" ? "12x18" : "18x12";
+                        updateSettings({ imageOrientation: orientation, imageSize: defaultSize });
+                      }}
+                      placeholder="Select orientation"
                     />
                     <Dropdown
                       label="Image size"
@@ -736,29 +758,13 @@ export default function WomenCollection() {
                         }}
                         placeholder="Select image count"
                       />
-                    ) : null}
-                    <Dropdown
-                      label="Orientation"
-                      instanceId="orientation"
-                      options={imageOrientationOptions}
-                      value={imageOrientationOptions.find((option) => option.value === settings.imageOrientation) || null}
-                      onChange={(option) => {
-                        const orientation = option?.value || "portrait";
-                        const defaultSize = orientation === "portrait" ? "12x18" : "18x12";
-                        updateSettings({ imageOrientation: orientation, imageSize: defaultSize });
-                      }}
-                      placeholder="Select orientation"
-                    />
+                    ) : null}                    
                   </div>
                   <div>
                     {settings.isEcommerce ? (
                       <div>
                         <div className={styles.selectviewContent}>
-                          <label>
-                            Select views
-                          </label>
-
-
+                          <label>Select views</label>
                           <div className={styles.viewOptions}>
                             {ecommerceViewOptions.map((viewOption) => {
                               const isSelected = (settings.ecommerceViewTypes || []).includes(viewOption.value);
@@ -932,16 +938,13 @@ export default function WomenCollection() {
                       />
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
             <div className={styles.items}>
               <div className={styles.productDetails}>
                 <div className={styles.boxtitle}>
-                  <h2>
-                    Product Details
-                  </h2>
+                  <h2>Product Details</h2>
                 </div>
                 <div className={styles.lightbox}>
                   <div ref={productsSectionRef}>
@@ -950,7 +953,8 @@ export default function WomenCollection() {
                       const categoryName = normalizeCategoryName(getCategoryNameById(product.clothingType));
                       const uploadFields = getUploadFields(categoryName);
                       const hasSubCategoryOptions = (subCategories[Number(product.clothingType)] || []).length > 0;
-                      const showSubCategoryField = !shouldDisableSubCategory(categoryName) && (product.clothingType === "other" || hasSubCategoryOptions);
+                      const showSubCategoryField =
+                        !shouldDisableSubCategory(categoryName) && (product.clothingType === "other" || hasSubCategoryOptions);
                       const isCategoryLocked = index > 0 && Boolean(products[0]?.clothingType);
                       const isLastProduct = index === products.length - 1;
                       const clothingTypeOptions = [
@@ -975,8 +979,7 @@ export default function WomenCollection() {
                               ) : null}
                             </div>
                           ) : null}
-
-                          <div >
+                          <div>
                             <Dropdown
                               label="Clothing Type *"
                               instanceId={`clothing-type-${product.id}-${index}`}
@@ -990,35 +993,39 @@ export default function WomenCollection() {
 
                             {showSubCategoryField ? (
                               product.clothingType === "other" ? (
-                                <Input
-                                  label="Specify Category"
-                                  placeholder="Enter category"
-                                  value={product.otherCategory || ""}
-                                  onChange={(event) => {
-                                    updateProduct(product.id, "otherCategory", event.target.value);
-                                    setProductError(index, "subCategory", undefined);
-                                    setProductError(index, "otherCategory", undefined);
-                                  }}
-                                  error={productErrors.subCategory}
-                                  disabled={index > 0 && !products[0]?.subCategory}
-                                />
+                                <div style={{ marginTop: "14px" }}>
+                                  <Input
+                                    label="Specify Category"
+                                    placeholder="Enter category"
+                                    value={product.otherCategory || ""}
+                                    onChange={(event) => {
+                                      updateProduct(product.id, "otherCategory", event.target.value);
+                                      setProductError(index, "subCategory", undefined);
+                                      setProductError(index, "otherCategory", undefined);
+                                    }}
+                                    error={productErrors.subCategory}
+                                    disabled={index > 0 && !products[0]?.subCategory}
+                                  />
+                                </div>
                               ) : (
-                                <Dropdown
-                                  label="Sub-Category *"
-                                  instanceId={`sub-category-${product.id}-${index}`}
-                                  options={subCategoryOptions}
-                                  value={subCategoryOptions.find((option) => option.value === product.subCategory) || null}
-                                  onChange={(option) => handleSubCategoryChange(product, option)}
-                                  isDisabled={isCategoryLocked}
-                                  error={productErrors.subCategory}
-                                  placeholder="Select sub-category"
-                                />
+                                <div style={{ marginTop: "14px" }}>
+                                  <Dropdown
+                                    label="Sub-Category *"
+                                    instanceId={`sub-category-${product.id}-${index}`}
+                                    options={subCategoryOptions}
+                                    value={subCategoryOptions.find((option) => option.value === product.subCategory) || null}
+                                    onChange={(option) => handleSubCategoryChange(product, option)}
+                                    isDisabled={isCategoryLocked}
+                                    error={productErrors.subCategory}
+                                    placeholder="Select sub-category"
+                                  />
+                                </div>
                               )
                             ) : null}
                           </div>
 
                           {product.subCategory === "other" ? (
-                            <div style={{ paddingBottom: "8px" }}>
+                            <div style={{ paddingBottom: "8px", marginTop: "14px" }}>
                               <Input
                                 label="Specify Sub-Category *"
                                 placeholder="Specify sub-category"
@@ -1050,7 +1057,6 @@ export default function WomenCollection() {
                               );
                             })}
                           </div>
-
                           {productErrors.imageError ? <p className={styles.inlineError}>{productErrors.imageError}</p> : null}
 
                           <div className={styles.boxtitle}>
@@ -1060,81 +1066,80 @@ export default function WomenCollection() {
                           <div className={styles.textareaGrid}>
                             {settings.isEcommerce
                               ? (() => {
-                                const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
-                                const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
-                                const standardCount = standardViews.length;
-                                const totalImages = settings.imagesPerProduct || 1;
+                                  const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
+                                  const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
+                                  const standardCount = standardViews.length;
+                                  const totalImages = settings.imagesPerProduct || 1;
 
-                                if (totalImages <= 0) {
-                                  return (
-                                    <div>
-                                      <label>Instructions</label>
-                                      <textarea
-                                        placeholder="Instructions..."
-                                        value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
-                                        onChange={(event) => {
-                                          updateProduct(product.id, "additionalInstructions", [event.target.value]);
-                                        }}
-                                      />
-                                    </div>
-                                  );
-                                }
-
-                                return (
-                                  <>
-                                    {standardCount > 0 ? (
+                                  if (totalImages <= 0) {
+                                    return (
                                       <div>
-                                        <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
+                                        <label>Instructions</label>
                                         <textarea
-                                          placeholder="Instructions for selected views..."
+                                          placeholder="Instructions..."
                                           value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
                                           onChange={(event) => {
-                                            const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                            for (let i = 0; i < standardCount; i += 1) {
-                                              next[i] = event.target.value;
-                                            }
-                                            updateProduct(product.id, "additionalInstructions", next);
+                                            updateProduct(product.id, "additionalInstructions", [event.target.value]);
                                           }}
                                         />
                                       </div>
-                                    ) : null}
-
-                                    {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
-                                      const realIndex = standardCount + additionalIndex;
-                                      return (
-                                        <div key={`additional-${product.id}-${additionalIndex}`}>
-                                          <label>Additional Image {additionalIndex + 1}</label>
+                                    );
+                                  }
+                                  return (
+                                    <>
+                                      {standardCount > 0 ? (
+                                        <div>
+                                          <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
                                           <textarea
-                                            placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
-                                            value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""}
+                                            placeholder="Instructions for selected views..."
+                                            value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
                                             onChange={(event) => {
                                               const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                              next[realIndex] = event.target.value;
+                                              for (let i = 0; i < standardCount; i += 1) {
+                                                next[i] = event.target.value;
+                                              }
                                               updateProduct(product.id, "additionalInstructions", next);
                                             }}
                                           />
                                         </div>
-                                      );
-                                    })}
-                                  </>
-                                );
-                              })()
+                                      ) : null}
+                                      {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
+                                        const realIndex = standardCount + additionalIndex;
+                                        return (
+                                          <div key={`additional-${product.id}-${additionalIndex}`}>
+                                            <label>Additional Image {additionalIndex + 1}</label>
+                                            <textarea
+                                              placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
+                                              value={
+                                                Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""
+                                              }
+                                              onChange={(event) => {
+                                                const next = resizeInstructions(product.additionalInstructions, totalImages);
+                                                next[realIndex] = event.target.value;
+                                                updateProduct(product.id, "additionalInstructions", next);
+                                              }}
+                                            />
+                                          </div>
+                                        );
+                                      })}
+                                    </>
+                                  );
+                                })()
                               : Array.from({ length: settings.imagesPerProduct || 1 }).map((_, imageIndex) => (
-                                <div key={`${product.id}-${imageIndex}`}>
-                                  <label>Image {imageIndex + 1}</label>
-                                  <textarea
-                                    placeholder={`Instruction image ${imageIndex + 1}...`}
-                                    value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
-                                    onChange={(event) => {
-                                      const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
-                                      next[imageIndex] = event.target.value;
-                                      updateProduct(product.id, "additionalInstructions", next);
-                                    }}
-                                  />
-                                </div>
-                              ))}
+                                  <div key={`${product.id}-${imageIndex}`}>
+                                    <label>Image {imageIndex + 1}</label>
+                                    <textarea
+                                      placeholder={`Instruction image ${imageIndex + 1}...`}
+                                      value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
+                                      onChange={(event) => {
+                                        const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
+                                        next[imageIndex] = event.target.value;
+                                        updateProduct(product.id, "additionalInstructions", next);
+                                      }}
+                                    />
+                                  </div>
+                                ))}
                           </div>
-
                           {isLastProduct ? (
                             <>
                               <div
@@ -1147,13 +1152,11 @@ export default function WomenCollection() {
                                 </div>
                                 <p>Add another product</p>
                               </div>
-
                               {!canAddProduct ? (
                                 <div className={styles.importantMessage}>
                                   <p>Please complete all required fields (at least one image) in the current product before adding another.</p>
                                 </div>
                               ) : null}
-
                               <div className={styles.estimateBox}>
                                 <div className={styles.contentAlignment}>
                                   <div className={styles.leftAlignment}>
@@ -1168,7 +1171,6 @@ export default function WomenCollection() {
                                     <button>{creditsLoading ? "..." : `${availableCredits} credits`}</button>
                                   </div>
                                 </div>
-
                                 <div className={styles.buttonDesign}>
                                   {(availableCredits || 0) < estimatedCost ? (
                                     <button type="button" onClick={() => router.push("/profile")}>
@@ -1183,7 +1185,6 @@ export default function WomenCollection() {
                                   )}
                                 </div>
                               </div>
-
                               <div className={styles.noteAlignment}>
                                 <div className={styles.note}>
                                   <img src={DangerIcon} alt="DangerIcon" />

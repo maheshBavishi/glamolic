@@ -166,6 +166,8 @@
         .cardSlide {
             flex: 0 0 calc((100% - 60px) / 3);
             min-width: 300px;
+            box-sizing: border-box;
+            padding-inline: 1px;
             scroll-snap-align: start;
             scroll-snap-stop: always;
 

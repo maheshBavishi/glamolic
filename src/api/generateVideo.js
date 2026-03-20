@@ -3,12 +3,7 @@ import { useCreditsStore } from "@/hooks/useCreditsStore";
 import { useGenerateStore } from "@/hooks/useGenerateStore";
 
 const DEFAULT_BACKEND_URL = "https://ai-api.glamolic.com";
-
-const normalizeBaseUrl = (value) =>
-  String(value || "")
-    .trim()
-    .replace(/^["']+|["']+$/g, "")
-    .replace(/\/+$/, "");
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || DEFAULT_BACKEND_URL;
 
 const handleUnauthorizedError = async () => {
   if (typeof window !== "undefined") {
@@ -18,13 +13,12 @@ const handleUnauthorizedError = async () => {
   useGenerateStore.getState().resetStore();
   useCreditsStore.getState().resetCredits();
   await supabase.auth.signOut();
-
   if (typeof window !== "undefined") {
     window.location.href = "/";
   }
 };
 
-export const generateImage = async (payload) => {
+export const generateVideo = async (payload) => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -35,16 +29,12 @@ export const generateImage = async (payload) => {
     throw new Error("No authentication token found. Please log in again.");
   }
 
-  const baseUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_BACKEND_URL) || DEFAULT_BACKEND_URL;
-  const requestUrl = `${baseUrl}/generate`;
-
-  const response = await fetch(requestUrl, {
+  const response = await fetch(`${BACKEND_URL}/video-generate`, {
     method: "POST",
     headers: {
       accept: "application/json",
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      "ngrok-skip-browser-warning": "true",
     },
     body: JSON.stringify(payload),
   });
@@ -56,7 +46,7 @@ export const generateImage = async (payload) => {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || errorData.message || `API request failed (${response.status}) at ${requestUrl}`);
+    throw new Error(errorData.detail || errorData.message || `Video generation API request failed with status ${response.status}`);
   }
 
   return response.json();
