@@ -20,7 +20,7 @@ export default function History() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [expandedId, setExpandedId] = useState(null);
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -110,32 +110,34 @@ export default function History() {
                   </svg>
                   Images
                 </button>
-                <button className={activeTab === "videos" ? styles.active : ""} onClick={() => handleTabChange("videos")}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path
-                      d="M10.443 17.0167H5.1763C2.54297 17.0167 1.66797 15.2667 1.66797 13.5084V6.49173C1.66797 3.8584 2.54297 2.9834 5.1763 2.9834H10.443C13.0763 2.9834 13.9513 3.8584 13.9513 6.49173V13.5084C13.9513 16.1417 13.068 17.0167 10.443 17.0167Z"
-                      stroke="#121212"
-                      strokeWidth="1.25"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M16.2659 14.2501L13.9492 12.6251V7.36678L16.2659 5.74178C17.3992 4.95011 18.3326 5.43344 18.3326 6.82511V13.1751C18.3326 14.5668 17.3992 15.0501 16.2659 14.2501Z"
-                      stroke="#121212"
-                      strokeWidth="1.25"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M9.58203 9.16667C10.2724 9.16667 10.832 8.60702 10.832 7.91667C10.832 7.22631 10.2724 6.66667 9.58203 6.66667C8.89168 6.66667 8.33203 7.22631 8.33203 7.91667C8.33203 8.60702 8.89168 9.16667 9.58203 9.16667Z"
-                      stroke="#121212"
-                      strokeWidth="1.25"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  Videos
-                </button>
+                {profile?.video_generation === true && (
+                  <button className={activeTab === "videos" ? styles.active : ""} onClick={() => handleTabChange("videos")}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M10.443 17.0167H5.1763C2.54297 17.0167 1.66797 15.2667 1.66797 13.5084V6.49173C1.66797 3.8584 2.54297 2.9834 5.1763 2.9834H10.443C13.0763 2.9834 13.9513 3.8584 13.9513 6.49173V13.5084C13.9513 16.1417 13.068 17.0167 10.443 17.0167Z"
+                        stroke="#121212"
+                        strokeWidth="1.25"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M16.2659 14.2501L13.9492 12.6251V7.36678L16.2659 5.74178C17.3992 4.95011 18.3326 5.43344 18.3326 6.82511V13.1751C18.3326 14.5668 17.3992 15.0501 16.2659 14.2501Z"
+                        stroke="#121212"
+                        strokeWidth="1.25"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M9.58203 9.16667C10.2724 9.16667 10.832 8.60702 10.832 7.91667C10.832 7.22631 10.2724 6.66667 9.58203 6.66667C8.89168 6.66667 8.33203 7.22631 8.33203 7.91667C8.33203 8.60702 8.89168 9.16667 9.58203 9.16667Z"
+                        stroke="#121212"
+                        strokeWidth="1.25"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    Videos
+                  </button>
+                )}
               </div>
             </div>
             {currentLoading ? (

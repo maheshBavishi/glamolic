@@ -52,6 +52,7 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
   onDownload,
   onGenerateVideo,
   onOpenPreview,
+  profile,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
@@ -181,9 +182,11 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
         </div>
       ) : null}
       <div className={styles.centerAlignment}>
-        <div onClick={onGenerateVideo}>
-          <Button text="Generate video" icon={VideoIcon} />
-        </div>
+        {profile?.video_generation === true && (
+          <div onClick={onGenerateVideo}>
+            <Button text="Generate video" icon={VideoIcon} />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -195,7 +198,7 @@ export default function GeneratedImages({ item }) {
   const [viewerIndex, setViewerIndex] = useState(0);
   const router = useRouter();
   const loadMoreRef = useRef(null);
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { credits, fetchCredits } = useCreditsStore();
   const imageItems = useMemo(
     () =>
@@ -416,6 +419,7 @@ export default function GeneratedImages({ item }) {
               onDownload={handleDownloadImage}
               onGenerateVideo={() => handleGenerateVideo(sourceUrl)}
               onOpenPreview={handleOpenPreview}
+              profile={profile}
             />
           );
         })}
