@@ -10,7 +10,7 @@ import LocationIcon from "@/icons/locationIcon";
 import toast from "react-hot-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-const EMAIL_REGEX = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
+const EMAIL_REGEX = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const PHONE_REGEX = /^(?=(?:\D*\d){10,})[0-9+\s-]+$/;
 
 export default function ContactUs() {
@@ -147,14 +147,7 @@ export default function ContactUs() {
             </div>
             <form className={styles.formAlignment} onSubmit={handleSubmit}>
               <div className={styles.twocol}>
-                <Input
-                  label="Full Name"
-                  placeholder="Your name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  error={errors.name}
-                />
+                <Input label="Full Name" placeholder="Your name" name="name" value={formData.name} onChange={handleChange} error={errors.name} />
                 <Input
                   label="Phone Number"
                   placeholder="Your number"
