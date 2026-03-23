@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import styles from "./contactUs.module.scss";
 import Input from "@/components/input";
+import PhoneInput from "@/components/phoneInput";
 import SendIcon from "@/icons/sendIcon";
 import EmailIcon from "@/icons/emailIcon";
 import CallIcon from "@/icons/callIcon";
@@ -25,16 +26,28 @@ export default function ContactUs() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    const nextValue = name === "phone" ? value.replace(/[^0-9+\s-]/g, "") : value;
-
     setFormData((prev) => ({
       ...prev,
-      [name]: nextValue,
+      [name]: value,
     }));
 
     setErrors((prev) => ({
       ...prev,
       [name]: "",
+    }));
+  };
+
+  const handlePhoneChange = (value) => {
+    const sanitizedValue = value ? `+${value.replace(/\D/g, "")}` : "";
+
+    setFormData((prev) => ({
+      ...prev,
+      phone: sanitizedValue,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      phone: "",
     }));
   };
 
@@ -145,23 +158,24 @@ export default function ContactUs() {
             <div className={styles.title}>
               <h3>Send us a message</h3>
             </div>
-            <form className={styles.formAlignment} onSubmit={handleSubmit}>
+            <form className={styles.formAlignment} onSubmit={handleSubmit} noValidate>
               <div className={styles.twocol}>
-                <Input label="Full Name" placeholder="Your name" name="name" value={formData.name} onChange={handleChange} error={errors.name} />
-                <Input
+                <Input label="Full Name" requiredMark placeholder="Your name" name="name" value={formData.name} onChange={handleChange} error={errors.name} />
+                <PhoneInput
                   label="Phone Number"
+                  requiredMark
+                  country="in"
+                  value={formData.phone}
+                  onChange={handlePhoneChange}
                   placeholder="Your number"
                   name="phone"
-                  type="tel"
-                  inputMode="numeric"
-                  pattern="[0-9+\\s-]*"
-                  value={formData.phone}
-                  onChange={handleChange}
+                  id="phone"
                   error={errors.phone}
                 />
                 <div className={styles.collg}>
                   <Input
                     label="Email Address"
+                    requiredMark
                     placeholder="Your email"
                     name="email"
                     type="email"
@@ -172,7 +186,9 @@ export default function ContactUs() {
                 </div>
               </div>
               <div className={styles.textareaDesign}>
-                <label>Message</label>
+                <label>
+                  Message<span className={styles.requiredMark}>*</span>
+                </label>
                 <textarea name="message" placeholder="Your Message..." value={formData.message} onChange={handleChange}></textarea>
                 {errors.message ? <p style={{ color: "red", fontSize: "14px", marginTop: "4px" }}>{errors.message}</p> : null}
               </div>

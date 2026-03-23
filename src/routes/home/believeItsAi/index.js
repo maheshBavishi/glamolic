@@ -4,11 +4,23 @@ import styles from "./believeItsAi.module.scss";
 import RightWhiteIcon from "@/icons/rightWhiteIcon";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const AiImage = "/assets/images/ai-img.png";
 const CheckIcon = "/assets/icons/check.svg";
 
 export default function BelieveItsAi() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleOnRedirect = () => {
+    if (user) {
+      router.push("/category-selection");
+      return;
+    }
+    router.push("/login");
+  };
   const slideInLeft = {
     hidden: { opacity: 0, x: -60 },
     visible: {
@@ -77,12 +89,10 @@ export default function BelieveItsAi() {
                   ))}
                 </motion.div>
                 <motion.div className={styles.buttonDesign} variants={fadeInUp}>
-                  <Link href="/category-selection">
-                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      Create Realistic AI Photos
-                      <RightWhiteIcon />
-                    </motion.button>
-                  </Link>
+                  <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleOnRedirect}>
+                    Create Realistic AI Photos
+                    <RightWhiteIcon />
+                  </motion.button>
                 </motion.div>
               </motion.div>
             </motion.div>

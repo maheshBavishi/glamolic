@@ -1,0 +1,198 @@
+@use '../../scss/main.scss' as *;
+@use '../../scss/breakpoints/breakpoints.scss' as *;
+
+.phoneInputField {
+    label {
+        display: block;
+        color: #121212;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        padding: 0 0 4px 0;
+    }
+
+    .requiredMark {
+        color: #E23030;
+        margin-left: 4px;
+    }
+
+    .phoneInputContainer {
+        width: 100%;
+        font-family: var(--font-heebo);
+    }
+
+    .phoneInputDropdown {
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .phoneInputErrorState {
+        :global(.form-control),
+        :global(.flag-dropdown) {
+            border-color: #dc2626;
+        }
+
+        :global(.react-tel-input:focus-within .flag-dropdown) {
+            border-left-color: #dc2626;
+            border-top-color: #dc2626;
+            border-bottom-color: #dc2626;
+        }
+
+        :global(.selected-flag::after) {
+            background: #dc2626;
+        }
+    }
+
+    .errorText {
+        color: red;
+        font-size: 14px;
+        margin-top: 4px;
+    }
+
+    @include respond-to("sm") {
+        .phoneInputContainer {
+            :global(.form-control) {
+                border-radius: 10px;
+            }
+
+            :global(.flag-dropdown),
+            :global(.selected-flag) {
+                border-radius: 10px 0 0 10px;
+            }
+        }
+    }
+
+    .phoneInputContainer :global(.form-control) {
+        width: 100%;
+        height: 54px;
+        border-radius: 12px;
+        border: 1px solid rgba(18, 18, 18, 0.10);
+        background: #FFF;
+        box-shadow: none;
+        color: rgba(18, 18, 18, 0.60);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        font-family: var(--font-heebo);
+        padding: 0 16px 0 58px;
+        transition: .3s ease-in-out;
+    }
+
+    .phoneInputContainer :global(.form-control::placeholder) {
+        color: rgba(18, 18, 18, 0.60);
+        font-size: 16px;
+        font-style: normal;
+        font-family: var(--font-heebo);
+        font-weight: 500;
+        line-height: normal;
+    }
+
+    .phoneInputContainer :global(.form-control:focus) {
+        border: 1px solid #647F80;
+    }
+
+    .phoneInputContainer:focus-within :global(.form-control) {
+        border-color: #647F80;
+    }
+
+    .phoneInputContainer :global(.flag-dropdown) {
+        border-radius: 12px 0 0 12px;
+        border: 1px solid rgba(18, 18, 18, 0.10);
+        border-right: none;
+        background: #FFF;
+        transition: .3s ease-in-out;
+    }
+
+    .phoneInputContainer :global(.flag-dropdown.open),
+    .phoneInputContainer :global(.flag-dropdown.open .selected-flag) {
+        border-radius: 12px 0 0 12px;
+    }
+
+    .phoneInputContainer:focus-within :global(.flag-dropdown) {
+        border-left-color: #647F80;
+        border-top-color: #647F80;
+        border-bottom-color: #647F80;
+    }
+
+    .phoneInputContainer :global(.form-control:focus + .flag-dropdown) {
+        border-left-color: #647F80;
+        border-top-color: #647F80;
+        border-bottom-color: #647F80;
+    }
+
+    .phoneInputErrorState:focus-within :global(.flag-dropdown),
+    .phoneInputErrorState :global(.form-control:focus + .flag-dropdown) {
+        border-left-color: #dc2626;
+        border-top-color: #dc2626;
+        border-bottom-color: #dc2626;
+    }
+
+    .phoneInputErrorState:focus-within :global(.form-control) {
+        border-color: #dc2626;
+    }
+
+    .phoneInputContainer :global(.selected-flag) {
+        position: relative;
+        border-radius: 12px 0 0 12px;
+        padding: 0 0 0 16px;
+        width: 48px;
+        transition: .3s ease-in-out;
+    }
+
+    .phoneInputContainer :global(.selected-flag::after) {
+        content: "";
+        position: absolute;
+        top: 8px;
+        bottom: 8px;
+        right: 0;
+        width: 1px;
+        background: rgba(18, 18, 18, 0.10);
+        transition: .3s ease-in-out;
+    }
+
+    .phoneInputContainer:focus-within :global(.selected-flag::after) {
+        background: #647F80;
+    }
+
+    .phoneInputContainer :global(.selected-flag:hover),
+    .phoneInputContainer :global(.selected-flag:focus) {
+        background: #FFF;
+    }
+
+    .phoneInputContainer :global(.country-list) {
+        margin: 8px 0 10px 0;
+        border: 1px solid rgba(18, 18, 18, 0.10);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        background: #FFF;
+    }
+
+    .phoneInputContainer :global(.country-list .country) {
+        color: #121212;
+        font-size: 14px;
+        font-family: var(--font-heebo);
+    }
+
+    .phoneInputContainer :global(.country-list .country:hover),
+    .phoneInputContainer :global(.country-list .country.highlight) {
+        background: #F2F7F7;
+    }
+
+    .phoneInputContainer :global(.country-list .search) {
+        background: #FFF;
+        padding: 10px;
+    }
+
+    .phoneInputContainer :global(.country-list .search .search-box) {
+        margin: 0;
+        width: 100%;
+        height: 40px;
+        border: 1px solid rgba(18, 18, 18, 0.10);
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: var(--font-heebo);
+        color: rgba(18, 18, 18, 0.60);
+    }
+}
