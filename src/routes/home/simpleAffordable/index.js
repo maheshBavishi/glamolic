@@ -193,7 +193,7 @@ export default function SimpleAffordable() {
     setSelectedPlanId(plan?.id ?? null);
     setIsProcessingPlan(true);
     try {
-      const { data, error } = await supabaseClient.functions.invoke("create-order", {
+      const { data, error } = await supabaseClient.functions.invoke("create-order-prod", {
         body: {
           credits: plan?.credits,
           price: plan?.price,
