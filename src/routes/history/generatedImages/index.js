@@ -53,6 +53,8 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
   onGenerateVideo,
   onOpenPreview,
   profile,
+  isRegenerating,
+  isDownloading,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
@@ -164,18 +166,20 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
           <img
             src={ReloadIcon}
             alt="Regenerate image"
-            className={styles.actionIcon}
+            className={`${styles.actionIcon} ${isRegenerating ? styles.actionIconBusy : ""} ${isRegenerating ? styles.actionIconSpin : ""}`}
             onClick={(e) => {
               e.stopPropagation();
+              if (isRegenerating) return;
               onRegenerate(sourceUrl, index);
             }}
           />
           <img
             src={FillIcon}
             alt="Download image"
-            className={styles.actionIcon}
+            className={`${styles.actionIcon} ${isDownloading ? styles.actionIconBusy : ""}`}
             onClick={(e) => {
               e.stopPropagation();
+              if (isDownloading) return;
               onDownload(sourceUrl, index);
             }}
           />
@@ -196,6 +200,10 @@ export default function GeneratedImages({ item }) {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_IMAGES);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(0);
+  const [regeneratingImages, setRegeneratingImages] = useState({});
+  const [downloadingImages, setDownloadingImages] = useState({});
+  const regeneratingSetRef = useRef(new Set());
+  const downloadingSetRef = useRef(new Set());
   const router = useRouter();
   const loadMoreRef = useRef(null);
   const { user, profile } = useAuth();
@@ -216,6 +224,7 @@ export default function GeneratedImages({ item }) {
   const allPreviewImages = useMemo(() => imageItems.map((imageItem) => imageItem.originalUrl || imageItem.displayUrl), [imageItems]);
   const hasMoreImages = visibleCount < imageItems.length;
   const { handleDownloadImage, handleDownloadAll, handleExportPDF } = useHistoryActions();
+  
   const handleGenerateVideo = useCallback(
     (sourceUrl) => {
       if (!sourceUrl) {
@@ -295,12 +304,18 @@ export default function GeneratedImages({ item }) {
 
   const handleRegenerateImage = useCallback(
     async (imageUrl, targetIndex) => {
+      if (regeneratingSetRef.current.has(targetIndex)) return;
+      regeneratingSetRef.current.add(targetIndex);
+      setRegeneratingImages((prev) => ({ ...prev, [targetIndex]: true }));
+
+      let toastId;
       try {
-        if (!credits || credits.available_credits < 1) {
+        const availableCredits = credits?.available_credits ?? profile?.tokens ?? 0;
+        if (availableCredits < 1) {
           toast.error("Insufficient credits. Please purchase more credits to regenerate images.");
           return;
         }
-        const imagesPerProduct = item.settings?.imagesPerProduct || 1;
+        const imagesPerProduct = item.settings?.imagesPerProduct || item.settings?.numberOfImages || 1;
         const productIndex = Math.floor(targetIndex / imagesPerProduct);
         const imageIndexInProduct = targetIndex % imagesPerProduct;
 
@@ -345,10 +360,10 @@ export default function GeneratedImages({ item }) {
             resolution: item.settings?.resolution || "4K",
             imageSize: item.settings?.imageSize || "12x18",
             backgroundType: item.settings?.backgroundType || "Professional Studio",
-            unifiedBackground: item.settings?.sameBackground || false,
+            unifiedBackground: item.settings?.sameBackground ?? item.settings?.unifiedBackground ?? false,
             modelConsistency: item.settings?.modelConsistency || false,
             additionalInstructions: additionalInstructions,
-            numberOfImages: item.settings?.imagesPerProduct || 1,
+            numberOfImages: imagesPerProduct,
             aspectRatio: "2:3",
             startingVariationIdx: item.settings?.startingVariationIdx || 0,
           },
@@ -357,7 +372,7 @@ export default function GeneratedImages({ item }) {
           additionalInstruction: specificInstruction,
         };
 
-        const toastId = toast.loading("Regenerating image...");
+        toastId = toast.loading("Regenerating image...");
 
         const response = await regenerateImage(payload);
 
@@ -369,7 +384,9 @@ export default function GeneratedImages({ item }) {
             toast.error("Failed to regenerate image");
             return;
           }
-          await fetchCredits(user?.id || "");
+          if (user?.id) {
+            await fetchCredits(user.id);
+          }
           toast.dismiss(toastId);
           toast.success("Image regenerated successfully!");
         } else {
@@ -378,11 +395,40 @@ export default function GeneratedImages({ item }) {
         }
       } catch (error) {
         console.error("Error regenerating image:", error);
-        toast.dismiss();
+        if (toastId) toast.dismiss(toastId);
         toast.error(error?.message || "Failed to regenerate image. Please try again.");
+      } finally {
+        regeneratingSetRef.current.delete(targetIndex);
+        setRegeneratingImages((prev) => {
+          if (!prev[targetIndex]) return prev;
+          const next = { ...prev };
+          delete next[targetIndex];
+          return next;
+        });
       }
     },
-    [credits, fetchCredits, item, user?.id],
+    [credits?.available_credits, fetchCredits, item, profile?.tokens, user?.id],
+  );
+
+  const handleSingleImageDownload = useCallback(
+    async (imageUrl, index) => {
+      if (downloadingSetRef.current.has(index)) return;
+      downloadingSetRef.current.add(index);
+      setDownloadingImages((prev) => ({ ...prev, [index]: true }));
+
+      try {
+        await handleDownloadImage(imageUrl, index);
+      } finally {
+        downloadingSetRef.current.delete(index);
+        setDownloadingImages((prev) => {
+          if (!prev[index]) return prev;
+          const next = { ...prev };
+          delete next[index];
+          return next;
+        });
+      }
+    },
+    [handleDownloadImage],
   );
 
   if (!imageItems || imageItems.length === 0) return null;
@@ -416,10 +462,12 @@ export default function GeneratedImages({ item }) {
               sourceUrl={sourceUrl}
               index={index}
               onRegenerate={handleRegenerateImage}
-              onDownload={handleDownloadImage}
+              onDownload={handleSingleImageDownload}
               onGenerateVideo={() => handleGenerateVideo(sourceUrl)}
               onOpenPreview={handleOpenPreview}
               profile={profile}
+              isRegenerating={Boolean(regeneratingImages[index])}
+              isDownloading={Boolean(downloadingImages[index])}
             />
           );
         })}

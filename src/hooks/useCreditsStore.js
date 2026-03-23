@@ -7,6 +7,10 @@ export const useCreditsStore = create((set) => ({
     error: null,
 
     fetchCredits: async (userId) => {
+        if (!userId) {
+            set({ loading: false, error: null });
+            return;
+        }
         set({ loading: true, error: null });
         try {
             const { data, error } = await supabase

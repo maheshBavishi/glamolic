@@ -86,6 +86,17 @@
                 .actionIcon {
                     display: block;
                     cursor: pointer;
+                    transition: opacity .2s ease-in-out;
+                }
+
+                .actionIconBusy {
+                    opacity: .6;
+                    pointer-events: none;
+                    cursor: wait;
+                }
+
+                .actionIconSpin {
+                    animation: action-spin 0.9s linear infinite;
                 }
             }
 
@@ -523,6 +534,16 @@
 }
 
 @keyframes viewer-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes action-spin {
     0% {
         transform: rotate(0deg);
     }
