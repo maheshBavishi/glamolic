@@ -571,7 +571,7 @@ export default function WomenCollection() {
                   : getSubCategoryNameById(product.subCategory),
             frontPreview: frontBase64,
             backPreview: backBase64,
-            referenceImage: frontBase64 || backBase64 || topBase64 || blouseBase64 || bottomBase64 || dupattaBase64 || "",
+            referenceImage: "",
             additionalInstructions: Array.isArray(product.additionalInstructions) ? product.additionalInstructions : [],
             poses: settings.isEcommerce
               ? getSortedViews(settings.ecommerceViewTypes || [])
