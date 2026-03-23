@@ -118,15 +118,27 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
       productMetadata = {};
     }
 
+    const normalizedProductMetadata = Array.isArray(productMetadata)
+      ? productMetadata
+      : productMetadata && typeof productMetadata === "object"
+        ? [productMetadata]
+        : [];
+    const primaryProductMetadata = normalizedProductMetadata[0] || {};
+    const imagesPerProduct = settings.imagesPerProduct || settings.numberOfImages || 1;
+    const unifiedBackground = settings.unifiedBackground ?? settings.sameBackground ?? false;
+    const additionalInstructions = Array.isArray(settings.additionalInstructions) ? settings.additionalInstructions : [];
+
     const imageUrls = collectImageUrls(item.image_urls);
 
     let productName = "Untitled Collection";
     if (settings.productName) {
       productName = settings.productName;
-    } else if (productMetadata.itemType) {
-      const gender = productMetadata.gender ? productMetadata.gender.charAt(0).toUpperCase() + productMetadata.gender.slice(1) : "";
-      const subCategory = productMetadata.subCategory ? ` - ${productMetadata.subCategory}` : "";
-      productName = `${gender} ${productMetadata.itemType}${subCategory}`.trim();
+    } else if (primaryProductMetadata.itemType) {
+      const gender = primaryProductMetadata.gender
+        ? primaryProductMetadata.gender.charAt(0).toUpperCase() + primaryProductMetadata.gender.slice(1)
+        : "";
+      const subCategory = primaryProductMetadata.subCategory ? ` - ${primaryProductMetadata.subCategory}` : "";
+      productName = `${gender} ${primaryProductMetadata.itemType}${subCategory}`.trim();
     }
 
     const historyItem = {
@@ -141,19 +153,24 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
             .join("\n") || "No additional instructions provided."
         : settings.additionalInstructions || "No additional instructions provided.",
       prompt: item.prompt || "",
-      products: Array.isArray(item.product_metadata) ? item.product_metadata.length : 1,
+      products: normalizedProductMetadata.length || 1,
       totalImages: imageUrls.length,
       status: item.status || "completed",
       settings: {
+        productName: settings.productName || productName,
         resolution: settings.resolution || "2K",
         imageSize: settings.imageSize || "12x18",
         backgroundType: settings.backgroundType || "Lifestyle",
-        imagesPerProduct: settings.numberOfImages || 1,
+        imagesPerProduct: imagesPerProduct,
+        numberOfImages: imagesPerProduct,
         modelConsistency: settings.modelConsistency,
-        sameBackground: settings.unifiedBackground,
+        sameBackground: unifiedBackground,
+        unifiedBackground: unifiedBackground,
+        additionalInstructions: additionalInstructions,
+        startingVariationIdx: settings.startingVariationIdx || 0,
       },
       thumbnails: imageUrls,
-      product_metadata: item.product_metadata,
+      product_metadata: normalizedProductMetadata,
     };
 
     return historyItem;
