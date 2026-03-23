@@ -175,10 +175,10 @@ export default function TermsConditions() {
             <p>If you have any questions about these Terms and Conditions, please contact us:</p>
             <ul>
               <li>
-                <strong>Email:</strong>{" "}
+                <strong>Email:</strong> support@glamolic.com{" "}
               </li>
               <li>
-                <strong>Website:</strong> www.glamolic.ai
+                <strong>Website:</strong> www.glamolic.com
               </li>
               <li>
                 <strong>Support:</strong> Available via the Contact Us page on our platform

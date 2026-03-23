@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [userTransactions, setUserTransactions] = useState([]);
+  const [userTransactions, setUserTransactions] = useState(null);
 
   const resetStore = useGenerateStore?.()?.resetStore || (() => {});
   const resetCredits = useCreditsStore?.()?.resetCredits || (() => {});
@@ -46,15 +46,18 @@ export const AuthProvider = ({ children }) => {
         .eq("user_id", userId)
         .order("created_at", { ascending: false }) // latest first
         .limit(1)
-        .single(); // get single object
+        .maybeSingle(); // get single object
 
       if (error) {
         console.error("Error fetching last transaction:", error);
+        setUserTransactions(null);
         return null;
       }
       setUserTransactions(data);
+      return data;
     } catch (error) {
       console.error("Error:", error);
+      setUserTransactions(null);
       return null;
     }
   };
@@ -79,9 +82,11 @@ export const AuthProvider = ({ children }) => {
       if (session?.user) {
         setTimeout(() => {
           fetchProfile(session.user.id).then(setProfile);
+          getTransactionsByUser(session.user.id);
         }, 0);
       } else {
         setProfile(null);
+        setUserTransactions(null);
       }
       setLoading(false);
     });
@@ -90,6 +95,9 @@ export const AuthProvider = ({ children }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id).then(setProfile);
+        getTransactionsByUser(session.user.id);
+      } else {
+        setUserTransactions(null);
       }
       setLoading(false);
     });
@@ -168,6 +176,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setSession(null);
     setProfile(null);
+    setUserTransactions(undefined);
   };
 
   const updateProfile = async (updates) => {

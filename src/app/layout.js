@@ -4,6 +4,7 @@ import { El_Messiri, Heebo } from "next/font/google"; // Removed unused Geist co
 import { Toaster } from "react-hot-toast";
 import "../scss/main.scss";
 import "./globals.css";
+import "react-phone-input-2/lib/style.css";
 
 const elMessiri = El_Messiri({
   variable: "--font-el-messiri",

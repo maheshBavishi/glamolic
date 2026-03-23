@@ -105,8 +105,8 @@ export default function PrivacyPolicy() {
                             If you have any questions, concerns or requests regarding this Privacy Policy, please contact us:
                         </p>
                         <ul>
-                            <li><strong>Email:</strong> </li>
-                            <li><strong>Website:</strong> www.glamolic.ai</li>
+                            <li><strong>Email:</strong> support@glamolic.com </li>
+                            <li><strong>Website:</strong> www.glamolic.com</li>
                             <li><strong>Support:</strong> Available via the Contact Us page on our platform</li>
                         </ul>
 

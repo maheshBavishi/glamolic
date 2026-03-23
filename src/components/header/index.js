@@ -163,13 +163,33 @@ export default function Header() {
     if (!target) {
       return;
     }
-    const timer = window.setTimeout(() => {
+
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    const tryScrollToTarget = () => {
       const didScroll = scrollToSection(target);
-      if (didScroll && pendingTarget) {
-        window.sessionStorage.removeItem("home-scroll-target");
+      if (didScroll) {
+        if (pendingTarget) {
+          window.sessionStorage.removeItem("home-scroll-target");
+        }
+        return true;
       }
-    }, 120);
-    return () => window.clearTimeout(timer);
+      return false;
+    };
+
+    if (tryScrollToTarget()) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      attempts += 1;
+      if (tryScrollToTarget() || attempts >= maxAttempts) {
+        window.clearInterval(intervalId);
+      }
+    }, 100);
+
+    return () => window.clearInterval(intervalId);
   }, [pathname]);
 
   useEffect(() => {

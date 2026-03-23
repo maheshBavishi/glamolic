@@ -1,10 +1,10 @@
 "use client";
-import React from "react";
-import styles from "./createPerfectPhotos.module.scss";
 import RightWhiteIcon from "@/icons/rightWhiteIcon";
 import { motion } from "framer-motion";
-import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import styles from "./createPerfectPhotos.module.scss";
+import { useAuth } from "@/context/AuthContext";
+ 
 const SliderImage = "/assets/images/slider.png";
 const SliderImage2 = "/assets/images/slider2.png";
 const PerfectLeft = "/assets/images/perfect-left.png";
@@ -12,6 +12,17 @@ const PerfectRight = "/assets/images/perfect-right.png";
 const CheckIcon = "/assets/icons/check.svg";
 
 export default function CreatePerfectPhotos() {
+  const router = useRouter();
+   const { user } = useAuth();
+ 
+   const handleOnRedirect = () => {
+     if (user) {
+       router.push("/category-selection");
+       return;
+     }
+     router.push("/login");
+   };
+
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -126,12 +137,10 @@ export default function CreatePerfectPhotos() {
                       ))}
                     </motion.div>
                     <motion.div className={styles.buttonDesign} variants={fadeIn}>
-                      <Link href="/category-selection">
-                        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleOnRedirect}>
                           {box.button}
                           <RightWhiteIcon />
                         </motion.button>
-                      </Link>
                     </motion.div>
                   </div>
                 </motion.div>

@@ -4,11 +4,32 @@ import styles from "./readytoTransform.module.scss";
 import RightWhiteIcon from "@/icons/rightWhiteIcon";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const ModelImage1 = "/assets/images/modal1.png";
 const ModelImage2 = "/assets/images/modal2.png";
 
 export default function ReadytoTransform() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleOnRedirect = () => {
+    if (user) {
+      router.push("/category-selection");
+      return;
+    }
+    router.push("/login");
+  };
+
+  const handleOnRedirectGenerateImage = (category) => {
+    if (user) {
+      router.push(category);
+      return;
+    }
+    router.push("/login");
+  };
+
   const slideFadeLeft = {
     hidden: { opacity: 0, x: -50 },
     visible: {
@@ -48,12 +69,10 @@ export default function ReadytoTransform() {
               <div className={styles.content}>
                 <h2>Stop Paying for Photoshoots. Start Using Glamolic AI.</h2>
                 <p>Join hundreds of brands already using Glamolic AI to create stunning product images. Start your free trial today!</p>
-                <Link href="/category-selection">
-                  <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleOnRedirect}>
                     Start Generating Free
                     <RightWhiteIcon />
                   </motion.button>
-                </Link>
               </div>
             </motion.div>
             <div className={styles.griditems}>
@@ -70,12 +89,10 @@ export default function ReadytoTransform() {
                         <li> Lehengas</li>
                         <li>Kurtis & More</li>
                       </ul>
-                      <Link href="/generate/women">
-                        <motion.button whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }}>
-                          Explore
-                          <RightWhiteIcon />
-                        </motion.button>
-                      </Link>
+                      <motion.button whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }} onClick={() => handleOnRedirectGenerateImage("/generate/women")}>
+                        Explore
+                        <RightWhiteIcon />
+                      </motion.button>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -91,12 +108,10 @@ export default function ReadytoTransform() {
                         <li> Sherwanis</li>
                         <li>Blazer & More</li>
                       </ul>
-                      <Link href="/generate/men">
-                        <motion.button whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }}>
+                        <motion.button whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }} onClick={() => handleOnRedirectGenerateImage("/generate/men")}>
                           Explore
                           <RightWhiteIcon />
                         </motion.button>
-                      </Link>
                     </div>
                   </motion.div>
                 </motion.div>
