@@ -14,8 +14,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [userTransactions, setUserTransactions] = useState(null);
 
-  const resetStore = useGenerateStore?.()?.resetStore || (() => {});
-  const resetCredits = useCreditsStore?.()?.resetCredits || (() => {});
+  const { resetStore } = useGenerateStore();
+  const { resetCredits } = useCreditsStore();
 
   const fetchProfile = async (userId) => {
     try {
