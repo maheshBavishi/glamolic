@@ -1,0 +1,151 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.blogBanner {
+    background-image: url('/assets/images/hero-banner.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    background-position: bottom;
+
+    @include respond-to("md") {
+        height: auto;
+    }
+
+    .topAlignment {
+        padding: 160px 0;
+
+        @include respond-to("xl") {
+            padding: 140px 0 0 0;
+        }
+
+        @include respond-to("sm") {
+            padding: 130px 0 0 0;
+        }
+    }
+
+    .grid {
+        display: grid;
+        align-items: center;
+        grid-template-columns: 1fr 580px;
+        gap: 100px;
+        max-width: 1400px;
+        margin: 0 auto;
+
+        .image {
+            img {
+                display: block;
+                width: 100%;
+            }
+        }
+
+        .buttonAlignment {
+            padding: 24px 0 0 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            button {
+                border-radius: 100px;
+                border: 1px solid #D2D4D6;
+                background: #FFF;
+                color: #121212;
+                font-size: 14px;
+                padding: 8px 20px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 120%;
+                text-transform: capitalize;
+            }
+        }
+
+        .textstyle {
+            h1 {
+                font-family: var(--font-el-messiri);
+                color: #121212;
+                font-size: 42px;
+                font-style: normal;
+                max-width: 80%;
+                font-weight: 600;
+                line-height: 58px;
+                text-transform: capitalize;
+                margin: 0 0 10px 0;
+            }
+
+            .inputsearch {
+                display: grid;
+                grid-template-columns: 1fr 54px;
+                gap: 16px;
+
+                .icon {
+                    width: 54px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 54px;
+                    border-radius: 99px;
+                    outline: none;
+                    transition: .3s ease-in-out;
+                    border-radius: 50%;
+                    background: #527475;
+                    cursor: pointer;
+
+                    svg {
+                        width: 22px;
+                        height: 22px;
+                    }
+                }
+
+                input {
+                    width: 100%;
+                    padding: 0 16px;
+                    color: rgba(18, 18, 18, 0.60);
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    font-family: var(--font-heebo);
+                    height: 54px;
+                    border-radius: 99px;
+                    border: 1px solid rgba(18, 18, 18, 0.10);
+                    background: #FFF;
+                    outline: none;
+                    transition: .3s ease-in-out;
+
+                    @include respond-to("sm") {
+                        font-size: 16px;
+                        border-radius: 10px;
+                    }
+
+                    &:focus {
+                        border: 1px solid #647F80;
+                    }
+                }
+
+                ::placeholder {
+                    color: rgba(18, 18, 18, 0.60);
+                    font-size: 16px;
+                    font-style: normal;
+                    font-family: var(--font-heebo);
+                    font-weight: 500;
+                    line-height: normal;
+
+                    @include respond-to("sm") {
+                        font-size: 16px;
+                    }
+                }
+            }
+
+            p {
+
+                color: #727272;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 500;
+                margin: 0 0 24px 0;
+                line-height: normal;
+            }
+        }
+    }
+
+}
