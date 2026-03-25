@@ -1,0 +1,91 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.blogInformation {
+    padding: 160px 0;
+
+    @include respond-to("xl") {
+        padding: 140px 0 0 0;
+    }
+
+    @include respond-to("sm") {
+        padding: 130px 0 0 0;
+    }
+
+    .title {
+        h1 {
+            font-family: var(--font-el-messiri);
+            color: #121212;
+            font-size: 42px;
+            font-style: normal;
+            max-width: 80%;
+            text-align: center;
+            font-weight: 600;
+            line-height: 58px;
+            text-transform: capitalize;
+            margin: 0 auto 10px auto;
+        }
+
+        .profilleDateAlignment {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            justify-content: center;
+            padding: 10px 0 40px 0;
+
+            .date {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+
+                svg {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                span {
+                    color: #727272;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    display: block;
+                }
+            }
+
+            .profile {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+
+                img {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    display: block;
+                }
+
+                span {
+                    color: #727272;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .mainImage {
+        max-width: 80%;
+        margin: 0 auto;
+
+        img {
+            width: 100%;
+            border-radius: 22px;
+            display: block;
+        }
+    }
+}

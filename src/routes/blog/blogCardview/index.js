@@ -1,0 +1,101 @@
+'use client'
+import React, { useRef } from 'react'
+import styles from './blogCardview.module.scss';
+import RightBlackIcon from '@/icons/rightBlackIcon';
+import { motion, useInView } from 'framer-motion';
+
+const BlogImage = '/assets/images/blog-img.png';
+
+const containerVariants = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.18,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const cardVariants = {
+    hidden: {
+        opacity: 0,
+        y: 40,
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.65,
+            ease: [0.22, 1, 0.36, 1],
+        },
+    },
+};
+
+const articles = [
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+];
+
+export default function BlogCardview() {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: '-80px' });
+
+    return (
+        <div className={styles.blogCardview}>
+            <div className='container'>
+                <motion.div
+                    ref={ref}
+                    className={styles.grid}
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate={isInView ? 'visible' : 'hidden'}
+                >
+                    {articles.map((item) => (
+                        <motion.div
+                            key={item.id}
+                            className={styles.items}
+                            variants={cardVariants}
+                            whileHover={{ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }}
+                            style={{ willChange: 'transform, opacity' }}
+                        >
+                            <div className={styles.imagebox}>
+                                <motion.img
+                                    src={BlogImage}
+                                    alt='BlogImage'
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ duration: 0.4, ease: 'easeOut' }}
+                                    style={{ willChange: 'transform' }}
+                                />
+                            </div>
+                            <div className={styles.content}>
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    Dec 29,2025
+                                </motion.button>
+                                <h3>
+                                    How AI Photoshoots Are Replacing Traditional Fashion Photography
+                                </h3>
+                                <p>
+                                    Discover how brands are saving thousands on models, studios and editing while producing unlimited catalog images
+                                    in minutes.
+                                </p>
+                                <motion.div
+                                    className={styles.readmore}
+                                    whileHover={{ gap: '12px' }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    <span>Read More</span>
+                                    <RightBlackIcon />
+                                </motion.div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </motion.div>
+            </div>
+        </div>
+    );
+}

@@ -1,0 +1,40 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.tableOfContentDetails {
+    padding: 0 0 100px 0;
+
+    .grid {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 40px;
+
+        .tableofContent {
+            border-radius: 20px;
+            border: 1px solid rgba(18, 18, 18, 0.10);
+            background: #FFF;
+            box-shadow: 0 0 64.4px 0 rgba(0, 0, 0, 0.08);
+            padding: 20px;
+
+            h2 {
+                color: #121212;
+                font-size: 21px;
+                margin: 0 0 16px 0;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+                text-transform: capitalize;
+            }
+
+            span {
+                color: #565656;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 500;
+                padding: 0 0 10px 0;
+                line-height: 24px;
+                display: block;
+            }
+        }
+    }
+}

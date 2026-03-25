@@ -79,6 +79,59 @@
 
     .allBoxAlignment {
 
+        .twocol {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+
+            .newItems {
+                height: 100%;
+                position: relative;
+
+                .bottomAlignment {
+                    position: absolute;
+                    bottom: -14px;
+                    left: 50%;
+                    transform: translateX(-50%);
+
+                    @include respond-to("sm") {
+                        bottom: -4px;
+                    }
+
+                    button {
+                        border-radius: 1000px;
+                        color: #FFF;
+                        text-align: center;
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: normal;
+                        padding: 4px 24px;
+                        border-bottom: none;
+                        border-top: 4px solid #FFF;
+                        border-right: 4px solid #FFF;
+                        border-left: 4px solid #FFF;
+                        background: #527475;
+
+                        @include respond-to("sm") {
+                            border-top: 2px solid #FFF;
+                            border-right: 2px solid #FFF;
+                            font-size: 12px;
+                            border-left: 2px solid #FFF;
+                            padding: 4px 16px;
+                        }
+                    }
+                }
+
+                img,
+                video {
+                    height: 100%;
+                    width: 100%;
+                    display: block;
+                    border-radius: 16px;
+                }
+            }
+        }
 
         .box:last-child {
             margin: 0;
