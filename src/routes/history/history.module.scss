@@ -139,6 +139,19 @@
                 background: #F7F7F7;
                 padding: 24px;
 
+                .instructionsList {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 14px;
+                }
+
+                .productInstructionBlock {
+                    border-radius: 16px;
+                    border: 1px solid rgba(18, 18, 18, 0.08);
+                    background: rgba(255, 255, 255, 0.55);
+                    padding: 14px;
+                }
+
                 .subtitle {
                     h4 {
                         color: #121212;
@@ -147,7 +160,17 @@
                         font-weight: 500;
                         line-height: normal;
                         margin: 0 0 6px 0;
+
+                        .productLabel {
+                            color: #121212;
+                        }
                     }
+                }
+
+                .instructionGrid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                    gap: 12px;
                 }
 
                 .typebox {
@@ -165,13 +188,41 @@
                         margin: 0 0 6px 0;
                     }
 
-                    span {
+                    .instructionText {
                         display: block;
                         color: rgba(18, 18, 18, 0.60);
                         font-size: 18px;
                         font-style: normal;
                         font-weight: 500;
                         line-height: normal;
+                        white-space: pre-wrap;
+                        word-break: break-word;
+                        margin: 0;
+                    }
+
+                    .instructionTextCollapsed {
+                        display: -webkit-box;
+                        -webkit-line-clamp: 3;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        white-space: normal;
+                    }
+
+                    .instructionToggle {
+                        margin-top: 6px;
+                        padding: 0;
+                        border: none;
+                        background: transparent;
+                        color: #121212;
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                        cursor: pointer;
+                    }
+
+                    .instructionToggle:hover {
+                        text-decoration: underline;
                     }
                 }
 

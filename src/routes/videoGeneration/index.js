@@ -8,7 +8,7 @@ import { useCreditsStore } from "@/hooks/useCreditsStore";
 import BottomIcon from "@/icons/bottomIcon";
 import BottomRightIcon from "@/icons/bottomRightIcon";
 import CameraIcon from "@/icons/cameraIcon";
-import CenterIcon from "@/icons/centerIcon";
+// import CenterIcon from "@/icons/centerIcon";
 import LandscapeIcon from "@/icons/landscapeIcon";
 import MobileIcon from "@/icons/mobileIcon";
 import RightWhiteIcon from "@/icons/rightWhiteIcon";
@@ -202,7 +202,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                 </div>
               </div>
               <div className={styles.logoposition}>
-                <p>Logo position</p>
+                <p>Logo Position</p>
                 <div className={styles.logogrid}>
                   <div
                     className={styles.items}
@@ -218,7 +218,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     style={formData.logo_position === "left_bottom" ? activeStyle : undefined}
                   >
                     <BottomIcon />
-                    <span>Bottom left</span>
+                    <span>Bottom Left</span>
                   </div>
                   <div
                     className={styles.items}
@@ -234,23 +234,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     style={formData.logo_position === "right_bottom" ? activeStyle : undefined}
                   >
                     <BottomRightIcon />
-                    <span>Bottom right</span>
-                  </div>
-                  <div
-                    className={styles.items}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => handleChange("logo_position", "center")}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        handleChange("logo_position", "center");
-                      }
-                    }}
-                    style={formData.logo_position === "center" ? activeStyle : undefined}
-                  >
-                    <CenterIcon />
-                    <span>Center</span>
+                    <span>Bottom Right</span>
                   </div>
                   <div
                     className={styles.items}
@@ -282,12 +266,12 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     style={formData.logo_position === "left_top" ? activeStyle : undefined}
                   >
                     <TopLeftIcon />
-                    <span>Top left</span>
+                    <span>Top Left</span>
                   </div>
                 </div>
               </div>
               <div className={styles.logosize}>
-                <p>Logo size</p>
+                <p>Logo Size</p>
                 <div className={styles.threeCol}>
                   <input
                     type="text"
@@ -322,7 +306,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                 />
               </div>
               <div className={styles.ratio}>
-                <p>Aspect ratio</p>
+                <p>Aspect Ratio</p>
                 <div className={styles.twocol}>
                   <div
                     className={styles.items}
@@ -354,12 +338,12 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     style={formData.aspectRatio === "landscape" ? activeStyle : undefined}
                   >
                     <LandscapeIcon />
-                    <span>Landscape (16:09)</span>
+                    <span>Landscape (16:9)</span>
                   </div>
                 </div>
               </div>
               <div className={styles.audiotype}>
-                <p>Audio type</p>
+                <p>Audio Type</p>
                 <div className={styles.three}>
                   <div
                     className={styles.items}
@@ -404,7 +388,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     }}
                     style={formData.audioType === "voice" ? activeStyle : undefined}
                   >
-                    <span>Voice over</span>
+                    <span>Voice Over</span>
                   </div>
                 </div>
               </div>
@@ -418,7 +402,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                           <CameraIcon />
                         </div>
                         <div>
-                          <h5>Show product name</h5>
+                          <h5>Show Product Name</h5>
                           <p>Display the product name as a text overlay on the video</p>
                         </div>
                       </div>

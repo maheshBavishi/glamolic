@@ -7,9 +7,8 @@ import toast from "react-hot-toast";
 export const useHistoryActions = () => {
   const handleDownloadImage = async (url, id) => {
     try {
-      const response = await fetch(url, { method: "HEAD" });
-      if (!response?.ok) {
-        throw new Error("Image not found");
+      if (!url) {
+        throw new Error("Image URL not found");
       }
       saveAs(url, `image-${id}.jpg`);
     } catch (error) {

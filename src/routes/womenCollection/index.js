@@ -239,7 +239,7 @@ export default function WomenCollection() {
   const params = useParams();
   const router = useRouter();
   const { user, profile, userTransactions } = useAuth();
-  const { credits, loading: creditsLoading, fetchCredits, resetCredits } = useCreditsStore();
+  const { credits, loading: creditsLoading, fetchCredits } = useCreditsStore();
   const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, preserveState, setPreserveState } =
     useGenerateStore();
 
@@ -571,7 +571,7 @@ export default function WomenCollection() {
                   : getSubCategoryNameById(product.subCategory),
             frontPreview: frontBase64,
             backPreview: backBase64,
-            referenceImage: frontBase64 || backBase64 || topBase64 || blouseBase64 || bottomBase64 || dupattaBase64 || "",
+            referenceImage: "",
             additionalInstructions: Array.isArray(product.additionalInstructions) ? product.additionalInstructions : [],
             poses: settings.isEcommerce
               ? getSortedViews(settings.ecommerceViewTypes || [])
@@ -656,7 +656,9 @@ export default function WomenCollection() {
         toast.dismiss(loadingToast);
         toast.success(response?.message || "Generation started in background!");
         resetStore();
-        resetCredits();
+        if (user?.id) {
+          fetchCredits(user.id);
+        }
         setFormErrors({ products: [] });
         router.push("/history");
         return;
@@ -758,7 +760,7 @@ export default function WomenCollection() {
                         }}
                         placeholder="Select image count"
                       />
-                    ) : null}                    
+                    ) : null}
                   </div>
                   <div>
                     {settings.isEcommerce ? (
