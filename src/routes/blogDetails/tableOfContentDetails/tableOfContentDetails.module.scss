@@ -3,48 +3,50 @@
 
 .tableOfContentDetails {
     padding: 0 0 100px 0;
-    
+
     .grid {
         display: grid;
         grid-template-columns: 340px 1fr;
         gap: 40px;
-        
-        .griditems{
-            position: sticky;
-            z-index: 99;
 
-        .tableofContent {
-            border-radius: 20px;
-            border: 1px solid rgba(18, 18, 18, 0.10);
-            background: #FFF;
-            box-shadow: 0 0 64.4px 0 rgba(0, 0, 0, 0.08);
-            padding: 20px;
+        .griditems {
 
-            h2 {
-                color: #121212;
-                font-size: 21px;
-                margin: 0 0 16px 0;
-                font-style: normal;
-                font-weight: 600;
-                line-height: normal;
-                text-transform: capitalize;
-                cursor: pointer;
+
+            .tableofContent {
+                border-radius: 20px;
+                border: 1px solid rgba(18, 18, 18, 0.10);
+                background: #FFF;
+                box-shadow: 0 0 64.4px 0 rgba(0, 0, 0, 0.08);
+                padding: 20px;
+                position: sticky;
+                z-index: 99;
+                top: 100px;
+
+                h2 {
+                    color: #121212;
+                    font-size: 21px;
+                    margin: 0 0 16px 0;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    text-transform: capitalize;
+                    cursor: pointer;
+                }
+
+                .active {
+                    color: #121212;
+                }
+
+                span {
+                    color: #565656;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 500;
+                    padding: 0 0 10px 0;
+                    line-height: 24px;
+                    display: block;
+                }
             }
-
-            .active{
-                color: #121212;
-            }
-
-            span {
-                color: #565656;
-                font-size: 16px;
-                font-style: normal;
-                font-weight: 500;
-                padding: 0 0 10px 0;
-                line-height: 24px;
-                display: block;
-            }
-        }
         }
 
         .blogContent {
@@ -360,6 +362,7 @@
                         font-size: 16px;
 
                         @include transition-3s;
+
                         @include breakpoint("xl-max") {
                             padding: 16px;
                         }
@@ -387,6 +390,7 @@
                     }
 
                     thead {
+
                         td,
                         th {
                             padding: 10px;
@@ -510,6 +514,119 @@
                     tr:hover {
                         td {
                             color: #121212;
+                        }
+                    }
+                }
+
+                .faqMainBox {
+                    border-radius: 24px;
+                    border: 1px solid rgba(0, 0, 0, 0.07);
+                    background: #FFF;
+                    box-shadow: 0 0 80px 0 rgba(0, 0, 0, 0.06);
+                    max-width: 100%;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    margin-top: 40px;
+
+                    @include respond-to("xl") {
+                        padding: 16px;
+                    }
+
+                    @include respond-to("sm") {
+                        border-radius: 12px;
+                        padding: 14px;
+                        margin-top: 30px;
+                    }
+
+                    .faqMainTitle {
+                        margin-bottom: 10px;
+                        h3 {
+                            margin: 0;
+                            padding: 0;
+                            color: #121212;
+                            font-size: 24px;
+                            font-weight: 600;
+
+                            @include respond-to("xl") {
+                                font-size: 22px;
+                            }
+
+                            @include respond-to("sm") {
+                                font-size: 18px;
+                            }
+                        }
+                    }
+
+                    .lineBox {
+                        border-radius: 16px;
+                        border: 1px solid rgba(18, 18, 18, 0.14);
+                        background: #FFF;
+                        padding: 16px;
+
+                        .faqBody {
+                            .spacer {
+                                padding: 16px 0 0 0;
+
+                                p {
+                                    color: #5C5C5C;
+                                    font-size: 18px;
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    line-height: 32px;
+                                    margin: 0;
+
+                                    @include respond-to("xl") {
+                                        font-size: 16px;
+                                        line-height: 26px;
+                                    }
+
+                                    @include respond-to("sm") {
+                                        font-size: 14px;
+                                        line-height: 22px;
+                                    }
+                                }
+                            }
+                        }
+
+                        .faqHeader {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            cursor: pointer;
+
+                            @include respond-to("sm") {
+                                gap: 6px;
+                            }
+
+                            p {
+                                color: #121212;
+                                font-size: 20px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: normal;
+                                margin: 0;
+                                text-transform: capitalize;
+
+                                @include respond-to("xl") {
+                                    font-size: 18px;
+                                }
+
+                                @include respond-to("sm") {
+                                    font-size: 16px;
+                                }
+                            }
+
+                            .arrow {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                
+                                svg {
+                                    cursor: pointer;
+                                }
+                            }
                         }
                     }
                 }

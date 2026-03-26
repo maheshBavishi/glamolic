@@ -3,14 +3,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import styles from "./tableOfContentDetails.module.scss";
 import { Marked } from "marked";
 import classNames from "classnames";
-
-function FaqChevronIcon() {
-  return (
-    <svg className={styles.chevron} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M8 9L12 13L16 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+import { motion, AnimatePresence } from "framer-motion";
+import PlusIcon from "@/icons/plusIcon";
 
 export default function TableOfContentDetails({ BlogDetail }) {
   const [activeContent, setActiveContent] = useState("");
@@ -129,7 +123,7 @@ export default function TableOfContentDetails({ BlogDetail }) {
     <div className={styles.tableOfContentDetails}>
       <div className="container-xs">
         <div className={styles.grid}>
-          <div className={styles.tocColumn}>
+          <div className={styles.griditems}>
             <div className={styles.tableofContent}>
               <h2>Table of Contents</h2>
 
@@ -144,44 +138,63 @@ export default function TableOfContentDetails({ BlogDetail }) {
               ))}
             </div>
           </div>
-          <div
-            className={styles.blogContent}
-            dangerouslySetInnerHTML={{
-              __html: renderedHtml,
-            }}
-          />
-          {BlogDetail?.attributes?.Blog_FAQ?.length ? (
-            <div className={styles.faqMainBox}>
-              {BlogDetail?.attributes?.Blog_FAQ?.map((faqItem, index) => {
-                const open = isActive === index;
-                return (
-                  <div
-                    key={faqItem?.id ?? `${faqItem?.question ?? "faq"}-${index}`}
-                    className={classNames(styles.lineBox, open ? styles.active : "")}
-                  >
+          <div className={styles.blogContent}>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: renderedHtml,
+              }}
+            />
+            {BlogDetail?.attributes?.Blog_FAQ?.length ? (
+              <div className={styles.faqMainBox}>
+                <div className={styles.faqMainTitle}>
+                  <h3>Frequently Asked Questions</h3>
+                </div>
+                {BlogDetail?.attributes?.Blog_FAQ?.map((faqItem, index) => {
+                  const open = isActive === index;
+                  return (
                     <div
-                      className={styles.faqHeader}
-                      onClick={() => handleToggle(index)}
-                      onKeyDown={(event) => handleKeyDown(event, index)}
-                      role="button"
-                      tabIndex={0}
-                      aria-expanded={open}
+                      key={faqItem?.id ?? `${faqItem?.question ?? "faq"}-${index}`}
+                      className={classNames(styles.lineBox, open ? styles.active : "")}
                     >
-                      <p>{faqItem?.question}</p>
-                      <div className={classNames(styles.arrow, open ? styles.arrowOpen : "")}>
-                        <FaqChevronIcon />
+                      <div
+                        className={styles.faqHeader}
+                        onClick={() => handleToggle(index)}
+                        onKeyDown={(event) => handleKeyDown(event, index)}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={open}
+                      >
+                        <p>{faqItem?.question}</p>
+                        <motion.div
+                          className={styles.arrow}
+                          animate={{ rotate: open ? 45 : 0 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                        >
+                          <PlusIcon />
+                        </motion.div>
                       </div>
+                      <AnimatePresence initial={false}>
+                        {open && (
+                          <motion.div
+                            className={styles.faqBody}
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                            style={{ overflow: "hidden" }}
+                          >
+                            <div className={styles.spacer}>
+                              <p>{faqItem?.answer}</p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                    <div className={classNames(styles.faqBody, open ? styles.show : styles.hide)}>
-                      <div className={styles.spacer}>
-                        <p>{faqItem?.answer}</p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : null}
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>
