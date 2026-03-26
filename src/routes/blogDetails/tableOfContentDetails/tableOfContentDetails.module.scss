@@ -9,31 +9,629 @@
         grid-template-columns: 340px 1fr;
         gap: 40px;
 
-        .tableofContent {
-            border-radius: 20px;
-            border: 1px solid rgba(18, 18, 18, 0.10);
-            background: #FFF;
-            box-shadow: 0 0 64.4px 0 rgba(0, 0, 0, 0.08);
-            padding: 20px;
+        .griditems {
 
-            h2 {
-                color: #121212;
-                font-size: 21px;
-                margin: 0 0 16px 0;
-                font-style: normal;
-                font-weight: 600;
-                line-height: normal;
-                text-transform: capitalize;
+
+            .tableofContent {
+                border-radius: 20px;
+                border: 1px solid rgba(18, 18, 18, 0.10);
+                background: #FFF;
+                box-shadow: 0 0 64.4px 0 rgba(0, 0, 0, 0.08);
+                padding: 20px;
+                position: sticky;
+                z-index: 99;
+                top: 100px;
+
+                h2 {
+                    color: #121212;
+                    font-size: 21px;
+                    margin: 0 0 16px 0;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: normal;
+                    text-transform: capitalize;
+                    cursor: pointer;
+                }
+
+                .active {
+                    color: #121212;
+                }
+
+                span {
+                    color: #565656;
+                    font-size: 16px;
+                    cursor: pointer;
+                    font-style: normal;
+                    font-weight: 500;
+                    padding: 0 0 10px 0;
+                    line-height: 24px;
+                    display: block;
+                }
             }
+        }
 
-            span {
-                color: #565656;
-                font-size: 16px;
-                font-style: normal;
-                font-weight: 500;
-                padding: 0 0 10px 0;
-                line-height: 24px;
+        .blogContent {
+            &:last-child {
                 display: block;
+                color: #565656;
+                @include font-medium;
+                font-weight: 400;
+                line-height: 1.5;
+                font-size: rem(16);
+                margin: 20px 0;
+
+                @media (max-width: 576px) {
+                    font-size: rem(12);
+                }
+
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6 {
+                    padding: 14px 0 10px 0;
+                    color: #121212;
+                    @include font-bold;
+
+                    @include breakpoint("xl-max") {
+                        padding: 12px 0 8px 0;
+                    }
+
+                    @include breakpoint("md-max") {
+                        padding: 9px 0 5px 0;
+                    }
+
+                    @media (max-width: 576px) {
+                        padding: 8px 0 4px 0;
+                    }
+                }
+
+                h1 {
+                    font-weight: 600;
+                    font-size: 32px;
+
+                    @include breakpoint("xl-max") {
+                        font-size: 30px;
+                    }
+
+                    @include breakpoint("md-max") {
+                        font-size: 26px;
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: 24px;
+                    }
+                }
+
+                h2 {
+                    font-weight: 600;
+                    font-size: 28px;
+
+                    @include breakpoint("xl-max") {
+                        font-size: 26px;
+                    }
+
+                    @include breakpoint("md-max") {
+                        font-size: 24px;
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: 22px;
+                    }
+                }
+
+                h3 {
+                    font-weight: 500;
+                    font-size: 24px;
+                    color: #121212;
+
+                    @include breakpoint("xl-max") {
+                        font-size: 22px;
+                    }
+
+                    @include breakpoint("md-max") {
+                        font-size: 20px;
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: rem(18);
+                    }
+                }
+
+                h4 {
+                    font-weight: 500;
+                    font-size: 22px;
+                    color: #121212;
+
+                    @include breakpoint("xl-max") {
+                        font-size: 20px;
+                    }
+
+                    @include breakpoint("md-max") {
+                        font-size: rem(18);
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: rem(16);
+                    }
+                }
+
+                h5 {
+                    font-weight: 400;
+                    font-size: 20px;
+                    color: #121212;
+
+                    @include breakpoint("xl-max") {
+                        font-size: rem(18);
+                    }
+
+                    @include breakpoint("md-max") {
+                        font-size: rem(16);
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: rem(14);
+                    }
+                }
+
+                h6 {
+                    font-weight: 400;
+                    font-size: rem(18);
+                    color: #121212;
+
+                    @include breakpoint("xl-max") {
+                        font-size: rem(16);
+                    }
+
+                    @include breakpoint("md-max") {
+                        font-size: rem(14);
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: 13px;
+                    }
+                }
+
+                p,
+                li {
+                    color: #565656;
+                    font-weight: 400;
+                    margin-bottom: 10px;
+
+                    @include font-medium;
+                    font-size: rem(16);
+
+                    @include breakpoint("xl-max") {
+                        margin-bottom: 8px;
+                        font-size: 15px;
+                    }
+
+                    @include breakpoint("md-max") {
+                        margin-bottom: 5px;
+                        font-size: rem(14);
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: rem(14);
+                        margin-bottom: 4px;
+                    }
+                }
+
+                ul,
+                ol {
+                    padding: 8px 0 8px 25px;
+                    color: #565656;
+
+                    @include breakpoint("xl-max") {
+                        padding: 5px 0 5px 20px;
+                    }
+
+                    @include breakpoint("md-max") {
+                        padding: 3px 0 3px 18px;
+                    }
+
+                    @media (max-width: 576px) {
+                        padding: 2px 0 2px 15px;
+                    }
+
+                    li {
+                        &::marker {
+                            color: #565656;
+                            font-weight: 900;
+                        }
+
+                        p {
+                            margin: unset !important;
+                            font-weight: inherit;
+                            color: inherit;
+                        }
+                    }
+                }
+
+                ol {
+                    li {
+                        list-style: decimal;
+                    }
+                }
+
+                ul {
+                    li {
+                        list-style: disc;
+                    }
+                }
+
+                strong,
+                b,
+                a {
+                    font-weight: 700;
+                    color: #121212;
+                }
+
+                a {
+                    line-height: 1.15;
+                    color: #527475;
+                    border-bottom: 2px solid #527475;
+                    transition: 0.5s ease-in-out all;
+
+                    &:hover {
+                        color: #085F62;
+                        border-bottom-color: #085F62;
+                    }
+                }
+
+                u {
+                    text-decoration-thickness: 1.5px;
+
+                    @include breakpoint("xl-max") {
+                        text-decoration-thickness: 1px;
+                    }
+                }
+
+                blockquote {
+                    padding: 18px;
+                    border-radius: 0 10px 10px 0;
+                    margin: 15px 0;
+                    border: rem(1) solid rgba(18, 18, 18, 0.10);
+                    background: #EEF6F3;
+                    border-left: 3px solid #527475;
+
+                    @include breakpoint("max-xl") {
+                        margin: 12px 0;
+                    }
+
+                    @include breakpoint("max-md") {
+                        margin: 10px 0;
+                    }
+
+                    @include breakpoint("max-sm") {
+                        padding: 8px;
+                        border-radius: 0 8px 8px 0;
+                        margin: 8px 0;
+                    }
+                }
+
+                img {
+                    object-fit: cover;
+                    width: 100%;
+                    margin: 25px 0;
+                    border-radius: 25px;
+                    border-bottom: 8px solid #527475;
+                    cursor: zoom-in;
+
+                    @include breakpoint("md-max") {
+                        margin: 20px 0;
+                        border-radius: rem(20);
+                        border-width: 6px;
+                    }
+
+                    @media (max-width: 576px) {
+                        margin: 15px 0;
+                        border-radius: 15px;
+                        border-width: 4px;
+                    }
+                }
+
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    margin: 12px 0 12px 0;
+                    border: 1px solid rgba(18, 18, 18, 0.10);
+
+                    tr:last-child {
+                        td {
+                            &::before {
+                                content: "";
+                                position: absolute;
+                                bottom: 0;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                width: 90%;
+                                height: 1px;
+                                background-color: rgba(18, 18, 18, 0);
+                            }
+                        }
+                    }
+
+                    td,
+                    th {
+                        position: relative;
+                        padding: 20px;
+                        text-align: center;
+                        color: #FFF;
+                        font-weight: 600;
+                        font-size: 16px;
+
+                        @include transition-3s;
+
+                        @include breakpoint("xl-max") {
+                            padding: 16px;
+                        }
+
+                        @include breakpoint("md-max") {
+                            padding: 14px;
+                        }
+
+                        @media (max-width: 576px) {
+                            padding: 12px;
+                            font-size: rem(12);
+                            font-weight: 500;
+                        }
+
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            bottom: 0;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            width: 90%;
+                            height: 1px;
+                            background-color: rgba(18, 18, 18, 0.10);
+                        }
+                    }
+
+                    thead {
+
+                        td,
+                        th {
+                            padding: 10px;
+                            font-size: 18px;
+
+                            @include breakpoint("xl-max") {
+                                font-size: 16px;
+                            }
+
+                            @include breakpoint("md-max") {
+                                font-size: rem(14);
+                            }
+
+                            &::before {
+                                content: "";
+                                position: absolute;
+                                bottom: 0;
+                                left: 5%;
+                                width: calc(100% - 10%);
+                                height: 1px;
+                                background-color: rgba(18, 18, 18, 0);
+                            }
+                        }
+                    }
+
+                    td {
+                        color: #565656;
+                        font-weight: 400;
+                        font-size: rem(16);
+                        text-transform: capitalize;
+                        text-align: left;
+                        border-right: none;
+
+                        @include breakpoint("xl-max") {
+                            font-size: 15px;
+                        }
+
+                        @include breakpoint("md-max") {
+                            font-size: rem(14);
+                        }
+
+                        @media (max-width: 576px) {
+                            font-size: rem(12);
+                        }
+                    }
+
+                    thead {
+                        background: linear-gradient(101deg, #527475 0%, #647F80 100%);
+                    }
+
+                    tbody {
+                        background: linear-gradient(180deg, #FFF 0%, #E3E8E8 100%);
+
+                        tr {
+                            td {
+                                color: #565656;
+                            }
+                        }
+                    }
+
+                    tr:nth-child(even) {
+                        // background: rgba(82, 116, 117, 0.15);
+                    }
+
+                    tbody {
+                        tr:first-child {
+                            td {
+                                &::after {
+                                    height: 90%;
+                                    bottom: 0;
+                                    right: -5px;
+                                }
+                            }
+                        }
+
+                        tr {
+                            td {
+                                &::after {
+                                    width: 1px;
+                                    height: 100%;
+                                    position: absolute;
+                                    content: "";
+                                    bottom: 0;
+                                    right: -5px;
+                                    background-color: rgba(18, 18, 18, 0.10);
+                                }
+                            }
+
+                            td:last-child {
+                                &::after {
+                                    width: 0px !important;
+                                }
+                            }
+                        }
+
+                        tr:last-child {
+                            td {
+                                &::after {
+                                    height: 90%;
+                                    top: 0;
+                                    right: -5px;
+                                }
+                            }
+                        }
+                    }
+
+                    tr {
+                        td {
+                            // border-right: 1px solid rgba(18, 18, 18, 0.10);
+                        }
+
+                        td:last-child {
+                            border-right: 0px solid rgba(18, 18, 18, 0.10);
+                        }
+                    }
+
+                    tr:nth-child(odd) {
+                        // background: rgba(8, 95, 98, 0.15);
+                    }
+
+                    tr:hover {
+                        td {
+                            color: #121212;
+                        }
+                    }
+                }
+
+                .faqMainBox {
+                    border-radius: 24px;
+                    border: 1px solid rgba(0, 0, 0, 0.07);
+                    background: #FFF;
+                    box-shadow: 0 0 80px 0 rgba(0, 0, 0, 0.06);
+                    max-width: 100%;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    margin-top: 40px;
+
+                    @include respond-to("xl") {
+                        padding: 16px;
+                    }
+
+                    @include respond-to("sm") {
+                        border-radius: 12px;
+                        padding: 14px;
+                        margin-top: 30px;
+                    }
+
+                    .faqMainTitle {
+                        margin-bottom: 10px;
+
+                        h3 {
+                            margin: 0;
+                            padding: 0;
+                            color: #121212;
+                            font-size: 24px;
+                            font-weight: 600;
+
+                            @include respond-to("xl") {
+                                font-size: 22px;
+                            }
+
+                            @include respond-to("sm") {
+                                font-size: 18px;
+                            }
+                        }
+                    }
+
+                    .lineBox {
+                        border-radius: 16px;
+                        border: 1px solid rgba(18, 18, 18, 0.14);
+                        background: #FFF;
+                        padding: 16px;
+
+                        .faqBody {
+                            .spacer {
+                                padding: 16px 0 0 0;
+
+                                p {
+                                    color: #5C5C5C;
+                                    font-size: 18px;
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    line-height: 32px;
+                                    margin: 0;
+
+                                    @include respond-to("xl") {
+                                        font-size: 16px;
+                                        line-height: 26px;
+                                    }
+
+                                    @include respond-to("sm") {
+                                        font-size: 14px;
+                                        line-height: 22px;
+                                    }
+                                }
+                            }
+                        }
+
+                        .faqHeader {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            cursor: pointer;
+
+                            @include respond-to("sm") {
+                                gap: 6px;
+                            }
+
+                            p {
+                                color: #121212;
+                                font-size: 20px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: normal;
+                                margin: 0;
+                                text-transform: capitalize;
+
+                                @include respond-to("xl") {
+                                    font-size: 18px;
+                                }
+
+                                @include respond-to("sm") {
+                                    font-size: 16px;
+                                }
+                            }
+
+                            .arrow {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+
+                                svg {
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

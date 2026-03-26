@@ -2,7 +2,7 @@
 @use '../../../scss/breakpoints/breakpoints.scss' as *;
 
 .blogInformation {
-    padding: 160px 0;
+    padding: 160px 0 100px 0;
 
     @include respond-to("xl") {
         padding: 140px 0 0 0;
