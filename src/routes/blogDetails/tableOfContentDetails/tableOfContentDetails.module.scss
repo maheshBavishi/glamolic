@@ -40,6 +40,7 @@
                 span {
                     color: #565656;
                     font-size: 16px;
+                    cursor: pointer;
                     font-style: normal;
                     font-weight: 500;
                     padding: 0 0 10px 0;
@@ -542,6 +543,7 @@
 
                     .faqMainTitle {
                         margin-bottom: 10px;
+
                         h3 {
                             margin: 0;
                             padding: 0;
@@ -622,7 +624,7 @@
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
-                                
+
                                 svg {
                                     cursor: pointer;
                                 }
