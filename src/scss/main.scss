@@ -1,0 +1,36 @@
+@use "sass:math";
+@use "./breakpoints/breakpoints.scss" as bp;
+
+@function rem($value) {
+  @return math.div($value, 16) * 1rem;
+}
+
+@mixin font-medium {
+  font-family: var(--font-heebo);
+}
+
+@mixin font-bold {
+  font-family: var(--font-heebo);
+}
+
+@mixin transition-3s {
+  transition: 0.3s ease-in-out;
+}
+
+@mixin breakpoint($name) {
+  @if $name == "xl-max" or $name == "max-xl" {
+    @include bp.respond-to("xl") {
+      @content;
+    }
+  } @else if $name == "md-max" or $name == "max-md" {
+    @include bp.respond-to("md") {
+      @content;
+    }
+  } @else if $name == "max-sm" {
+    @include bp.respond-to("sm") {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint: #{$name}";
+  }
+}

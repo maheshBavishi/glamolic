@@ -56,6 +56,12 @@
                 font-weight: 600;
                 line-height: 120%;
                 text-transform: capitalize;
+                cursor: pointer;
+            }
+            .active {
+                background: #527475;
+                border: 1px solid #527475;
+                color: #FFF;
             }
         }
 
