@@ -1,9 +1,9 @@
-import ContactUs from "@/routes/contactUs";
-import { GET_SEO } from "@/utils/seo";
-import React from "react";
+import TermsConditions from '@/routes/termsConditions'
+import { GET_SEO } from '@/utils/seo';
+import React from 'react'
 
 export async function generateMetadata() {
-  const seoData = await GET_SEO("contact-us");
+  const seoData = await GET_SEO("terms-and-conditions");
   return {
     title: seoData.title,
     description: seoData.description,
@@ -47,5 +47,9 @@ export async function generateMetadata() {
 }
 
 export default function page() {
-  return <ContactUs />;
+    return (
+        <div>
+            <TermsConditions />
+        </div>
+    )
 }

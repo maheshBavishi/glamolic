@@ -10,7 +10,7 @@ export default function TermsConditions() {
             {/* Section 1 */}
             <h2>1. Acceptance of Terms</h2>
             <p>
-              By accessing or using Glamolic AI at glamolic.ai, you agree to be bound by these Terms and Conditions. If you do not agree to these
+              By accessing or using Glamolic AI at glamolic.com, you agree to be bound by these Terms and Conditions. If you do not agree to these
               terms, please do not use our platform. We reserve the right to update these terms at any time, and your continued use of the platform
               constitutes acceptance of any changes.
             </p>
@@ -20,7 +20,7 @@ export default function TermsConditions() {
             <p>
               Glamolic AI is an AI-powered fashion photography platform that allows clothing brands, ecommerce sellers and fashion businesses to
               generate professional model photos, catalog images and fashion videos from product images. Our services include AI fashion model
-              generation, AI clothing photoshoot, fashion video creation and related tools available at glamolic.ai.
+              generation, AI clothing photoshoot, fashion video creation and related tools available at glamolic.com.
             </p>
 
             {/* Section 3 */}
@@ -38,7 +38,7 @@ export default function TermsConditions() {
             <ul>
               <li>You must create an account to access Glamolic AI's full features</li>
               <li>You are responsible for maintaining the confidentiality of your account credentials</li>
-              <li>You agree to notify us immediately at privacy@glamolic.ai if you suspect any unauthorized use of your account</li>
+              <li>You agree to notify us immediately at support@glamolic.com if you suspect any unauthorized use of your account</li>
               <li>Glamolic AI is not liable for any loss or damage arising from unauthorized use of your account</li>
               <li>Each user may maintain only one account unless explicitly permitted by us</li>
             </ul>
@@ -81,7 +81,7 @@ export default function TermsConditions() {
                 exclusive intellectual property of Glamolic AI and are protected by applicable copyright, trademark and intellectual property laws
               </li>
             </ul>
-            <p>You may not copy, reproduce or distribute any part of our platform without prior written permission.</p>
+            <p>You may not copy, reproduce or distribute any part of our platform without prior written permission .</p>
 
             {/* Section 8 */}
             <h2>8. Content Responsibility</h2>
@@ -151,7 +151,7 @@ export default function TermsConditions() {
             <h2>13. Privacy</h2>
             <p>
               Your use of Glamolic AI is also governed by our Privacy Policy, which is incorporated into these Terms by reference. Please review our
-              Privacy Policy at glamolic.ai/privacy to understand our data practices.
+              Privacy Policy to understand our data practices.
             </p>
 
             {/* Section 14 */}

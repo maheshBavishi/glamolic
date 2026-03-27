@@ -165,6 +165,11 @@ export default function Footer() {
                     Contact
                   </Link>
                 </div>
+                <div>
+                  <Link href="/sitemap.xml" aria-label="Sitemap">
+                    Sitemap
+                  </Link>
+                </div>
               </div>
               <div>
                 <h3>Legal</h3>
@@ -173,7 +178,7 @@ export default function Footer() {
                     Privacy Policy
                   </Link>
                 </div>
-                <Link href="/terms-conditions" aria-label="Terms of Service">
+                <Link href="/terms-and-conditions" aria-label="Terms of Service">
                   Terms of Service
                 </Link>
               </div>

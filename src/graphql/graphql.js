@@ -133,3 +133,30 @@ export const GetBlogDetails = gql`
     }
   }
 `;
+
+export const GetSEOData = gql`
+  query GlamolicAiSeos($filters: GlamolicAiSeoFiltersInput) {
+    glamolicAiSeos(filters: $filters) {
+      data {
+        id
+        attributes {
+          Slug
+          URL
+          Title
+          Description
+          Image {
+            data {
+              id
+              attributes {
+                url
+              }
+            }
+          }
+          createdAt
+          updatedAt
+          publishedAt
+        }
+      }
+    }
+  }
+`;
