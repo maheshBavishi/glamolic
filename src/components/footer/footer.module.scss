@@ -123,9 +123,12 @@
                         cursor: pointer;
                         will-change: transform;
                         transition: background 0.3s ease;
+                        text-decoration: none;
+                        color: inherit;
 
 
-                        img {
+                        img,
+                        svg {
                             display: block;
                             pointer-events: none;
                         }

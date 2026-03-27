@@ -28,7 +28,7 @@ export default async function HomePage() {
       <SimpleAffordable />
       <TrustedByBrands />
       <FaqSection />
-      <FeaturedArticle Blogs={Data?.blog?.data} />
+      {Data?.blog?.data && <FeaturedArticle Blogs={Data.blog.data} />}
       <ReadytoTransform />
     </div>
   );

@@ -47,7 +47,10 @@ export default function TableOfContentDetails({ BlogDetail }) {
     const renderer = {
       heading(token) {
         const text = token?.tokens?.length ? this.parser.parseInline(token.tokens) : token?.text || "";
-        const slugID = slugify(text);
+        // Build the anchor from plain heading text so escaped entities like "&amp;"
+        // don't produce a different slug than the TOC entry.
+        const slugSource = token?.text || text.replace(/<[^>]*>/g, "");
+        const slugID = slugify(slugSource);
         return `<h${token.depth} dir="auto" title="${text}" id="${slugID}">${text}</h${token.depth}>`;
       },
       table(token) {
