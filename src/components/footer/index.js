@@ -178,6 +178,11 @@ export default function Footer() {
                     Privacy Policy
                   </Link>
                 </div>
+                <div>
+                  <Link href="/cookie-policy" aria-label="Cookie Policy">
+                    Cookie Policy
+                  </Link>
+                </div>
                 <Link href="/terms-and-conditions" aria-label="Terms of Service">
                   Terms of Service
                 </Link>

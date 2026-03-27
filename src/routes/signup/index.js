@@ -89,12 +89,22 @@ export default function Signup() {
     try {
       const { error, data } = await signUp(formData.email, formData.password, formData.fullName, formData.phone);
       if (error) {
-        if (error.message.includes("already registered")) {
-          toast.error("This email is already registered. Please sign in.");
+          const errorMessage = String(error.message || "").toLowerCase();
+        if (
+          errorMessage.includes("already registered") ||
+          errorMessage.includes("already exists") ||
+          error?.code === "user_already_exists" ||
+          error?.code === "email_exists"
+        ) {
+          toast.error("This email already exists. Please sign in.");
         } else {
           toast.error(error.message);
         }
       } else {
+        if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+          toast.error("This email already exists. Please sign in.");
+          return;
+        }
         if (data?.user && !data?.session) {
           setEmailSent(true);
           toast.success("Please check your email to confirm your account!");
@@ -129,9 +139,10 @@ export default function Signup() {
               onClick={() => {
                 setEmailSent(false);
                 setFormData({ fullName: "", email: "", phone: "", password: "" });
+                router.push("/login");
               }}
             >
-              Back to Sign Up
+              Back to Sign In
             </button>
           </div>
         </div>

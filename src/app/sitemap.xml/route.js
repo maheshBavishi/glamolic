@@ -17,6 +17,7 @@ export async function GET() {
     "/contact-us",
     "/about-us",
     "/privacy-policy",
+    "/cookie-policy",
     "/terms-and-conditions",
     ...BlogsPath,
   ];

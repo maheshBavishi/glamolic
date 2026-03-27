@@ -107,10 +107,26 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (email, password, fullName, phone) => {
     try {
+      const normalizedEmail = email.trim().toLowerCase();
+
+      const { data: emailExists, error: emailExistsError } = await supabase.rpc("check_auth_email_exists", {
+        input_email: normalizedEmail,
+      });
+
+      if (emailExistsError) {
+        console.error("Error checking auth email existence:", emailExistsError);
+      }
+
+      if (emailExists) {
+        return {
+          error: new Error("This email already exists. Please sign in."),
+        };
+      }
+
       const redirectUrl = `${window.location.origin}/login`;
 
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: normalizedEmail,
         password,
         options: {
           emailRedirectTo: redirectUrl,
@@ -122,6 +138,12 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (error) return { error };
+
+      if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        return {
+          error: new Error("This email already exists. Please sign in."),
+        };
+      }
 
       return { error: null, data };
     } catch (error) {

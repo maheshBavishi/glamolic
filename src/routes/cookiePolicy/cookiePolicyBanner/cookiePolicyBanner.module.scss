@@ -1,0 +1,46 @@
+@use '../../../scss/main.scss' as *;
+@use '../../../scss/breakpoints/breakpoints.scss' as *;
+
+.cookiePolicyBanner {
+  padding: 140px 0 100px 0;
+
+  @include respond-to("md") {
+    padding: 140px 0 60px 0;
+  }
+
+  .bannerDesign {
+    background-image: url('/assets/images/banner2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 290px;
+    width: 100%;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include respond-to("sm") {
+      background-image: none;
+      height: auto;
+      padding: 0;
+    }
+
+    h1 {
+      color: #121212;
+      font-size: 42px;
+      text-align: center;
+      font-style: normal;
+      margin: 0;
+      font-weight: 600;
+      line-height: 53px;
+      text-transform: capitalize;
+
+      @include respond-to("sm") {
+        font-size: 36px;
+        line-height: 41px;
+      }
+    }
+  }
+}
