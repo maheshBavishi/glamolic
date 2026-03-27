@@ -1,10 +1,6 @@
-import ResetPassword from '@/routes/resetPassword'
-import React from 'react'
+import React from "react";
+import ResetPasswordConfirm from "@/routes/resetPasswordConfirm";
 
 export default function page() {
-    return (
-        <div>
-            <ResetPassword />
-        </div>
-    )
+  return <ResetPasswordConfirm />;
 }

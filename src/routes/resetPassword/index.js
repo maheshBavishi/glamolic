@@ -63,14 +63,14 @@ export default function ResetPassword() {
         {!emailSent ? (
           <>
             <div className={styles.text}>
-              <h2>Reset Password</h2>
+              <h2>Forgot Password</h2>
               <p>Enter your email address and we'll send you a link to reset your password</p>
             </div>
             <form onSubmit={handleSubmit}>
               <div className={styles.bottomSpacing}>
                 <Input
                   label="Email"
-                  placeholder=" johnfrans@gmail.com"
+                  placeholder=" Enter your email"
                   smallInput
                   type="email"
                   value={email}

@@ -14,6 +14,7 @@ export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { signIn, user } = useAuth();
   const EMAIL_REGEX = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
@@ -92,7 +93,7 @@ export default function Login() {
               label="Email"
               name="email"
               type="email"
-              placeholder=" johnfrans@gmail.com"
+              placeholder="Enter your email"
               smallInput
               value={formData.email}
               onChange={handleChange}
@@ -108,9 +109,13 @@ export default function Login() {
             value={formData.password}
             onChange={handleChange}
             error={errors.password}
+            showPasswordToggle
+            isPasswordVisible={showPassword}
+            onTogglePassword={() => setShowPassword((current) => !current)}
+            autoComplete="current-password"
           />
           <div className={styles.forgotpassword}>
-            <Link href="/reset-password">Forgot password?</Link>
+            <Link href="/forgot-password">Forgot password?</Link>
           </div>
           <div className={styles.buttonDesign}>
             <button type="submit" aria-label="Sign In" disabled={loading}>
