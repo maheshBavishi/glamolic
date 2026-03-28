@@ -174,7 +174,9 @@
         justify-content: space-between;
         border-bottom: 1px solid #e0e0e0;
 
-        .logo {
+        .mobileLogo {
+            display: block;
+
             img {
                 display: block;
                 max-width: 177px;
@@ -186,10 +188,24 @@
             }
         }
 
+        .mobileCloseButton {
+            border: 0;
+            padding: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
         svg {
             width: 26px;
             height: 26px;
-            cursor: pointer;
 
             path {
                 fill: #527475;
@@ -253,12 +269,25 @@
         height: calc(100dvh - 235px);
         overflow: auto;
 
-        a {
+        .mobileLink {
             display: block;
+            color: #121212;
             font-size: 24px;
             font-family: var(--font-el-messiri);
             font-weight: 700;
             padding: 0 0 30px 0;
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+            cursor: pointer;
+
+            &:visited {
+                color: #121212;
+            }
+
+            &:hover,
+            &:focus-visible {
+                color: #527475;
+            }
 
             &:last-child {
                 padding: 0;
