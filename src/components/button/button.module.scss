@@ -17,5 +17,13 @@
         gap: 10px;
         border-radius: 12px;
         background: #527475;
-    }
+
+        @include respond-to("sm") {
+            padding: 10px 24px;
+            font-size: 14px;
+            border-radius: 8px;
+            font-weight: 500;
+            line-height: 120%;
+        }
+    }   
 }
