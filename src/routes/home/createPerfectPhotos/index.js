@@ -9,7 +9,7 @@ const SliderImage = "/assets/images/slider-new.png";
 const SliderImage2 = "/assets/images/slider2.png";
 const PerfectLeft = "/assets/images/perfect-left.png";
 const PerfectRight = "/assets/images/perfect-right.png";
-const DemoImage = "/assets/images/demo-img.png";
+const DemoImage = "/assets/images/demo-img.jpg";
 const DemoVideo = "/assets/video/demo-video.mp4";
 const CheckIcon = "/assets/icons/check.svg";
 
