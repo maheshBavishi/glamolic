@@ -8,6 +8,16 @@
     // width: 100%;
     padding: 140px 0 100px 0;
 
+    @include respond-to("sm") {
+        padding: 120px 0 60px 0;
+    }
+
+    :global(.container-md) {
+        @include respond-to("sm") {
+            padding: 0;
+        }
+    }
+
     .boxCenteralignment {
         .boxHeaderAlignment {
             display: flex;
@@ -29,6 +39,10 @@
                 box-shadow: 0 0 23.9px 0 rgba(0, 0, 0, 0.08);
                 flex-shrink: 0;
 
+                @include respond-to("sm") {
+                    display: none;
+                }
+
                 svg {
                     width: 16px;
                     height: 16px;
@@ -41,6 +55,10 @@
                 justify-content: center;
                 min-width: 0;
 
+                @include respond-to("sm") {
+                    padding: 0 20px;
+                }
+
                 h2 {
                     color: #121212;
                     font-size: 34px;
@@ -49,6 +67,12 @@
                     font-weight: 600;
                     line-height: 1.08;
                     text-transform: capitalize;
+
+                    @include respond-to("sm") {
+                        font-size: 30px;
+                        line-height: 40px;
+                        text-align: center;
+                    }
                 }
 
                 p {
@@ -59,6 +83,11 @@
                     line-height: 1.35;
                     text-align: left;
                     margin-top: 6px;
+
+                    @include respond-to("sm") {
+                        font-size: 16px;
+                        text-align: center;
+                    }
                 }
             }
         }
@@ -68,11 +97,20 @@
             grid-template-columns: 450px 1fr;
             gap: 16px;
 
+            @include respond-to("md") {
+                grid-template-columns: 1fr;
+            }
+
             .leftBox {
                 border-radius: 16px;
                 border: 1px solid rgba(0, 0, 0, 0.10);
                 background: #FFF;
                 padding: 20px;
+
+                @include respond-to("sm") {
+                    border: none;
+                    padding: 0 14px;
+                }
 
                 .subbox {
                     border-radius: 16px;
@@ -81,12 +119,21 @@
                     padding: 20px;
                     margin: 16px 0 0 0;
 
+                    @include respond-to("sm") {
+                        margin: 0px;
+                        padding: 14px;
+                    }
+
                     .items {
                         padding: 16px 0;
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
                         border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+
+                        @include respond-to("sm") {
+                            padding: 12px 0;
+                        }
 
                         .icontext {
                             display: flex;
@@ -99,6 +146,10 @@
                                 font-style: normal;
                                 font-weight: 600;
                                 line-height: normal;
+
+                                @include respond-to("sm") {
+                                    font-size: 14px;
+                                }
                             }
 
                             p {
@@ -107,6 +158,10 @@
                                 font-style: normal;
                                 font-weight: 500;
                                 line-height: normal;
+
+                                @include respond-to("sm") {
+                                    font-size: 12px;
+                                }
                             }
 
                             .icon {
@@ -299,11 +354,25 @@
                     padding: 20px;
                     background: #F7F7F7;
 
+                    @include respond-to("sm") {
+                        border-radius: 8px;
+                        padding: 14px;
+                    }
+
                     .singleGrid {
                         display: grid;
                         grid-template-columns: 1fr;
                         gap: 14px;
                         padding: 0 0 16px 0;
+
+                        @include respond-to("md") {
+                            grid-template-columns: 1fr 1fr;
+                        }
+
+                        @include respond-to("sm") {
+                            grid-template-columns: 1fr;
+                            gap: 12px;
+                        }
                     }
                 }
             }
@@ -313,6 +382,11 @@
                 border: 1px solid rgba(0, 0, 0, 0.10);
                 background: #FFF;
                 padding: 20px;
+
+                @include respond-to("sm") {
+                    padding: 0 14px;
+                    border: none;
+                }
 
                 .productInformation {
                     .productHeader {
@@ -358,6 +432,12 @@
                         grid-template-columns: repeat(2, 1fr);
                         gap: 14px;
 
+                        @include respond-to("sm") {
+                            grid-template-columns: 1fr;
+                            gap: 12px;
+                            padding: 0 0 12px 0;
+                        }
+
                         label {
                             display: block;
                             color: #121212;
@@ -366,6 +446,10 @@
                             font-weight: 500;
                             line-height: normal;
                             padding: 0 0 4px 0;
+
+                            @include respond-to("sm") {
+                                font-size: 14px;
+                            }
                         }
 
                         textarea {
@@ -430,6 +514,12 @@
                         align-items: center;
                         justify-content: space-between;
 
+                        @include respond-to("sm") {
+                            display: grid;
+                            grid-template-columns: 1fr;
+                            gap: 12px;
+                        }
+
                         .buttonDesign {
                             button {
                                 border-radius: 1000px;
@@ -444,18 +534,34 @@
                                 align-items: center;
                                 gap: 4px;
                                 line-height: normal;
+
+                                @include respond-to("md") {
+                                    white-space: nowrap;
+                                }
                             }
                         }
 
                         .line {
                             width: 1px;
                             height: 25px;
+
+                            @include respond-to("sm") {
+                                display: none;
+                            }
                         }
 
                         .contentAlignment {
                             display: flex;
                             align-items: center;
                             gap: 20px;
+
+                            @include respond-to("md") {
+                                flex-wrap: wrap;
+                            }
+
+                            @include respond-to("sm") {
+                                gap: 12px;
+                            }
                         }
 
                         .leftAlignment {
@@ -469,6 +575,10 @@
                                 font-style: normal;
                                 font-weight: 500;
                                 line-height: normal;
+
+                                @include respond-to("sm") {
+                                    font-size: 14px;
+                                }
                             }
 
                             button {
@@ -484,6 +594,10 @@
                                 font-weight: 500;
                                 line-height: normal;
                                 background: rgba(255, 255, 255, 0.10);
+
+                                @include respond-to("sm") {
+                                    font-size: 12px;
+                                }
                             }
                         }
                     }
@@ -501,12 +615,25 @@
                             background: rgba(255, 71, 71, 0.05);
                             gap: 6px;
 
+                            @include respond-to("sm") {
+                                display: grid;
+                                grid-template-columns: 1fr;
+                                gap: 12px;
+                                border-radius: 8px;
+                                gap: 4px;
+                                padding: 10px;
+                            }
+
                             p {
                                 color: #3F4153;
                                 font-size: 18px;
                                 font-style: normal;
                                 font-weight: 500;
                                 line-height: normal;
+
+                                @include respond-to("sm") {
+                                    font-size: 14px;
+                                }
 
                                 span {
                                     color: #FF4747;
@@ -519,12 +646,20 @@
                     .importantMessage {
                         padding: 8px 0 32px 0;
 
+                        @include respond-to("sm") {
+                            padding: 8px 0 14px 0;
+                        }
+
                         p {
                             color: #E23030;
                             font-size: 18px;
                             font-style: normal;
                             font-weight: 500;
                             line-height: normal;
+
+                            @include respond-to("sm") {
+                                font-size: 12px;
+                            }
                         }
                     }
 
@@ -534,6 +669,12 @@
                         grid-template-columns: repeat(2, 1fr);
                         gap: 16px;
 
+                        @include respond-to("sm") {
+                            padding: 12px 0;
+                            grid-template-columns: 1fr;
+                            gap: 12px;
+                        }
+
                         label {
                             padding: 0 0 6px 0;
                             display: block;
@@ -542,6 +683,10 @@
                             font-style: normal;
                             font-weight: 500;
                             line-height: normal;
+
+                            @include respond-to("sm") {
+                                font-size: 14px;
+                            }
                         }
                     }
                 }
@@ -550,6 +695,11 @@
                     border-radius: 14px;
                     padding: 20px;
                     background: #F7F7F7;
+
+                    @include respond-to("sm") {
+                        padding: 14px;
+                        border-radius: 8px;
+                    }
                 }
 
                 .boxtitle {

@@ -6,11 +6,20 @@
     background: #F7F7F7;
     padding: 24px;
 
+    @include respond-to("sm") {
+        padding: 14px;
+        border-radius: 12px;
+    }
+
     .subboxHeaderAlignment {
         padding: 0 0 32px 0;
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        @include respond-to("sm") {
+            padding: 0 0 14px 0;
+        }
 
         .twoButtonAlignment {
             display: flex;
@@ -29,6 +38,10 @@
                 font-style: normal;
                 font-weight: 600;
                 line-height: normal;
+
+                @include respond-to("sm") {
+                    font-size: 18px;
+                }
             }
         }
     }
@@ -199,12 +212,24 @@
             background: rgba(255, 71, 71, 0.05);
             gap: 6px;
 
+            @include respond-to("sm") {
+                padding: 12px;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 4px;
+                border-radius: 6px;
+            }
+
             p {
                 color: #3F4153;
                 font-size: 18px;
                 font-style: normal;
                 font-weight: 500;
                 line-height: normal;
+
+                @include respond-to("sm") {
+                    font-size: 14px;
+                }
 
                 span {
                     color: #FF4747;
@@ -439,7 +464,7 @@
 
 @include respond-to("tab") {
     .generatedImages {
-        padding: 18px;
+        padding: 16px;
 
         .subboxHeaderAlignment {
             flex-direction: column;
@@ -449,6 +474,10 @@
 
             .iconText h3 {
                 font-size: 20px;
+
+                @include respond-to("sm") {
+                    font-size: 18px;
+                }
             }
         }
 
@@ -457,6 +486,7 @@
             gap: 16px;
 
             .items {
+
                 .topAlignment,
                 .centerAlignment {
                     opacity: 1;
@@ -552,3 +582,5 @@
         transform: rotate(360deg);
     }
 }
+
+    

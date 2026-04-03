@@ -8,6 +8,10 @@
     width: 100%;
     padding: 140px 0 100px 0;
 
+    @include respond-to("sm") {
+        padding: 120px 0 60px 0;
+    }
+
     .boxCenter {
         max-width: 1080px;
         margin: 0 auto;
@@ -16,6 +20,10 @@
             display: flex;
             justify-content: center;
             padding: 0 0 32px 0;
+
+            @include respond-to("sm") {
+                padding: 0 0 24px 0;
+            }
 
             .tabdesign {
                 padding: 4px;
@@ -42,6 +50,11 @@
                     background-color: transparent;
                     cursor: pointer;
 
+                    @include respond-to("sm") {
+                        font-size: 14px;
+                        padding: 10px 24px;
+                    }
+
                     &.active {
                         background: #527475;
 
@@ -63,6 +76,13 @@
             justify-content: space-between;
             padding: 0 0 32px 0;
 
+            @include respond-to("sm") {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 0 0 24px 0;
+            }
+
             h2 {
                 color: #121212;
                 font-size: 42px;
@@ -70,6 +90,12 @@
                 font-weight: 600;
                 line-height: 58px;
                 text-transform: capitalize;
+
+                @include respond-to("sm") {
+                    font-size: 32px;
+                    line-height: 42px;
+                    text-align: center;
+                }
             }
 
             p {
@@ -78,6 +104,12 @@
                 font-style: normal;
                 font-weight: 600;
                 line-height: normal;
+
+                @include respond-to("sm") {
+                    font-size: 16px;
+                    text-align: center;
+                    font-weight: 500;
+                }
             }
         }
 
@@ -85,6 +117,10 @@
             display: flex;
             flex-direction: column;
             gap: 24px;
+
+            @include respond-to("sm") {
+                gap: 16px;
+            }
         }
 
         .emptyState {
@@ -93,6 +129,11 @@
             border-radius: 24px;
             border: 1px solid rgba(0, 0, 0, 0.08);
             background: #FFF;
+
+            @include respond-to("sm") {
+                padding: 16px;
+                border-radius: 12px;
+            }
 
             .emptyStateIcon {
                 width: 72px;
@@ -129,8 +170,17 @@
             background: #FFF;
             padding: 32px;
 
+            @include respond-to("sm") {
+                padding: 14px;
+                border-radius: 8px;
+            }
+
             .expandedContent {
                 padding-top: 32px;
+
+                @include respond-to("sm") {
+                    padding-top: 14px;
+                }
             }
 
             .additionalInstructions {
@@ -138,6 +188,12 @@
                 margin: 0 0 32px 0;
                 background: #F7F7F7;
                 padding: 24px;
+
+                @include respond-to("sm") {
+                    margin: 0 0 14px 0;
+                    border-radius: 12px;
+                    padding: 14px;
+                }
 
                 .instructionsList {
                     display: flex;
@@ -179,6 +235,10 @@
                     background: #FFF;
                     padding: 14px 16px;
 
+                    @include respond-to("sm") {
+                        padding: 14px;
+                    }
+
                     p {
                         color: #121212;
                         font-size: 18px;
@@ -186,6 +246,11 @@
                         font-weight: 500;
                         line-height: normal;
                         margin: 0 0 6px 0;
+
+                        @include respond-to("sm") {
+                            font-size: 14px;
+                            line-height: 28px;
+                        }
                     }
 
                     .instructionText {
@@ -198,6 +263,11 @@
                         white-space: pre-wrap;
                         word-break: break-word;
                         margin: 0;
+
+                        @include respond-to("sm") {
+                            font-size: 14px;
+                            line-height: 22px;
+                        }
                     }
 
                     .instructionTextCollapsed {
@@ -232,12 +302,22 @@
                     padding: 0 0 32px 0;
                     gap: 10px;
 
+                    @include respond-to("sm") {
+
+                        padding: 0 0 10px 0;
+                    }
+
                     h3 {
                         color: #3F4153;
                         font-size: 24px;
                         font-style: normal;
                         font-weight: 600;
                         line-height: normal;
+
+                        @include respond-to("sm") {
+                            font-size: 18px;
+                            line-height: 28px;
+                        }
                     }
                 }
             }
@@ -249,6 +329,11 @@
                 gap: 20px;
                 align-items: center;
                 cursor: pointer;
+
+                @include respond-to("sm") {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
 
                 .toggleIcon {
                     width: 40px;
@@ -265,6 +350,10 @@
 
                     &:hover {
                         background: #D4D8D8;
+                    }
+
+                    svg {
+                        transform: rotate(180deg);
                     }
                 }
 
@@ -291,6 +380,11 @@
                         cursor: pointer;
                         line-height: normal;
                         gap: 6px;
+
+                        @include respond-to("sm") {
+                            font-size: 12px;
+                            padding: 2px 10px;
+                        }
                     }
                 }
 
@@ -302,6 +396,12 @@
                     font-weight: 600;
                     line-height: 33px;
                     text-transform: capitalize;
+
+                    @include respond-to("sm") {
+                        font-size: 20px;
+                        line-height: 30px;
+                        margin: 10px 0;
+                    }
                 }
 
                 // Base chip style shared across all status chips
@@ -326,35 +426,50 @@
                     @extend %chipBase;
                     border-color: rgba(107, 114, 128, 0.3);
                     background: rgba(107, 114, 128, 0.10);
-                    span { color: #6B7280; }
+
+                    span {
+                        color: #6B7280;
+                    }
                 }
 
                 .chipCompleted {
                     @extend %chipBase;
                     border-color: rgba(15, 177, 45, 0.25);
                     background: rgba(15, 177, 45, 0.10);
-                    span { color: #0FB12D; }
+
+                    span {
+                        color: #0FB12D;
+                    }
                 }
 
                 .chipProcessing {
                     @extend %chipBase;
                     border-color: rgba(234, 179, 8, 0.25);
                     background: rgba(234, 179, 8, 0.10);
-                    span { color: #CA8A04; }
+
+                    span {
+                        color: #CA8A04;
+                    }
                 }
 
                 .chipFailed {
                     @extend %chipBase;
                     border-color: rgba(239, 68, 68, 0.25);
                     background: rgba(239, 68, 68, 0.10);
-                    span { color: #EF4444; }
+
+                    span {
+                        color: #EF4444;
+                    }
                 }
 
                 .chipQueued {
                     @extend %chipBase;
                     border-color: rgba(59, 130, 246, 0.25);
                     background: rgba(59, 130, 246, 0.10);
-                    span { color: #3B82F6; }
+
+                    span {
+                        color: #3B82F6;
+                    }
                 }
 
                 .primaryChip {
@@ -411,8 +526,14 @@
             }
         }
     }
-@keyframes shimmer {
-    0%   { background-position: -400px 0; }
-    100% { background-position: 400px 0; }
-}
+
+    @keyframes shimmer {
+        0% {
+            background-position: -400px 0;
+        }
+
+        100% {
+            background-position: 400px 0;
+        }
+    }
 }
