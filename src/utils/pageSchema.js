@@ -3,12 +3,10 @@ import { GetSEOData } from "@/graphql/graphql";
 import { graphcms } from "@/graphql/graphQLClient";
 import { usePathname } from "next/navigation";
 
-export async function GET_PAGE_SCHEMA() {
+export default async function GET_PAGE_SCHEMA() {
   const path = usePathname().replace(/^\//, "");
   try {
-    if (!pathname) return null;
-
-    const path = pathname.replace(/^\/+/, "");
+    if (!path) return null;
 
     const variables = {
       filters: {

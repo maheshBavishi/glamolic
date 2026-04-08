@@ -152,6 +152,9 @@ export const GetSEOData = gql`
               }
             }
           }
+          FAQ_Schema
+          BreadcrumbList_Schema
+          Organization_Schema
           createdAt
           updatedAt
           publishedAt

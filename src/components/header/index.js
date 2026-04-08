@@ -221,7 +221,7 @@ export default function Header() {
               </Link>
             </div>
             <div className={styles.menu}>
-              <Link href="/" aria-label="Home" className={styles.active}>
+              <Link href="/" aria-label="Home" className={pathname === "/" ? styles.active : ""}>
                 Home
               </Link>
               <a
@@ -245,15 +245,15 @@ export default function Header() {
                 Pricing
               </a>
               {user?.id ? (
-                <Link href="/history" aria-label="History">
+                <Link href="/history" aria-label="History" className={pathname === "/history" ? styles.active : ""}>
                   History
                 </Link>
               ) : (
-                <Link href="/login" aria-label="History">
+                <Link href="/login" aria-label="History" className={pathname === "/history" ? styles.active : ""}>
                   History
                 </Link>
               )}
-              <Link href="/contact-us" aria-label="Contact US">
+              <Link href="/contact-us" aria-label="Contact US" className={pathname === "/contact-us" ? styles.active : ""}>
                 Contact Us
               </Link>
             </div>

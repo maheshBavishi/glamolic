@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import "../scss/main.scss";
 import "./globals.css";
 import "react-phone-input-2/lib/style.css";
+import GET_PAGE_SCHEMA from "@/utils/pageSchema";
 
 const elMessiri = El_Messiri({
   variable: "--font-el-messiri",
@@ -27,6 +28,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <GET_PAGE_SCHEMA />
+      </head>
       <body className={`${elMessiri.variable} ${heebo.variable}`}>
         <ClientProviders>
           <Toaster position="bottom-right" />

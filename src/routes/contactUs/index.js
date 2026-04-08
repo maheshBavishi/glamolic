@@ -150,7 +150,7 @@ export default function ContactUs() {
         <div className={styles.boxCenteralignment}>
           <div className={styles.boxHeaderAlignment}>
             <div>
-              <h2>Contact Us</h2>
+              <h1>Contact Us</h1>
               <p>Have questions, feedback, or need support? fill out the form below or reach us through</p>
             </div>
           </div>
