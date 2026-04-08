@@ -1,5 +1,6 @@
 import ContactUs from "@/routes/contactUs";
 import { GET_SEO } from "@/utils/seo";
+import RenderSchema from "@/utils/RenderSchema";
 import React from "react";
 
 export async function generateMetadata() {
@@ -46,6 +47,12 @@ export async function generateMetadata() {
   };
 }
 
-export default function page() {
-  return <ContactUs />;
+export default async function page() {
+  const seoData = await GET_SEO("contact-us");
+  return (
+    <>
+      <RenderSchema seoData={seoData} />
+      <ContactUs />
+    </>
+  );
 }

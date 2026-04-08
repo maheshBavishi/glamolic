@@ -2,6 +2,7 @@ import { GetAllBlogCategories, GetAllBlogs } from "@/graphql/graphql";
 import { graphcms } from "@/graphql/graphQLClient";
 import Blog from "@/routes/blog";
 import { GET_SEO } from "@/utils/seo";
+import RenderSchema from "@/utils/RenderSchema";
 import React from "react";
 
 export async function generateMetadata() {
@@ -49,6 +50,7 @@ export async function generateMetadata() {
 }
 
 export default async function Page({ searchParams }) {
+  const seoData = await GET_SEO("blog");
   const params = await searchParams;
   const parsedPage = Number(params?.page);
   const currentPage = parsedPage > 0 ? parsedPage : 1;
@@ -85,6 +87,7 @@ export default async function Page({ searchParams }) {
   });
   return (
     <div>
+      <RenderSchema seoData={seoData} />
       <Blog Blogs={Data?.blog?.data} paginationData={Data?.blog?.meta?.pagination} Categories={CategoriesData?.blogCategories?.data} />
     </div>
   );

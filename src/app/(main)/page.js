@@ -1,5 +1,6 @@
 import HomePage from "@/routes/home";
 import { GET_SEO } from "@/utils/seo";
+import RenderSchema from "@/utils/RenderSchema";
 
 export async function generateMetadata() {
   const seoData = await GET_SEO("home");
@@ -45,9 +46,11 @@ export async function generateMetadata() {
   };
 }
 
-export default function Home() {
+export default async function Home() {
+  const seoData = await GET_SEO("home");
   return (
     <div>
+      <RenderSchema seoData={seoData} />
       <HomePage />
     </div>
   );

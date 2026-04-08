@@ -1,5 +1,6 @@
 import PrivacyPolicy from "@/routes/privacyPolicy";
 import { GET_SEO } from "@/utils/seo";
+import RenderSchema from "@/utils/RenderSchema";
 import React from "react";
 
 export async function generateMetadata() {
@@ -46,9 +47,11 @@ export async function generateMetadata() {
   };
 }
 
-export default function page() {
+export default async function page() {
+  const seoData = await GET_SEO("privacy-policy");
   return (
     <div>
+      <RenderSchema seoData={seoData} />
       <PrivacyPolicy />
     </div>
   );
