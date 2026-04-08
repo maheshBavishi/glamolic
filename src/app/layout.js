@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <GET_PAGE_SCHEMA />
+        {/* <GET_PAGE_SCHEMA /> */}
       </head>
       <body className={`${elMessiri.variable} ${heebo.variable}`}>
         <ClientProviders>
