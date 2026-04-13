@@ -189,7 +189,7 @@ export default function ContactUs() {
                 <label>
                   Message<span className={styles.requiredMark}>*</span>
                 </label>
-                <textarea name="message" placeholder="Your Message..." value={formData.message} onChange={handleChange}></textarea>
+                <textarea data-lenis-prevent={true} name="message" placeholder="Your Message..." value={formData.message} onChange={handleChange}></textarea>
                 {errors.message ? <p style={{ color: "red", fontSize: "14px", marginTop: "4px" }}>{errors.message}</p> : null}
               </div>
               <div className={styles.sendMessage}>

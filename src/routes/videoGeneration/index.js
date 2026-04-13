@@ -181,6 +181,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                   <div className={styles.textareaDesign}>
                     <label>Video prompt</label>
                     <textarea
+                      data-lenis-prevent={true}
                       placeholder="Describe the motion and atmosphere (e.g., 'Slow cinematic pan, dust particles floating in light rays')"
                       value={formData.prompt}
                       onChange={(event) => handleChange("prompt", event.target.value)}

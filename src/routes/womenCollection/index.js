@@ -1078,6 +1078,7 @@ export default function WomenCollection() {
                                       <div>
                                         <label>Instructions</label>
                                         <textarea
+                                          data-lenis-prevent={true}
                                           placeholder="Instructions..."
                                           value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
                                           onChange={(event) => {
@@ -1093,6 +1094,7 @@ export default function WomenCollection() {
                                         <div>
                                           <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
                                           <textarea
+                                            data-lenis-prevent={true}
                                             placeholder="Instructions for selected views..."
                                             value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
                                             onChange={(event) => {
@@ -1111,6 +1113,7 @@ export default function WomenCollection() {
                                           <div key={`additional-${product.id}-${additionalIndex}`}>
                                             <label>Additional Image {additionalIndex + 1}</label>
                                             <textarea
+                                              data-lenis-prevent={true}
                                               placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
                                               value={
                                                 Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""
@@ -1131,6 +1134,7 @@ export default function WomenCollection() {
                                   <div key={`${product.id}-${imageIndex}`}>
                                     <label>Image {imageIndex + 1}</label>
                                     <textarea
+                                      data-lenis-prevent={true}
                                       placeholder={`Instruction image ${imageIndex + 1}...`}
                                       value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
                                       onChange={(event) => {
