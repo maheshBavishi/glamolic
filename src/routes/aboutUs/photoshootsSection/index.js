@@ -1,7 +1,10 @@
 import React from 'react'
 import styles from './photoshootsSection.module.scss';
 const PhotoShootImage = '/assets/images/photoshoot3.png';
-const CardImage = '/assets/images/img01.png';
+const CardImage1 = '/assets/images/p1.png';
+const CardImage2 = '/assets/images/p2.png';
+const CardImage3 = '/assets/images/p3.png';
+const CardImage4 = '/assets/images/p4.png';
 export default function PhotoshootsSection() {
     return (
         <div className={styles.photoshootsSection}>
@@ -20,16 +23,16 @@ export default function PhotoshootsSection() {
                             </div>
                             <div className={styles.colGrid}>
                                 <div className={styles.colGridItems}>
-                                    <img src={CardImage} alt='CardImage' />
+                                    <img src={CardImage1} alt='CardImage1' />
                                 </div>
                                 <div className={styles.colGridItems}>
-                                    <img src={CardImage} alt='CardImage' />
+                                    <img src={CardImage2} alt='CardImage2' />
                                 </div>
                                 <div className={styles.colGridItems}>
-                                    <img src={CardImage} alt='CardImage' />
+                                    <img src={CardImage3} alt='CardImage3' />
                                 </div>
                                 <div className={styles.colGridItems}>
-                                    <img src={CardImage} alt='CardImage' />
+                                    <img src={CardImage4} alt='CardImage4' />
                                 </div>
                             </div>
                         </div>
