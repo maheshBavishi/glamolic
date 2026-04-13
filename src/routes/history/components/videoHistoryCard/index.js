@@ -278,7 +278,11 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
                          </svg>
                        </div>
                        <p style={{ color: "#f87171", fontSize: "16px", marginBottom: "4px" }}>Generation Failed</p>
-                       <p style={{ color: "#fca5a5", fontSize: "12px", maxWidth: "250px", margin: "0 auto" }}>{item?.error_message || "An unknown error occurred"}</p>
+                       <p style={{ color: "#fca5a5", fontSize: "12px", maxWidth: "250px", margin: "0 auto" }}>
+                        {item?.error_message?.includes("Wavespeed Fallback") 
+                          ? "Our models are experiencing high demand. Please try again later."
+                          : (item?.error_message || "An unknown error occurred")}
+                       </p>
                      </>
                    ) : (
                      <>

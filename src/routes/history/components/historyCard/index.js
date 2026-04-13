@@ -83,7 +83,10 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
     .replace(/[\s-]+/g, "_");
   const isTerminalStatus = ["completed", "failed", "canceled", "cancelled"].includes(normalizedStatus);
   const showImageSkeleton = (!imgLoaded && Boolean(productImage)) || (!productImage && !isTerminalStatus);
-  const statusText = item?.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : "Processing";
+  let statusText = item?.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : "Processing";
+  if (typeof item?.status === "string" && item.status.includes("[Wavespeed Fallback] Task completed but no valid output found")) {
+    statusText = "Failed: Our models are experiencing high demand. Please try again later.";
+  }
   const productMetadata = normalizeProductMetadata(item?.product_metadata);
 
   const instructionGroups = (() => {

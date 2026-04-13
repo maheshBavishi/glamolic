@@ -46,7 +46,11 @@ export const generateVideo = async (payload) => {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || errorData.message || `Video generation API request failed with status ${response.status}`);
+    let errorMessage = errorData.detail || errorData.message || `Video generation API request failed with status ${response.status}`;
+    if (typeof errorMessage === "string" && errorMessage.includes("[Wavespeed Fallback] Task completed but no valid output found")) {
+      errorMessage = "Our models are experiencing high demand. Please try again later.";
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();
