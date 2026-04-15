@@ -756,7 +756,12 @@ export default function WomenCollection() {
                         value={imagesPerProductOptions.find((option) => option.value === settings.imagesPerProduct) || null}
                         onChange={(option) => {
                           const selectedCount = Number(option?.value) || 1;
-                          updateSettings({ imagesPerProduct: selectedCount });
+                          const updates = { imagesPerProduct: selectedCount };
+                          if (selectedCount === 1) {
+                            updates.modelConsistency = false;
+                            updates.sameBackground = false;
+                          }
+                          updateSettings(updates);
                         }}
                         placeholder="Select image count"
                       />
@@ -918,7 +923,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.modelConsistency)}
-                        disabled={settings.resolution === "1k"}
+                        disabled={settings.resolution === "1k" || (!settings.isEcommerce && (settings.imagesPerProduct || 1) === 1)}
                         onChange={(checked) => updateSettings({ modelConsistency: checked })}
                       />
                     </div>
@@ -935,7 +940,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.sameBackground)}
-                        disabled={settings.resolution === "1k"}
+                        disabled={settings.resolution === "1k" || (!settings.isEcommerce && (settings.imagesPerProduct || 1) === 1)}
                         onChange={(checked) => updateSettings({ sameBackground: checked })}
                       />
                     </div>
