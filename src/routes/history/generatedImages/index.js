@@ -180,7 +180,7 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
             onClick={(e) => {
               e.stopPropagation();
               if (isDownloading) return;
-              onDownload(sourceUrl, index);
+              onDownload(index);
             }}
           />
         </div>
@@ -411,13 +411,13 @@ export default function GeneratedImages({ item }) {
   );
 
   const handleSingleImageDownload = useCallback(
-    async (imageUrl, index) => {
+    async (index) => {
       if (downloadingSetRef.current.has(index)) return;
       downloadingSetRef.current.add(index);
       setDownloadingImages((prev) => ({ ...prev, [index]: true }));
 
       try {
-        await handleDownloadImage(imageUrl, index);
+        await handleDownloadImage(item, index);
       } finally {
         downloadingSetRef.current.delete(index);
         setDownloadingImages((prev) => {
@@ -428,7 +428,7 @@ export default function GeneratedImages({ item }) {
         });
       }
     },
-    [handleDownloadImage],
+    [handleDownloadImage, item],
   );
 
   if (!imageItems || imageItems.length === 0) return null;

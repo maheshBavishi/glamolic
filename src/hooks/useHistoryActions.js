@@ -3,14 +3,38 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import jsPDF from "jspdf";
 import toast from "react-hot-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { collectImageUrls } from "@/utils/imageUrlUtils";
 
 export const useHistoryActions = () => {
-  const handleDownloadImage = async (url, id) => {
+  const fetchDownloadImageUrls = async (item) => {
+    if (!item?.id) {
+      throw new Error("History item not found");
+    }
+
+    const { data, error } = await supabase
+      .from("generated_images")
+      .select("image_urls")
+      .eq("id", item.id)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return collectImageUrls(data?.image_urls);
+  };
+
+  const handleDownloadImage = async (item, index) => {
     try {
+      const imageUrls = await fetchDownloadImageUrls(item);
+      const url = imageUrls[index];
+
       if (!url) {
         throw new Error("Image URL not found");
       }
-      saveAs(url, `image-${id}.jpg`);
+
+      saveAs(url, `image-${index + 1}.jpg`);
     } catch (error) {
       console.error("Error downloading image:", error);
       toast.error("Failed to download image. The file may have been deleted.");
@@ -24,30 +48,8 @@ export const useHistoryActions = () => {
     let errorCount = 0;
 
     try {
-      const validThumbnails = await Promise.all(
-        item.thumbnails.map(async (url) => {
-          if (!url) return null;
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000);
-            const response = await fetch(url, {
-              method: "HEAD",
-              signal: controller.signal,
-            });
-            clearTimeout(timeoutId);
-            if (!response.ok) {
-              console.warn(`Image not found: ${url}`);
-              return null;
-            }
-            return url;
-          } catch (error) {
-            console.warn(`Error checking image: ${url}`, error);
-            return null;
-          }
-        })
-      );
-
-      const validImages = validThumbnails.filter((url) => url !== null);
+      const imageUrls = await fetchDownloadImageUrls(item);
+      const validImages = imageUrls.filter(Boolean);
 
       if (validImages.length === 0) {
         toast.dismiss(toastId);
@@ -103,40 +105,67 @@ export const useHistoryActions = () => {
     }
   };
 
-  const handleExportPDF = (item) => {
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "px",
-    });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+  const handleExportPDF = async (item) => {
+    const toastId = toast.loading("Preparing PDF...");
 
-    const promises = item.thumbnails.map((url) => {
-      return new Promise((resolve) => {
-        const image = new Image();
-        image.src = url;
-        image.crossOrigin = "anonymous";
-        image.onload = () => {
-          const maxImgWidth = 400;
-          const imgWidth = maxImgWidth;
-          const imgHeight = (image.height / image.width) * imgWidth;
-          const x = (pageWidth - imgWidth) / 2;
-          const y = (pageHeight - imgHeight) / 2;
-          pdf.addImage(image, "JPEG", x, y, imgWidth, imgHeight);
-          pdf.addPage();
-          resolve();
-        };
-        image.onerror = () => {
-          console.error("Failed to load image for PDF:", url);
-          resolve();
-        };
+    try {
+      const imageUrls = await fetchDownloadImageUrls(item);
+      const validImages = imageUrls.filter(Boolean);
+
+      if (validImages.length === 0) {
+        toast.dismiss(toastId);
+        toast.error("No valid images found to export");
+        return;
+      }
+
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
       });
-    });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let addedPageCount = 0;
 
-    Promise.all(promises).then(() => {
+      const promises = validImages.map((url) => {
+        return new Promise((resolve) => {
+          const image = new Image();
+          image.src = url;
+          image.crossOrigin = "anonymous";
+          image.onload = () => {
+            const maxImgWidth = 400;
+            const imgWidth = maxImgWidth;
+            const imgHeight = (image.height / image.width) * imgWidth;
+            const x = (pageWidth - imgWidth) / 2;
+            const y = (pageHeight - imgHeight) / 2;
+            pdf.addImage(image, "JPEG", x, y, imgWidth, imgHeight);
+            pdf.addPage();
+            addedPageCount++;
+            resolve();
+          };
+          image.onerror = () => {
+            console.error("Failed to load image for PDF:", url);
+            resolve();
+          };
+        });
+      });
+
+      await Promise.all(promises);
+
+      if (addedPageCount === 0) {
+        toast.dismiss(toastId);
+        toast.error("Failed to load images for PDF");
+        return;
+      }
+
       pdf.deletePage(pdf.getNumberOfPages());
       pdf.save(`${item.productName || "catalog"}.pdf`);
-    });
+      toast.dismiss(toastId);
+      toast.success("PDF exported successfully");
+    } catch (error) {
+      console.error("PDF export failed:", error);
+      toast.dismiss(toastId);
+      toast.error("Failed to export PDF");
+    }
   };
 
   return {

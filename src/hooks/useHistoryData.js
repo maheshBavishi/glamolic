@@ -1,54 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-
-const normalizeImageUrl = (value) => (typeof value === "string" ? value.trim() : "");
-
-const collectImageUrls = (source) => {
-  const urls = [];
-
-  const pushUrl = (value) => {
-    const normalized = normalizeImageUrl(value);
-    if (normalized) {
-      urls.push(normalized);
-    }
-  };
-
-  const collectFromGroup = (group) => {
-    if (!group) return;
-
-    if (typeof group === "string") {
-      pushUrl(group);
-      return;
-    }
-
-    if (Array.isArray(group)) {
-      group.forEach(collectFromGroup);
-      return;
-    }
-
-    if (typeof group === "object") {
-      if (Array.isArray(group.images)) {
-        group.images.forEach(pushUrl);
-      }
-      if (Array.isArray(group.urls)) {
-        group.urls.forEach(pushUrl);
-      }
-      if (typeof group.imageUrl === "string") {
-        pushUrl(group.imageUrl);
-      }
-      if (typeof group.image_url === "string") {
-        pushUrl(group.image_url);
-      }
-      if (typeof group.url === "string") {
-        pushUrl(group.url);
-      }
-    }
-  };
-
-  collectFromGroup(source);
-  return urls;
-};
+import { collectThumbnailUrls } from "@/utils/imageUrlUtils";
 
 export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
   const [history, setHistory] = useState([]);
@@ -64,7 +17,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
 
       const { data: oldRows, error } = await supabase
         .from("generated_images")
-        .select("id, image_urls")
+        .select("id, thumbnail_urls")
         .eq("user_id", user.id)
         .lt("created_at", sevenDaysAgo.toISOString());
 
@@ -78,8 +31,8 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
       const filesToDelete = [];
 
       oldRows.forEach((row) => {
-        const rowImageUrls = collectImageUrls(row.image_urls);
-        rowImageUrls.forEach((url) => {
+        const rowThumbnailUrls = collectThumbnailUrls(row.thumbnail_urls);
+        rowThumbnailUrls.forEach((url) => {
           try {
             const path = new URL(url).pathname.split("/").slice(-2).join("/");
             filesToDelete.push(path);
@@ -128,7 +81,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
     const unifiedBackground = settings.unifiedBackground ?? settings.sameBackground ?? false;
     const additionalInstructions = Array.isArray(settings.additionalInstructions) ? settings.additionalInstructions : [];
 
-    const imageUrls = collectImageUrls(item.image_urls);
+    const thumbnailUrls = collectThumbnailUrls(item.thumbnail_urls);
 
     let productName = "Untitled Collection";
     if (settings.productName) {
@@ -154,7 +107,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
         : settings.additionalInstructions || "No additional instructions provided.",
       prompt: item.prompt || "",
       products: normalizedProductMetadata.length || 1,
-      totalImages: imageUrls.length,
+      totalImages: thumbnailUrls.length,
       status: item.status || "completed",
       settings: {
         productName: settings.productName || productName,
@@ -169,7 +122,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
         additionalInstructions: additionalInstructions,
         startingVariationIdx: settings.startingVariationIdx || 0,
       },
-      thumbnails: imageUrls,
+      thumbnails: thumbnailUrls,
       product_metadata: normalizedProductMetadata,
     };
 
@@ -225,7 +178,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
       
       const { data, error } = await supabase
         .from("generated_images")
-        .select("id, user_id, settings, product_metadata, created_at, status, image_urls")
+        .select("id, user_id, settings, product_metadata, created_at, status, thumbnail_urls")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .range(from, to);
