@@ -264,9 +264,6 @@ export default function WomenCollection() {
   const creditsPerImage = CREDITS_PER_IMAGE[settings.resolution] || 1;
   const estimatedCost = (products?.length || 0) * (settings.imagesPerProduct || 1) * creditsPerImage;
   const availableCredits = credits?.available_credits ?? profile?.tokens ?? 0;
-  const isSingleImageSingleProduct =
-    !settings.isEcommerce && (settings.imagesPerProduct || 1) === 1 && (products?.length || 0) <= 1;
-  const shouldDisableConsistencyControls = settings.resolution === "1k" || isSingleImageSingleProduct;
   const resolutionFieldOptions = useMemo(() => {
     if (userTransactions?.transaction_type !== "SIGNUP_BONUS") {
       return resolutionOptions.filter((option) => option.value !== "1k");
@@ -311,12 +308,6 @@ export default function WomenCollection() {
     resetStore();
     updateSettings({ gender: routeCategory });
   }, [preserveState, resetStore, routeCategory, setPreserveState, settings.gender, updateSettings]);
-
-  useEffect(() => {
-    if (shouldDisableConsistencyControls && (settings.modelConsistency || settings.sameBackground)) {
-      updateSettings({ modelConsistency: false, sameBackground: false });
-    }
-  }, [settings.modelConsistency, settings.sameBackground, shouldDisableConsistencyControls, updateSettings]);
 
   useEffect(() => {
     if (userTransactions?.transaction_type !== "SIGNUP_BONUS" && settings.resolution === "1k") {
@@ -759,12 +750,7 @@ export default function WomenCollection() {
                         value={imagesPerProductOptions.find((option) => option.value === settings.imagesPerProduct) || null}
                         onChange={(option) => {
                           const selectedCount = Number(option?.value) || 1;
-                          const updates = { imagesPerProduct: selectedCount };
-                          if (selectedCount === 1 && (products?.length || 0) <= 1) {
-                            updates.modelConsistency = false;
-                            updates.sameBackground = false;
-                          }
-                          updateSettings(updates);
+                          updateSettings({ imagesPerProduct: selectedCount });
                         }}
                         placeholder="Select image count"
                       />
@@ -926,7 +912,6 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.modelConsistency)}
-                        disabled={shouldDisableConsistencyControls}
                         onChange={(checked) => updateSettings({ modelConsistency: checked })}
                       />
                     </div>
@@ -943,7 +928,6 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.sameBackground)}
-                        disabled={shouldDisableConsistencyControls}
                         onChange={(checked) => updateSettings({ sameBackground: checked })}
                       />
                     </div>
