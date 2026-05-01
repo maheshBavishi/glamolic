@@ -186,11 +186,11 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
         </div>
       ) : null}
       <div className={styles.centerAlignment}>
-        {profile?.video_generation === true && (
+        {/* {profile?.video_generation === true && (
           <div onClick={onGenerateVideo}>
             <Button text="Generate video" icon={VideoIcon} />
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -240,7 +240,7 @@ export default function WomenCollection() {
   const router = useRouter();
   const { user, profile, userTransactions } = useAuth();
   const { credits, loading: creditsLoading, fetchCredits } = useCreditsStore();
-  const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, preserveState, setPreserveState } =
+  const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, clearProductImages, preserveState, setPreserveState } =
     useGenerateStore();
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -297,6 +297,8 @@ export default function WomenCollection() {
   );
 
   useEffect(() => {
+    clearProductImages();
+
     if (preserveState) {
       setPreserveState(false);
       if (settings.gender !== routeCategory) {
@@ -305,9 +307,15 @@ export default function WomenCollection() {
       return;
     }
 
-    resetStore();
-    updateSettings({ gender: routeCategory });
-  }, [preserveState, resetStore, routeCategory, setPreserveState, settings.gender, updateSettings]);
+    if (!settings.gender) {
+      updateSettings({ gender: routeCategory });
+      return;
+    }
+
+    if (settings.gender !== routeCategory) {
+      resetStore({ gender: routeCategory });
+    }
+  }, [clearProductImages, preserveState, resetStore, routeCategory, setPreserveState, settings.gender, updateSettings]);
 
   useEffect(() => {
     if (userTransactions?.transaction_type !== "SIGNUP_BONUS" && settings.resolution === "1k") {
@@ -649,7 +657,7 @@ export default function WomenCollection() {
       if (isQueuedResponse || hasTaskResponse || hasImmediateResult) {
         toast.dismiss(loadingToast);
         toast.success(response?.message || "Generation started in background!");
-        resetStore();
+        clearProductImages();
         if (user?.id) {
           fetchCredits(user.id);
         }

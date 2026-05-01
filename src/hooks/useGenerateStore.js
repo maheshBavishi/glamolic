@@ -1,7 +1,19 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-const initialSettings = {
+const GENERATE_STORAGE_KEY = "generate-storage";
+const NON_PERSISTED_IMAGE_FIELDS = [
+  "frontImage",
+  "backImage",
+  "bottomBackImage",
+  "blouseImage",
+  "topImage",
+  "bottomImage",
+  "dupattaImage",
+  "referenceImage",
+];
+
+const createInitialSettings = () => ({
   resolution: "2k",
   imageOrientation: "portrait",
   imageSize: "12x18",
@@ -15,10 +27,10 @@ const initialSettings = {
   isEcommerce: false,
   ecommerceViewTypes: [],
   additionalImagesCount: 0,
-};
+});
 
-const initialProduct = {
-  id: "1",
+const createInitialProduct = (id = "1", imagesPerProduct = 2) => ({
+  id,
   clothingType: "",
   subCategory: "",
   otherCategory: "",
@@ -30,15 +42,41 @@ const initialProduct = {
   bottomImage: null,
   dupattaImage: null,
   referenceImage: null,
-  additionalInstructions: ["", ""],
+  additionalInstructions: Array(imagesPerProduct).fill(""),
+});
+
+const sanitizeProductForRetention = (product) => {
+  const nextProduct = {
+    ...product,
+    additionalInstructions: Array.isArray(product?.additionalInstructions) ? product.additionalInstructions : [],
+  };
+
+  NON_PERSISTED_IMAGE_FIELDS.forEach((field) => {
+    nextProduct[field] = null;
+  });
+
+  return nextProduct;
+};
+
+const sanitizeProductsForRetention = (products = []) => products.map((product) => sanitizeProductForRetention(product));
+
+const createInitialState = (settingsOverrides = {}) => {
+  const settings = {
+    ...createInitialSettings(),
+    ...settingsOverrides,
+  };
+
+  return {
+    products: [createInitialProduct("1", settings.imagesPerProduct)],
+    settings,
+    preserveState: false,
+  };
 };
 
 export const useGenerateStore = create(
   persist(
     (set) => ({
-      products: [initialProduct],
-      settings: initialSettings,
-      preserveState: false,
+      ...createInitialState(),
 
       setPreserveState: (preserve) => set({ preserveState: preserve }),
 
@@ -107,34 +145,26 @@ export const useGenerateStore = create(
           settings: { ...state.settings, ...newSettings },
         })),
 
-      resetStore: () => {
-        // Clear localStorage completely to prevent data leakage
+      clearProductImages: () =>
+        set((state) => ({
+          ...state,
+          products: sanitizeProductsForRetention(state.products),
+        })),
+
+      resetStore: (settingsOverrides = {}) => {
         if (typeof window !== "undefined") {
-            localStorage.removeItem("generate-storage");
+          localStorage.removeItem(GENERATE_STORAGE_KEY);
         }
-        set({
-          products: [initialProduct],
-          settings: initialSettings,
-        });
+        set(createInitialState(settingsOverrides));
       },
     }),
     {
-      name: "generate-storage",
+      name: GENERATE_STORAGE_KEY,
       // Use SSR-safe fallback for storage
       storage: createJSONStorage(() => typeof window !== "undefined" ? window.localStorage : null),
       partialize: (state) => ({
         settings: state.settings,
-        products: state.products.map((p) => ({
-          ...p,
-          frontImage: null,
-          backImage: null,
-          bottomBackImage: null,
-          blouseImage: null,
-          topImage: null,
-          bottomImage: null,
-          dupattaImage: null,
-          additionalInstructions: p.additionalInstructions || [],
-        })),
+        products: sanitizeProductsForRetention(state.products),
       }),
     },
   ),
