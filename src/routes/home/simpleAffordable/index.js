@@ -8,8 +8,10 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { supabaseClient } from "@/integrations/supabase/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 import { fetchPlansByCategory, formatPrice, generatePlanFeatures, getPlanName, normalizePlanCategory } from "@/services/plans-service";
 import PhoneRequiredModal from "@/components/phoneRequiredModal";
+import WhatsAppVerificationModal from "@/components/whatsappVerificationModal";
 
 const FlowerImage = "/assets/images/flower.png";
 const LineBoxOne = "/assets/images/linebox1.png";
@@ -25,6 +27,8 @@ export default function SimpleAffordable() {
   const [isProcessingPlan, setIsProcessingPlan] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState(null);
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
+  const [isWhatsappModalOpen, setIsWhatsappModalOpen] = useState(false);
+  const [hasClaimed, setHasClaimed] = useState(null);
   const [pendingPlan, setPendingPlan] = useState(null);
 
   const scrollRef = useRef(null);
@@ -57,6 +61,25 @@ export default function SimpleAffordable() {
       transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
     },
   };
+
+  useEffect(() => {
+    const checkClaim = async () => {
+      if (!user) return;
+      try {
+        const { data, error } = await supabase
+          .from("whatsapp_claims")
+          .select("id")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (error) throw error;
+        setHasClaimed(!!data);
+      } catch (err) {
+        console.error("Error checking whatsapp claim:", err);
+        setHasClaimed(true);
+      }
+    };
+    checkClaim();
+  }, [user]);
 
   useEffect(() => {
     let isMounted = true;
@@ -309,6 +332,29 @@ export default function SimpleAffordable() {
           </div>
         </motion.div>
 
+        {/* WhatsApp Claim Banner — shown only to logged-in users who haven't claimed yet */}
+        {user && hasClaimed === false && (
+          <motion.div
+            className={styles.whatsappClaimBanner}
+            initial={{ opacity: 0, y: -12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <span className={styles.bannerEmoji}>🎁</span>
+            <div className={styles.bannerText}>
+              <strong>Verify your WhatsApp &amp; claim 5 FREE credits!</strong>
+              <span>One-time offer — takes less than a minute.</span>
+            </div>
+            <button
+              className={styles.bannerCta}
+              onClick={() => setIsWhatsappModalOpen(true)}
+            >
+              Claim Now
+            </button>
+          </motion.div>
+        )}
+
         {isLoadingPlans ? (
           <div className={styles.loadingState}>
             <div className={styles.loader}></div>
@@ -459,6 +505,14 @@ export default function SimpleAffordable() {
         initialPhone={savedPhoneNumber}
         onClose={closePhoneModal}
         onConfirm={handlePhoneConfirm}
+      />
+      <WhatsAppVerificationModal
+        isOpen={isWhatsappModalOpen}
+        onClose={() => setIsWhatsappModalOpen(false)}
+        onVerified={() => {
+          setHasClaimed(true);
+          setIsWhatsappModalOpen(false);
+        }}
       />
     </div>
   );

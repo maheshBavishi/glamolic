@@ -528,6 +528,94 @@
         border-radius: 16px;
     }
 
+    .whatsappClaimBanner {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: linear-gradient(135deg, #e8f5e0 0%, #d4edd5 100%);
+        max-width: 1280px;
+        border: 1.5px solid #25d366;
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin: 0 auto 36px;
+        position: relative;
+        z-index: 2;
+
+        @include respond-to("sm") {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            margin: 0 20px 28px;
+        }
+
+        .bannerEmoji {
+            font-size: 32px;
+            flex-shrink: 0;
+
+            @include respond-to("sm") {
+                font-size: 26px;
+            }
+        }
+
+        .bannerText {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            strong {
+                color: #1a1a1a;
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 1.3;
+
+                @include respond-to("sm") {
+                    font-size: 14px;
+                }
+            }
+
+            span {
+                color: #3a3a3a;
+                font-size: 14px;
+                font-weight: 400;
+
+                @include respond-to("sm") {
+                    font-size: 13px;
+                }
+            }
+        }
+
+        .bannerCta {
+            flex-shrink: 0;
+            background: #25d366;
+            color: #fff;
+            border: none;
+            border-radius: 100px;
+            padding: 10px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.15s ease;
+            white-space: nowrap;
+
+            &:hover {
+                background: #1ebe5a;
+                transform: translateY(-1px);
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+
+            @include respond-to("sm") {
+                width: 100%;
+                text-align: center;
+                padding: 10px;
+            }
+        }
+    }
+
 }
 
 @keyframes spin {

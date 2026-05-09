@@ -199,7 +199,7 @@ export default function Profile() {
                     </p>
                   </div>
                   <div className={styles.buttonDesign}>
-                    <button>
+                    <button onClick={() => router.push("/#pricing")}>
                       Upgrade to Pro
                       <RightWhiteIcon />
                     </button>
