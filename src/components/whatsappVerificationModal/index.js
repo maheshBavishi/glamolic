@@ -88,7 +88,7 @@ export default function WhatsAppVerificationModal({ isOpen, onClose, onVerified 
       setOtp(["", "", "", "", "", ""]);
     } catch (error) {
       console.error("Error sending OTP:", error);
-      const errorMessage = error.response?.data?.message || error.message || "Failed to send OTP. Please try again.";
+      const errorMessage = error.response?.data?.detail || error.response?.data?.message || error.message || "Failed to send OTP. Please try again.";
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -149,7 +149,7 @@ export default function WhatsAppVerificationModal({ isOpen, onClose, onVerified 
       onClose();
     } catch (error) {
       console.error("Error verifying OTP:", error);
-      const errorMessage = error.response?.data?.message || error.message || "Invalid OTP. Please check and try again.";
+      const errorMessage = error.response?.data?.detail || error.response?.data?.message || error.message || "Invalid OTP. Please check and try again.";
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);

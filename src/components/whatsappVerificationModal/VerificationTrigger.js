@@ -19,20 +19,18 @@ export default function VerificationTrigger() {
           .select("id")
           .eq("user_id", user.id)
           .maybeSingle();
-        console.log("🚀 ~ checkClaimStatus ~ data:", data, error)
 
         if (error) {
           console.error("Error checking whatsapp claim:", error);
           return;
         }
 
-        // If no claim exists, show the modal
         if (!data) {
           const hasSeenModal = sessionStorage.getItem("hasSeenWhatsappModal");
           if (!hasSeenModal) {
             const timer = setTimeout(() => {
               setIsWhatsappModalOpen(true);
-            }, 3000); // 3 second delay
+            }, 3000);
             return () => clearTimeout(timer);
           }
         }
