@@ -6,6 +6,31 @@ import toast from "react-hot-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { collectImageUrls } from "@/utils/imageUrlUtils";
 
+/** Maximum simultaneous image fetches to avoid network saturation */
+const DOWNLOAD_CONCURRENCY = 3;
+
+/**
+ * Run async tasks with a capped concurrency pool.
+ * @param {Array} items
+ * @param {number} limit - max parallel tasks
+ * @param {(item: any, index: number) => Promise<any>} worker
+ */
+async function pooledMap(items, limit, worker) {
+  const results = new Array(items.length);
+  let nextIndex = 0;
+
+  async function runWorker() {
+    while (nextIndex < items.length) {
+      const index = nextIndex++;
+      results[index] = await worker(items[index], index);
+    }
+  }
+
+  const pool = Array.from({ length: Math.min(limit, items.length) }, runWorker);
+  await Promise.all(pool);
+  return results;
+}
+
 export const useHistoryActions = () => {
   const fetchDownloadImageUrls = async (item) => {
     if (!item?.id) {
@@ -41,67 +66,107 @@ export const useHistoryActions = () => {
     }
   };
 
-  const handleDownloadAll = async (item) => {
-    const zip = new JSZip();
-    const toastId = toast.loading("Preparing ZIP file...");
-    let successCount = 0;
-    let errorCount = 0;
+  /**
+   * Start a ZIP download with real-time progress reporting.
+   *
+   * @param {object} item - history item
+   * @param {object} callbacks
+   * @param {(state: DownloadState) => void} callbacks.onProgress  - called on each update
+   * @param {() => void}                     callbacks.onComplete  - called after saveAs
+   * @param {(err: Error) => void}           callbacks.onError     - called on fatal error
+   * @param {AbortSignal}                    callbacks.signal      - cancellation signal
+   *
+   * DownloadState shape:
+   *   { phase: 'fetching'|'zipping'|'saving', fetched: number, total: number, zipPercent: number }
+   */
+  const startDownloadAll = async (item, { onProgress, onComplete, onError, signal } = {}) => {
+    const report = (state) => {
+      if (typeof onProgress === "function") onProgress(state);
+    };
 
     try {
+      report({ phase: "fetching", fetched: 0, total: 0, zipPercent: 0 });
+
       const imageUrls = await fetchDownloadImageUrls(item);
       const validImages = imageUrls.filter(Boolean);
 
       if (validImages.length === 0) {
-        toast.dismiss(toastId);
-        toast.error("No valid images found to download");
-        return;
+        throw new Error("No valid images found to download");
       }
 
-      toast.loading(`Downloading ${validImages.length} images...`, { id: toastId });
+      report({ phase: "fetching", fetched: 0, total: validImages.length, zipPercent: 0 });
 
-      const imagePromises = validImages.map(async (url, index) => {
+      const zip = new JSZip();
+      let fetched = 0;
+      let errors = 0;
+
+      await pooledMap(validImages, DOWNLOAD_CONCURRENCY, async (url, index) => {
+        if (signal?.aborted) return;
+
         try {
-          const response = await fetch(url);
-          if (!response.ok)
-            throw new Error(`HTTP error! status: ${response.status}`);
+          const response = await fetch(url, { signal });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
           const blob = await response.blob();
           zip.file(`image-${index + 1}.jpg`, blob);
-          successCount++;
-          toast.loading(`Downloaded ${successCount} of ${validImages.length} images`, {
-            id: toastId,
-          });
-        } catch (error) {
-          console.error(`Error downloading image ${index + 1}:`, error);
-          errorCount++;
+          fetched++;
+        } catch (err) {
+          if (err?.name === "AbortError") throw err; // re-throw cancellations
+          console.error(`Failed to fetch image ${index + 1}:`, err);
+          errors++;
+          fetched++;
         }
+
+        report({
+          phase: "fetching",
+          fetched,
+          total: validImages.length,
+          zipPercent: 0,
+        });
       });
 
-      await Promise.all(imagePromises);
+      if (signal?.aborted) return;
 
+      const successCount = fetched - errors;
       if (successCount === 0) {
-        toast.dismiss(toastId);
-        toast.error("Failed to download any images");
-        return;
+        throw new Error("Failed to download any images");
       }
 
-      const content = await zip.generateAsync({ type: "blob" });
-      saveAs(
-        content,
-        `${(item.productName || "images").replace(/\s+/g, "-").toLowerCase()}.zip`
+      // ZIP compression phase
+      report({ phase: "zipping", fetched, total: validImages.length, zipPercent: 0 });
+
+      const content = await zip.generateAsync(
+        {
+          type: "blob",
+          compression: "DEFLATE",
+          compressionOptions: { level: 3 }, // fast compression, good for images
+        },
+        (metadata) => {
+          if (signal?.aborted) return;
+          report({
+            phase: "zipping",
+            fetched,
+            total: validImages.length,
+            zipPercent: Math.round(metadata.percent),
+          });
+        },
       );
-      toast.dismiss(toastId);
 
-      if (errorCount > 0) {
-        toast.error(
-          `Downloaded ${successCount} images, failed to download ${errorCount} images`
-        );
-      } else {
-        toast.success(`Successfully downloaded ${successCount} images`);
+      if (signal?.aborted) return;
+
+      report({ phase: "saving", fetched, total: validImages.length, zipPercent: 100 });
+
+      const fileName = `${(item.productName || "images").replace(/\s+/g, "-").toLowerCase()}.zip`;
+      saveAs(content, fileName);
+
+      if (typeof onComplete === "function") {
+        onComplete({ successCount, errorCount: errors, total: validImages.length });
       }
-    } catch (error) {
-      console.error("ZIP creation failed:", error);
-      toast.dismiss(toastId);
-      toast.error("Failed to create ZIP file");
+    } catch (err) {
+      if (err?.name === "AbortError") return; // user cancelled — silent
+      console.error("ZIP download failed:", err);
+      if (typeof onError === "function") {
+        onError(err);
+      }
     }
   };
 
@@ -170,7 +235,7 @@ export const useHistoryActions = () => {
 
   return {
     handleDownloadImage,
-    handleDownloadAll,
+    startDownloadAll,
     handleExportPDF,
   };
 };

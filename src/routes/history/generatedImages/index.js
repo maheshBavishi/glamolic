@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCreditsStore } from "@/hooks/useCreditsStore";
 import { regenerateImage } from "@/api/regenerateImage";
 import { useHistoryActions } from "@/hooks/useHistoryActions";
+import DownloadProgressDrawer from "./DownloadProgressDrawer";
 import ImagePreviewModal from "./ImagePreviewModal";
 import { useRouter } from "next/navigation";
 
@@ -196,12 +197,18 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
   );
 });
 
+/** @typedef {{ phase: 'idle'|'fetching'|'zipping'|'saving', fetched: number, total: number, zipPercent: number }} DownloadState */
+const IDLE_DOWNLOAD_STATE = { phase: "idle", fetched: 0, total: 0, zipPercent: 0 };
+
 export default function GeneratedImages({ item }) {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_IMAGES);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(0);
   const [regeneratingImages, setRegeneratingImages] = useState({});
   const [downloadingImages, setDownloadingImages] = useState({});
+  /** @type {[DownloadState, React.Dispatch<React.SetStateAction<DownloadState>>]} */
+  const [downloadState, setDownloadState] = useState(IDLE_DOWNLOAD_STATE);
+  const downloadAbortRef = useRef(null);
   const regeneratingSetRef = useRef(new Set());
   const downloadingSetRef = useRef(new Set());
   const router = useRouter();
@@ -223,7 +230,7 @@ export default function GeneratedImages({ item }) {
   const visibleImageItems = imageItems.slice(0, visibleCount);
   const allPreviewImages = useMemo(() => imageItems.map((imageItem) => imageItem.originalUrl || imageItem.displayUrl), [imageItems]);
   const hasMoreImages = visibleCount < imageItems.length;
-  const { handleDownloadImage, handleDownloadAll, handleExportPDF } = useHistoryActions();
+  const { handleDownloadImage, startDownloadAll, handleExportPDF } = useHistoryActions();
   
   const handleGenerateVideo = useCallback(
     (sourceUrl) => {
@@ -256,6 +263,48 @@ export default function GeneratedImages({ item }) {
     },
     [allPreviewImages.length],
   );
+
+  /** Cancel an in-progress ZIP download */
+  const handleCancelDownload = useCallback(() => {
+    downloadAbortRef.current?.abort();
+    downloadAbortRef.current = null;
+    setDownloadState(IDLE_DOWNLOAD_STATE);
+  }, []);
+
+  /** Start the ZIP download with progress tracking */
+  const handleDownloadAllWithProgress = useCallback(() => {
+    if (downloadState.phase !== "idle") return;
+
+    const controller = new AbortController();
+    downloadAbortRef.current = controller;
+    setDownloadState({ phase: "fetching", fetched: 0, total: 0, zipPercent: 0 });
+
+    startDownloadAll(item, {
+      signal: controller.signal,
+      onProgress: (state) => setDownloadState({ ...state }),
+      onComplete: ({ successCount, errorCount }) => {
+        downloadAbortRef.current = null;
+        setDownloadState(IDLE_DOWNLOAD_STATE);
+        if (errorCount > 0) {
+          toast.error(`Downloaded ${successCount} images, ${errorCount} failed`);
+        } else {
+          toast.success(`Successfully downloaded ${successCount} images!`);
+        }
+      },
+      onError: (err) => {
+        downloadAbortRef.current = null;
+        setDownloadState(IDLE_DOWNLOAD_STATE);
+        toast.error(err?.message || "Download failed. Please try again.");
+      },
+    });
+  }, [downloadState.phase, item, startDownloadAll]);
+
+  // Clean up any in-flight download when component unmounts
+  useEffect(() => {
+    return () => {
+      downloadAbortRef.current?.abort();
+    };
+  }, []);
 
   useEffect(() => {
     setVisibleCount(INITIAL_VISIBLE_IMAGES);
@@ -444,8 +493,15 @@ export default function GeneratedImages({ item }) {
           <div onClick={() => handleExportPDF(item)}>
             <Button text="Export PDF" icon={PdfIcon} />
           </div>
-          <div onClick={() => handleDownloadAll(item)}>
-            <Button text="Download all" icon={DownloadIcon} />
+          <div
+            onClick={handleDownloadAllWithProgress}
+            className={downloadState.phase !== "idle" ? styles.downloadBtnBusy : ""}
+            title={downloadState.phase !== "idle" ? "Download in progress…" : undefined}
+          >
+            <Button
+              text={downloadState.phase !== "idle" ? "Downloading…" : "Download all"}
+              icon={DownloadIcon}
+            />
           </div>
         </div>
       </div>
@@ -495,6 +551,12 @@ export default function GeneratedImages({ item }) {
         onClose={handleClosePreview}
         onIndexChange={handlePreviewIndexChange}
         productName={item?.productName || item?.category || "AI Photoshoot"}
+      />
+
+      <DownloadProgressDrawer
+        state={downloadState}
+        onCancel={handleCancelDownload}
+        productName={item?.productName || item?.category || "images"}
       />
     </div>
   );
