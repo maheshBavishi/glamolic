@@ -82,7 +82,7 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
     };
   }, []);
 
-  const handleMouseEnter = () => {};
+  const handleMouseEnter = () => { };
   const handleMouseLeave = () => {
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
@@ -101,7 +101,7 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
   const thumbnailUrl = getThumbnail();
   const normalizedStatus = normalizeStatus(item?.status);
   const statusText = getStatusLabel(item?.status);
-  const productName = item?.settings?.product_name || item?.settings?.user_input || "Untitled Video";
+  const productName = item?.settings?.product_name || "Untitled Video";
   const dateFormatted = new Date(item.created_at).toLocaleString();
 
   const videoUrl = item?.video_url;
@@ -250,7 +250,7 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
               >
                 <DownloadIcon />
                 Download Video
-              </button> 
+              </button>
             </div>
             <div
               style={{
@@ -268,30 +268,30 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
                 <video src={videoUrl} controls style={{ width: "100%", height: "100%", objectFit: "contain" }} />
               ) : (
                 <div style={{ color: "#fff", textAlign: "center" }}>
-                   {normalizedStatus === "failed" ? (
-                     <>
-                       <div style={{ display: "flex", justifyContent: "center", marginBottom: "8px" }}>
-                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                           <circle cx="12" cy="12" r="10"></circle>
-                           <line x1="12" y1="8" x2="12" y2="12"></line>
-                           <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                         </svg>
-                       </div>
-                       <p style={{ color: "#f87171", fontSize: "16px", marginBottom: "4px" }}>Generation Failed</p>
-                       <p style={{ color: "#fca5a5", fontSize: "12px", maxWidth: "250px", margin: "0 auto" }}>
-                        {item?.error_message?.includes("Wavespeed Fallback") 
+                  {normalizedStatus === "failed" ? (
+                    <>
+                      <div style={{ display: "flex", justifyContent: "center", marginBottom: "8px" }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <line x1="12" y1="8" x2="12" y2="12"></line>
+                          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                      </div>
+                      <p style={{ color: "#f87171", fontSize: "16px", marginBottom: "4px" }}>Generation Failed</p>
+                      <p style={{ color: "#fca5a5", fontSize: "12px", maxWidth: "250px", margin: "0 auto" }}>
+                        {item?.error_message?.includes("Wavespeed Fallback")
                           ? "Our models are experiencing high demand. Please try again later."
                           : (item?.error_message || "An unknown error occurred")}
-                       </p>
-                     </>
-                   ) : (
-                     <>
-                       <div style={{ animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite", marginBottom: "8px", display: "flex", justifyContent: "center" }}>
-                         <VideoIcon />
-                       </div>
-                       <p>Video is processing...</p>
-                     </>
-                   )}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite", marginBottom: "8px", display: "flex", justifyContent: "center" }}>
+                        <VideoIcon />
+                      </div>
+                      <p>Video is processing...</p>
+                    </>
+                  )}
                 </div>
               )}
             </div>

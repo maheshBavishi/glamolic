@@ -109,7 +109,7 @@ export default function History({ initialTab = "images" }) {
                   </svg>
                   Images
                 </button>
-                {/* {profile?.video_generation === true && (
+                {profile?.video_generation === true && (
                   <button className={activeTab === "videos" ? styles.active : ""} onClick={() => handleTabChange("videos")}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path
@@ -136,7 +136,7 @@ export default function History({ initialTab = "images" }) {
                     </svg>
                     Videos
                   </button>
-                )} */}
+                )}
               </div>
             </div>
             {currentLoading ? (
