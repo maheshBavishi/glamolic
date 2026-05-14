@@ -138,14 +138,15 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
         audio_type: formData.audioType,
         ...(formData.logo
           ? {
-              logo: formData.logo,
-              logo_position: normalizeLogoPosition(formData.logo_position) || "right_top",
-              logo_size: formData.logo_size || "small",
-            }
+            logo: formData.logo,
+            logo_position: normalizeLogoPosition(formData.logo_position) || "right_top",
+            logo_size: formData.logo_size || "small",
+          }
           : {}),
         ...(productName ? { product_name: productName } : {}),
         show_product_name: Boolean(formData.show_product_name),
-        model: "kling-v2.5-turbo-pro",
+        model: "bytedance/seedance-2.0",
+        provider: "wavespeed",
         upscaling: false,
       };
       await generateVideo(payload);

@@ -187,11 +187,11 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
         </div>
       ) : null}
       <div className={styles.centerAlignment}>
-        {/* {profile?.video_generation === true && (
+        {profile?.video_generation === true && (
           <div onClick={onGenerateVideo}>
             <Button text="Generate video" icon={VideoIcon} />
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
@@ -231,7 +231,7 @@ export default function GeneratedImages({ item }) {
   const allPreviewImages = useMemo(() => imageItems.map((imageItem) => imageItem.originalUrl || imageItem.displayUrl), [imageItems]);
   const hasMoreImages = visibleCount < imageItems.length;
   const { handleDownloadImage, startDownloadAll, handleExportPDF } = useHistoryActions();
-  
+
   const handleGenerateVideo = useCallback(
     (sourceUrl) => {
       if (!sourceUrl) {
