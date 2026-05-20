@@ -9,6 +9,11 @@ const PHASE_LABELS = {
   saving: "Saving file\u2026",
 };
 
+const formatMB = (bytes) => {
+  if (!bytes || isNaN(bytes)) return "0.0 MB";
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
 /**
  * @param {{ state: import('./index').DownloadState, onCancel: () => void, productName: string }} props
  */
@@ -31,6 +36,8 @@ const DownloadProgressDrawer = memo(function DownloadProgressDrawer({ state, onC
   const fileName = productName
     ? `${productName.replace(/\s+/g, "-").toLowerCase()}.zip`
     : "images.zip";
+
+  const sizeMB = formatMB(state.bytesFetched);
 
   return (
     <div
@@ -68,17 +75,17 @@ const DownloadProgressDrawer = memo(function DownloadProgressDrawer({ state, onC
             <span className={styles.downloadDrawerFileName}>{fileName}</span>
             {state.phase === "fetching" && state.total > 0 && (
               <span className={styles.downloadDrawerCount}>
-                {state.fetched} / {state.total} images
+                {state.fetched} / {state.total} images • {sizeMB}
               </span>
             )}
             {state.phase === "zipping" && (
               <span className={styles.downloadDrawerCount}>
-                Compressing\u2026 {state.zipPercent}%
+                Compressing… {state.zipPercent}% • {sizeMB}
               </span>
             )}
             {state.phase === "saving" && (
               <span className={styles.downloadDrawerCount}>
-                Almost done\u2026
+                Almost done… • {sizeMB}
               </span>
             )}
           </div>

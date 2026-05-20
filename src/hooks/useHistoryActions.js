@@ -9,12 +9,55 @@ import { collectImageUrls } from "@/utils/imageUrlUtils";
 /** Maximum simultaneous image fetches to avoid network saturation */
 const DOWNLOAD_CONCURRENCY = 3;
 
-/**
- * Run async tasks with a capped concurrency pool.
- * @param {Array} items
- * @param {number} limit - max parallel tasks
- * @param {(item: any, index: number) => Promise<any>} worker
- */
+const FETCH_TIMEOUT_MS = 30_000;
+
+function parseSupabaseStorageUrl(url) {
+  if (!url) return null;
+  try {
+    const { pathname } = new URL(url);
+    const signedMatch = pathname.match(/^\/storage\/v1\/object\/sign\/([^/]+)\/(.+)$/);
+    if (signedMatch) return { bucket: signedMatch[1], path: signedMatch[2] };
+    const publicMatch = pathname.match(/^\/storage\/v1\/object\/public\/([^/]+)\/(.+)$/);
+    if (publicMatch) return { bucket: publicMatch[1], path: publicMatch[2] };
+  } catch {
+    // malformed URL — fall through
+  }
+  return null;
+}
+
+async function downloadBlob(url, signal) {
+  const storageInfo = parseSupabaseStorageUrl(url);
+  if (storageInfo) {
+    const { data, error } = await supabase.storage.from(storageInfo.bucket).download(storageInfo.path);
+    if (!error && data instanceof Blob) {
+      return data;
+    }
+    console.warn("supabase.storage.download failed, falling back to fetch:", error?.message);
+  }
+  const timeoutController = new AbortController();
+  const timeoutId = setTimeout(() => timeoutController.abort(), FETCH_TIMEOUT_MS);
+  const signals = [timeoutController.signal, ...(signal ? [signal] : [])];
+  const combinedSignal =
+    typeof AbortSignal.any === "function"
+      ? AbortSignal.any(signals)
+      : (() => {
+          const ctrl = new AbortController();
+          const abort = () => ctrl.abort();
+          signals.forEach((s) => {
+            if (s.aborted) ctrl.abort();
+            else s.addEventListener("abort", abort, { once: true });
+          });
+          return ctrl.signal;
+        })();
+  try {
+    const response = await fetch(url, { signal: combinedSignal });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.blob();
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function pooledMap(items, limit, worker) {
   const results = new Array(items.length);
   let nextIndex = 0;
@@ -37,11 +80,7 @@ export const useHistoryActions = () => {
       throw new Error("History item not found");
     }
 
-    const { data, error } = await supabase
-      .from("generated_images")
-      .select("image_urls")
-      .eq("id", item.id)
-      .maybeSingle();
+    const { data, error } = await supabase.from("generated_images").select("image_urls").eq("id", item.id).maybeSingle();
 
     if (error) {
       throw error;
@@ -58,8 +97,8 @@ export const useHistoryActions = () => {
       if (!url) {
         throw new Error("Image URL not found");
       }
-
-      saveAs(url, `image-${index + 1}.jpg`);
+      const blob = await downloadBlob(url);
+      saveAs(blob, `image-${index + 1}.jpg`);
     } catch (error) {
       console.error("Error downloading image:", error);
       toast.error("Failed to download image. The file may have been deleted.");
@@ -85,7 +124,7 @@ export const useHistoryActions = () => {
     };
 
     try {
-      report({ phase: "fetching", fetched: 0, total: 0, zipPercent: 0 });
+      report({ phase: "fetching", fetched: 0, total: 0, zipPercent: 0, bytesFetched: 0 });
 
       const imageUrls = await fetchDownloadImageUrls(item);
       const validImages = imageUrls.filter(Boolean);
@@ -94,23 +133,23 @@ export const useHistoryActions = () => {
         throw new Error("No valid images found to download");
       }
 
-      report({ phase: "fetching", fetched: 0, total: validImages.length, zipPercent: 0 });
+      report({ phase: "fetching", fetched: 0, total: validImages.length, zipPercent: 0, bytesFetched: 0 });
 
       const zip = new JSZip();
       let fetched = 0;
       let errors = 0;
+      let bytesFetched = 0;
 
       await pooledMap(validImages, DOWNLOAD_CONCURRENCY, async (url, index) => {
         if (signal?.aborted) return;
 
         try {
-          const response = await fetch(url, { signal });
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const blob = await response.blob();
+          const blob = await downloadBlob(url, signal);
           zip.file(`image-${index + 1}.jpg`, blob);
+          bytesFetched += blob.size;
           fetched++;
         } catch (err) {
-          if (err?.name === "AbortError") throw err; // re-throw cancellations
+          if (err?.name === "AbortError" && signal?.aborted) throw err; // user cancelled
           console.error(`Failed to fetch image ${index + 1}:`, err);
           errors++;
           fetched++;
@@ -121,6 +160,7 @@ export const useHistoryActions = () => {
           fetched,
           total: validImages.length,
           zipPercent: 0,
+          bytesFetched,
         });
       });
 
@@ -132,7 +172,7 @@ export const useHistoryActions = () => {
       }
 
       // ZIP compression phase
-      report({ phase: "zipping", fetched, total: validImages.length, zipPercent: 0 });
+      report({ phase: "zipping", fetched, total: validImages.length, zipPercent: 0, bytesFetched });
 
       const content = await zip.generateAsync(
         {
@@ -147,13 +187,14 @@ export const useHistoryActions = () => {
             fetched,
             total: validImages.length,
             zipPercent: Math.round(metadata.percent),
+            bytesFetched,
           });
         },
       );
 
       if (signal?.aborted) return;
 
-      report({ phase: "saving", fetched, total: validImages.length, zipPercent: 100 });
+      report({ phase: "saving", fetched, total: validImages.length, zipPercent: 100, bytesFetched });
 
       const fileName = `${(item.productName || "images").replace(/\s+/g, "-").toLowerCase()}.zip`;
       saveAs(content, fileName);

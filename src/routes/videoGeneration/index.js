@@ -24,15 +24,17 @@ const LineIcon = "/assets/icons/line.svg";
 const durationOptions = [
   { value: "5", label: "5 seconds" },
   { value: "10", label: "10 seconds" },
-  { value: "20", label: "20 seconds" },
-  { value: "30", label: "30 seconds" },
+  { value: "15", label: "15 seconds" },
+  // { value: "20", label: "20 seconds" },
+  // { value: "30", label: "30 seconds" },
 ];
 
 const getEstimatedCostByDuration = (duration) => {
-  if (duration === "5") return 7;
-  if (duration === "10") return 10;
-  if (duration === "20") return 18;
-  if (duration === "30") return 24;
+  if (duration === "5") return 6;
+  if (duration === "10") return 11;
+  if (duration === "15") return 16;
+  // if (duration === "20") return 18;
+  // if (duration === "30") return 24;
   return 0;
 };
 
