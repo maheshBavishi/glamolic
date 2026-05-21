@@ -685,7 +685,7 @@ export default function WomenCollection() {
             <button
               type="button"
               className={styles.backIcon}
-              onClick={() => router.push("/category-selection")}
+              onClick={() => router.push("/selection")}
               aria-label="Back to category selection"
             >
               <LeftIcon />

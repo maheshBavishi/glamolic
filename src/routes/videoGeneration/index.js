@@ -5,6 +5,7 @@ import Switch from "@/components/switch";
 import UploadPhoto from "@/components/uploadPhoto";
 import { useAuth } from "@/context/AuthContext";
 import { useCreditsStore } from "@/hooks/useCreditsStore";
+import { useImageUpload } from "@/hooks/useImageUpload";
 import BottomIcon from "@/icons/bottomIcon";
 import BottomRightIcon from "@/icons/bottomRightIcon";
 import CameraIcon from "@/icons/cameraIcon";
@@ -44,7 +45,9 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   const router = useRouter();
   const { user, profile } = useAuth();
   const { loading: creditsLoading, credits, fetchCredits } = useCreditsStore();
+  const { uploadImage, validateImageFile, isUploading } = useImageUpload();
 
+  const [referenceFile, setReferenceFile] = useState(imageUrl || null);
   const [logoFile, setLogoFile] = useState(null);
   const [formData, setFormData] = useState({
     prompt: "",
@@ -72,16 +75,13 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
     }
   }, [fetchCredits, user?.id]);
 
-  useEffect(() => {
-    if (!imageUrl) {
-      toast.error("No image selected for video generation");
-      router.push("/history");
-    }
-  }, [imageUrl, router]);
-
   const validateForm = () => {
     const errors = {};
     let isValid = true;
+    if (!referenceFile) {
+      errors.referenceFile = "Please upload a reference image";
+      isValid = false;
+    }
     if (!String(formData.prompt || "").trim()) {
       errors.prompt = "Please enter a prompt for the video";
       isValid = false;
@@ -107,9 +107,30 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
     }));
   };
 
+  const handleReferenceUpload = (selectedFile) => {
+    if (!selectedFile) {
+      setReferenceFile(null);
+      return;
+    }
+    const validation = validateImageFile(selectedFile);
+    if (!validation.valid) {
+      toast.error(validation.error);
+      return;
+    }
+    setReferenceFile(selectedFile);
+    if (formErrors.referenceFile) {
+      setFormErrors((prev) => ({ ...prev, referenceFile: undefined }));
+    }
+  };
+
   const handleLogoUpload = (selectedFile) => {
     if (!selectedFile) {
       handleRemoveLogo();
+      return;
+    }
+    const validation = validateImageFile(selectedFile);
+    if (!validation.valid) {
+      toast.error(validation.error);
       return;
     }
     setLogoFile(selectedFile);
@@ -132,8 +153,15 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
     }
     setIsGenerating(true);
     try {
+      let finalImageUrl = "";
+      if (referenceFile instanceof File) {
+        finalImageUrl = await uploadImage(referenceFile, user?.id, "video-references");
+      } else if (typeof referenceFile === "string") {
+        finalImageUrl = referenceFile;
+      }
+
       const payload = {
-        image_link: imageUrl,
+        ...(finalImageUrl ? { image_link: finalImageUrl } : {}),
         user_input: formData.prompt,
         video_duration: parseInt(formData.duration, 10),
         aspect_ratio: formData.aspectRatio,
@@ -162,8 +190,6 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
     }
   };
 
-  if (!imageUrl) return null;
-
   return (
     <div className={styles.videoGeneration}>
       <div className="container-md">
@@ -177,8 +203,19 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
           <div className={styles.mainBoxDesign}>
             <div className={styles.subbox}>
               <div className={styles.maingrid}>
-                <div className={styles.image}>
-                  <img src={imageUrl || DefaultVideoImage} alt={productName || "VideoImage"} />
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <div className={styles.uploadText}>
+                    <label>Reference Image</label>
+                  </div>
+                  <UploadPhoto
+                    file={referenceFile}
+                    onFileChange={handleReferenceUpload}
+                    onRemove={() => setReferenceFile(null)}
+                    placeholderTitle="Upload Reference"
+                    placeholderSubTitle="Drag & drop or click to select a reference image"
+                    placeholderMeta="PNG, JPG, WebP (Max 7MB)"
+                    error={formErrors.referenceFile}
+                  />
                 </div>
                 <div>
                   <div className={styles.textareaDesign}>
@@ -444,11 +481,11 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     <button
                       type="button"
                       onClick={handleGenerate}
-                      disabled={isGenerating}
-                      style={isGenerating ? { opacity: 0.7, cursor: "not-allowed" } : undefined}
+                      disabled={isGenerating || isUploading}
+                      style={isGenerating || isUploading ? { opacity: 0.7, cursor: "not-allowed" } : undefined}
                     >
-                      {isGenerating ? "Generating..." : "Generate Video"}
-                      {!isGenerating ? <RightWhiteIcon /> : null}
+                      {isUploading ? "Uploading image..." : isGenerating ? "Generating..." : "Generate Video"}
+                      {!(isGenerating || isUploading) ? <RightWhiteIcon /> : null}
                     </button>
                   )}
                 </div>

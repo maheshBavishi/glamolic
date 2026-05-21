@@ -23,7 +23,7 @@ export default function Herobanner() {
 
   const handleOnRedirect = () => {
     if (user) {
-      router.push("/category-selection");
+      router.push("/selection");
       return;
     }
     router.push("/login");

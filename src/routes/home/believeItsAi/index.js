@@ -16,7 +16,7 @@ export default function BelieveItsAi() {
 
   const handleOnRedirect = () => {
     if (user) {
-      router.push("/category-selection");
+      router.push("/selection");
       return;
     }
     router.push("/login");

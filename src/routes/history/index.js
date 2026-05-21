@@ -76,7 +76,7 @@ export default function History({ initialTab = "images" }) {
                 <p>Review and download your past generated collections</p>
               </div>
               <div>
-                <Link href="/category-selection">
+                <Link href="/selection">
                   <Button text="New Generation" icon={GenrationIcon} />
                 </Link>
               </div>
