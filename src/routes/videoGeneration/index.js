@@ -30,7 +30,7 @@ const durationOptions = [
 const getEstimatedCostByDuration = (duration) => {
   // if (duration === "5") return 6;
   // if (duration === "10") return 11;
-  if (duration === "15") return 16;
+  if (duration === "15") return 18;
   // if (duration === "20") return 18;
   // if (duration === "30") return 24;
   return 0;
@@ -63,7 +63,7 @@ const DurationSingleValue = ({ children, selectProps, ...props }) => {
           <span style={{
             color: 'rgba(18, 18, 18, 0.60)',
             fontWeight: 500
-          }}>16 credits</span>
+          }}>18 credits</span>
           <span style={{
             width: '1px',
             height: '16px',
@@ -99,7 +99,7 @@ const DurationOption = ({ children, ...props }) => {
           color: 'rgba(18, 18, 18, 0.60)',
           fontWeight: 500
         }}>
-          16 credits
+          18 credits
         </span>
       </div>
     </selectComponents.Option>
