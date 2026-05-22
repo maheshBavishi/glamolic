@@ -121,6 +121,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
         unifiedBackground: unifiedBackground,
         additionalInstructions: additionalInstructions,
         startingVariationIdx: settings.startingVariationIdx || 0,
+        doubleimage: Boolean(settings.doubleimage),
       },
       thumbnails: thumbnailUrls,
       product_metadata: normalizedProductMetadata,

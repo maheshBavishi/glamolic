@@ -15,11 +15,15 @@ export default function BelieveItsAi() {
   const { user } = useAuth();
 
   const handleOnRedirect = () => {
-    if (user) {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    if (profile?.video_generation === true) {
       router.push("/selection");
       return;
     }
-    router.push("/login");
+    router.push("/category-selection");
   };
   const slideInLeft = {
     hidden: { opacity: 0, x: -60 },
