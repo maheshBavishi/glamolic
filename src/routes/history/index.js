@@ -65,6 +65,18 @@ export default function History({ initialTab = "images" }) {
     setExpandedId(expandedId === id ? null : id);
   };
 
+  const handleOnRedirect = () => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    if (profile?.video_generation === true) {
+      router.push("/selection");
+      return;
+    }
+    router.push("/category-selection");
+  };
+
   return (
     <div>
       <div className={styles.historyPageAlignment}>
@@ -75,10 +87,8 @@ export default function History({ initialTab = "images" }) {
                 <h2>Generation History</h2>
                 <p>Review and download your past generated collections</p>
               </div>
-              <div>
-                <Link href="/selection">
-                  <Button text="New Generation" icon={GenrationIcon} />
-                </Link>
+              <div onClick={handleOnRedirect}>
+                <Button text="New Generation" icon={GenrationIcon} />
               </div>
             </div>
             <div className={styles.centerTabAlignment}>
