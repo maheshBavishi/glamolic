@@ -36,7 +36,8 @@ export const generateImage = async (payload) => {
   }
 
   const baseUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_BACKEND_URL) || DEFAULT_BACKEND_URL;
-  const requestUrl = `${baseUrl}/generate`;
+  const endPoint = payload?.settings?.doubleimage ? "/generate-double" : "/generate";
+  const requestUrl = `${baseUrl}${endPoint}`;
 
   const response = await fetch(requestUrl, {
     method: "POST",

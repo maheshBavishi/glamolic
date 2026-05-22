@@ -3,106 +3,126 @@ import React, { useEffect, useId, useState } from 'react'
 import Select, { components as selectComponents } from 'react-select';
 import styles from './dropdown.module.scss';
 
-const customStyles = (hasError) => ({
-  control: (provided, state) => ({
-    ...provided,
-    width: '100%',
-    minHeight: '54px',
-    height: '54px',
-    borderRadius: '12px',
-    border: hasError
-      ? '1px solid #E23030'
-      : state.isFocused
-        ? '1px solid #647F80'
-        : '1px solid rgba(18, 18, 18, 0.10)',
-    background: '#FFF',
-    padding: '0 4px',
-    boxShadow: 'none',
-    cursor: 'pointer',
-    '&:hover': {
-      border: hasError ? '1px solid #E23030' : '1px solid rgba(18, 18, 18, 0.10)',
-    },
-  }),
-  valueContainer: (provided) => ({
-    ...provided,
-    padding: '0 12px',
-    height: '54px',
-  }),
-  input: (provided) => ({
-    ...provided,
-    margin: 0,
-    padding: 0,
-    color: 'rgba(18, 18, 18, 0.60)',
-    fontSize: '16px',
-    fontWeight: 500,
-    fontFamily: 'var(--font-heebo)',
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: 'rgba(18, 18, 18, 0.60)',
-    fontSize: '16px',
-    fontWeight: 500,
-    fontFamily: 'var(--font-heebo)',
-    fontStyle: 'normal',
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: 'rgba(18, 18, 18, 0.60)',
-    fontSize: '16px',
-    fontWeight: 500,
-    fontFamily: 'var(--font-heebo)',
-    fontStyle: 'normal',
-  }),
-  indicatorSeparator: () => ({
-    display: 'none',
-  }),
-  dropdownIndicator: (provided) => ({
-    ...provided,
-    color: 'rgba(18, 18, 18, 0.60)',
-    '&:hover': {
+const customStyles = (hasError) => {
+  return {
+    control: (provided, state) => ({
+      ...provided,
+      width: '100%',
+      minHeight: '54px',
+      height: '54px',
+      borderRadius: '12px',
+      border: hasError
+        ? '1px solid #E23030'
+        : state.isFocused
+          ? '1px solid #647F80'
+          : '1px solid rgba(18, 18, 18, 0.10)',
+      background: '#FFF',
+      padding: '0 4px',
+      boxShadow: 'none',
+      cursor: 'pointer',
+      '&:hover': {
+        border: hasError ? '1px solid #E23030' : '1px solid rgba(18, 18, 18, 0.10)',
+      },
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: '0 12px',
+      height: '54px',
+    }),
+    input: (provided) => ({
+      ...provided,
+      margin: 0,
+      padding: 0,
       color: 'rgba(18, 18, 18, 0.60)',
-    },
-  }),
-  menu: (provided) => ({
-    ...provided,
-    borderRadius: '12px',
-    border: '1px solid rgba(18, 18, 18, 0.10)',
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
-    overflow: 'hidden',
-    marginTop: '4px',
-    zIndex: 9999,
-  }),
-  menuPortal: (provided) => ({
-    ...provided,
-    zIndex: 9999,
-  }),
-  menuList: (provided) => ({
-    ...provided,
-    padding: '4px 0',
-    maxHeight: '220px',
-    overflowY: 'auto',
-    overscrollBehavior: 'contain',
-    WebkitOverflowScrolling: 'touch',
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    color: '#121212',
-    fontSize: '16px',
-    fontWeight: 500,
-    fontFamily: 'var(--font-heebo)',
-    fontStyle: 'normal',
-    padding: '10px 16px',
-    cursor: 'pointer',
-    backgroundColor: state.isSelected
-      ? 'rgba(18, 18, 18, 0.08)'
-      : state.isFocused
-        ? 'rgba(18, 18, 18, 0.04)'
-        : '#FFF',
-    '&:active': {
-      backgroundColor: 'rgba(18, 18, 18, 0.08)',
-    },
-  }),
-});
+      fontSize: '16px',
+      fontWeight: 500,
+      fontFamily: 'var(--font-heebo)',
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: 'rgba(18, 18, 18, 0.60)',
+      fontSize: '16px',
+      fontWeight: 500,
+      fontFamily: 'var(--font-heebo)',
+      fontStyle: 'normal',
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: 'rgba(18, 18, 18, 0.60)',
+      fontSize: '16px',
+      fontWeight: 500,
+      fontFamily: 'var(--font-heebo)',
+      fontStyle: 'normal',
+    }),
+    indicatorSeparator: () => ({
+      display: 'none',
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      color: 'rgba(18, 18, 18, 0.60)',
+      '&:hover': {
+        color: 'rgba(18, 18, 18, 0.60)',
+      },
+    }),
+    menu: (provided) => ({
+      ...provided,
+      borderRadius: '12px',
+      border: '1px solid rgba(18, 18, 18, 0.10)',
+      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
+      overflow: 'hidden',
+      marginTop: '4px',
+      zIndex: 9999,
+    }),
+    menuPortal: (provided) => ({
+      ...provided,
+      zIndex: 9999,
+    }),
+    menuList: (provided) => ({
+      ...provided,
+      padding: '4px 0',
+      maxHeight: '220px',
+      overflowY: 'auto',
+      overscrollBehavior: 'contain',
+      WebkitOverflowScrolling: 'touch',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      color: '#121212',
+      fontSize: '16px',
+      fontWeight: 500,
+      fontFamily: 'var(--font-heebo)',
+      fontStyle: 'normal',
+      padding: '10px 16px',
+      cursor: 'pointer',
+      backgroundColor: state.isSelected
+        ? 'rgba(18, 18, 18, 0.08)'
+        : state.isFocused
+          ? 'rgba(18, 18, 18, 0.04)'
+          : '#FFF',
+      '&:active': {
+        backgroundColor: 'rgba(18, 18, 18, 0.08)',
+      },
+    }),
+  };
+};
+
+const mergeStyles = (defaultStyles, customStyles = {}) => {
+  const merged = { ...defaultStyles };
+  Object.keys(customStyles).forEach((key) => {
+    if (typeof defaultStyles[key] === 'function') {
+      merged[key] = (provided, state) => {
+        const base = defaultStyles[key](provided, state);
+        if (typeof customStyles[key] === 'function') {
+          return customStyles[key](base, state);
+        }
+        return { ...base, ...customStyles[key] };
+      };
+    } else {
+      merged[key] = customStyles[key];
+    }
+  });
+  return merged;
+};
 
 const withLenisPreventProps = (innerProps = {}) => ({
   ...innerProps,
@@ -142,6 +162,7 @@ export default function Dropdown({
   instanceId,
   inputId,
   components,
+  disabled,
   ...rest
 }) {
   const generatedId = useId().replace(/:/g, '');
@@ -162,7 +183,7 @@ export default function Dropdown({
       <Select
         options={options}
         placeholder={placeholder}
-        styles={customStyles(Boolean(error))}
+        styles={mergeStyles(customStyles(Boolean(error)), rest.styles)}
         value={value}
         onChange={onChange}
         instanceId={stableIdBase}
@@ -179,6 +200,7 @@ export default function Dropdown({
         captureMenuScroll={true}
         closeMenuOnScroll={false}
         menuShouldScrollIntoView={false}
+        isDisabled={disabled}
         {...rest}
       />
       {error ? <p className={styles.errorText}>{error}</p> : null}

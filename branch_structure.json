@@ -1,0 +1,27 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "dev",
+    "dev-glamolic",
+    "feat/dynamic-model",
+    "fix/download-extension-and-timeout-4k-8k",
+    "main",
+    "origin"
+  ],
+  "parent": {
+    "dev": "main",
+    "dev-glamolic": "dev",
+    "feat/dynamic-model": "main",
+    "fix/download-extension-and-timeout-4k-8k": "main",
+    "main": null,
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "dev",
+    "feat/dynamic-model",
+    "fix/download-extension-and-timeout-4k-8k",
+    "origin",
+    "dev-glamolic"
+  ]
+}

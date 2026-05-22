@@ -17,12 +17,16 @@ export default function CreatePerfectPhotos() {
   const router = useRouter();
   const { user } = useAuth();
 
-  const handleOnRedirect = () => {
-    if (user) {
+ const handleOnRedirect = () => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    if (profile?.video_generation === true) {
       router.push("/selection");
       return;
     }
-    router.push("/login");
+    router.push("/category-selection");
   };
 
   const fadeIn = {

@@ -19,14 +19,18 @@ const Catalog2 = "/assets/images/catalog2.png";
 
 export default function Herobanner() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   const handleOnRedirect = () => {
-    if (user) {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    if (profile?.video_generation === true) {
       router.push("/selection");
       return;
     }
-    router.push("/login");
+    router.push("/category-selection");
   };
 
   const containerVariants = {
@@ -105,10 +109,10 @@ export default function Herobanner() {
                 <p>Generate Professional AI Model Images From Your Clothing In Seconds. No Models, No Camera, No Editing - Just Upload & Create.</p>
               </motion.div>
               <motion.div className={styles.twoButtonAlignment} variants={leftItemVariants}>
-                  <motion.button whileHover={{ scale: 1.02, backgroundColor: "#425e5f" }} whileTap={{ scale: 0.98 }} onClick={handleOnRedirect}>
-                    <MagicIcon />
-                    Start Creating Magic
-                  </motion.button>
+                <motion.button whileHover={{ scale: 1.02, backgroundColor: "#425e5f" }} whileTap={{ scale: 0.98 }} onClick={handleOnRedirect}>
+                  <MagicIcon />
+                  Start Creating Magic
+                </motion.button>
                 {/* <motion.button
                   className={styles.lightButton}
                   whileHover={{ scale: 1.02, backgroundColor: "rgba(255, 255, 255, 0.2)" }}
@@ -148,7 +152,12 @@ export default function Herobanner() {
                       <div>
                         <p>Upload a picture or drop an image</p>
                         <div className={styles.btnCenter}>
-                          <motion.button aria-label="Drop your outfit here" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleOnRedirect}>
+                          <motion.button
+                            aria-label="Drop your outfit here"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={handleOnRedirect}
+                          >
                             <UploadIcon />
                             Drop your outfit here
                           </motion.button>

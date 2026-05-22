@@ -56,6 +56,7 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
   profile,
   isRegenerating,
   isDownloading,
+  doubleimage,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
@@ -187,7 +188,7 @@ const GeneratedImageTile = memo(function GeneratedImageTile({
         </div>
       ) : null}
       <div className={styles.centerAlignment}>
-        {profile?.video_generation === true && (
+        {profile?.video_generation === true && !doubleimage && (
           <div onClick={onGenerateVideo}>
             <Button text="Generate video" icon={VideoIcon} />
           </div>
@@ -510,6 +511,7 @@ export default function GeneratedImages({ item }) {
         {visibleImageItems.map((imageItem, index) => {
           const imageUrl = imageItem.displayUrl;
           const sourceUrl = imageItem.originalUrl || imageItem.displayUrl;
+          const isDoubleImage = item?.settings?.doubleimage;
 
           return (
             <GeneratedImageTile
@@ -524,6 +526,7 @@ export default function GeneratedImages({ item }) {
               profile={profile}
               isRegenerating={Boolean(regeneratingImages[index])}
               isDownloading={Boolean(downloadingImages[index])}
+              doubleimage={isDoubleImage}
             />
           );
         })}
@@ -553,11 +556,7 @@ export default function GeneratedImages({ item }) {
         productName={item?.productName || item?.category || "AI Photoshoot"}
       />
 
-      <DownloadProgressDrawer
-        state={downloadState}
-        onCancel={handleCancelDownload}
-        productName={item?.productName || item?.category || "images"}
-      />
+      <DownloadProgressDrawer state={downloadState} onCancel={handleCancelDownload} productName={item?.productName || item?.category || "images"} />
     </div>
   );
 }

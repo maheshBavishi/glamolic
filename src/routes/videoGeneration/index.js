@@ -19,20 +19,17 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import styles from "./videoGeneration.module.scss";
+import { components as selectComponents } from 'react-select';
 
 const DefaultVideoImage = "/assets/images/video-img.png";
 const LineIcon = "/assets/icons/line.svg";
 const durationOptions = [
-  { value: "5", label: "5 seconds" },
-  { value: "10", label: "10 seconds" },
   { value: "15", label: "15 seconds" },
-  // { value: "20", label: "20 seconds" },
-  // { value: "30", label: "30 seconds" },
 ];
 
 const getEstimatedCostByDuration = (duration) => {
-  if (duration === "5") return 6;
-  if (duration === "10") return 11;
+  // if (duration === "5") return 6;
+  // if (duration === "10") return 11;
   if (duration === "15") return 16;
   // if (duration === "20") return 18;
   // if (duration === "30") return 24;
@@ -40,6 +37,74 @@ const getEstimatedCostByDuration = (duration) => {
 };
 
 const normalizeLogoPosition = (position) => (position === "center" ? "right_top" : position);
+
+const DurationSingleValue = ({ children, selectProps, ...props }) => {
+  return (
+    <selectComponents.SingleValue {...props} selectProps={selectProps}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        fontFamily: 'var(--font-heebo)',
+        fontSize: '16px',
+        fontWeight: 500,
+        fontStyle: 'normal',
+        color: 'rgba(18, 18, 18, 0.60)'
+      }}>
+        <span>{children}</span>
+        <span style={{
+          marginRight: '8px',
+          fontWeight: 500,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px'
+        }}>
+          <span style={{
+            color: 'rgba(18, 18, 18, 0.60)',
+            fontWeight: 500
+          }}>16 credits</span>
+          <span style={{
+            width: '1px',
+            height: '16px',
+            background: 'rgba(18, 18, 18, 0.15)',
+            display: 'inline-block'
+          }} />
+          <span style={{
+            color: '#527475',
+            fontWeight: 600
+          }}></span>
+        </span>
+      </div>
+    </selectComponents.SingleValue>
+  );
+};
+
+const DurationOption = ({ children, ...props }) => {
+  return (
+    <selectComponents.Option {...props}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        fontFamily: 'var(--font-heebo)',
+        fontSize: '16px',
+        fontWeight: 500,
+        fontStyle: 'normal',
+        color: '#121212'
+      }}>
+        <span>{children}</span>
+        <span style={{
+          color: 'rgba(18, 18, 18, 0.60)',
+          fontWeight: 500
+        }}>
+          16 credits
+        </span>
+      </div>
+    </selectComponents.Option>
+  );
+};
 
 export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   const router = useRouter();
@@ -51,7 +116,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   const [logoFile, setLogoFile] = useState(null);
   const [formData, setFormData] = useState({
     prompt: "",
-    duration: "10",
+    duration: "15",
     aspectRatio: "portrait",
     audioType: "none",
     logo: null,
@@ -70,6 +135,12 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   };
 
   useEffect(() => {
+    if (profile?.video_generation !== true) {
+      router.push("/");
+    }
+  }, [profile]);
+
+  useEffect(() => {
     if (user?.id) {
       fetchCredits(user.id);
     }
@@ -84,6 +155,10 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
     }
     if (!String(formData.prompt || "").trim()) {
       errors.prompt = "Please enter a prompt for the video";
+      isValid = false;
+    }
+    if (!logoFile) {
+      errors.logoFile = "Please upload a logo";
       isValid = false;
     }
     setFormErrors(errors);
@@ -112,7 +187,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
       setReferenceFile(null);
       return;
     }
-    const validation = validateImageFile(selectedFile);
+    const validation = validateImageFile(selectedFile, Infinity);
     if (!validation.valid) {
       toast.error(validation.error);
       return;
@@ -128,12 +203,15 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
       handleRemoveLogo();
       return;
     }
-    const validation = validateImageFile(selectedFile);
+    const validation = validateImageFile(selectedFile, Infinity);
     if (!validation.valid) {
       toast.error(validation.error);
       return;
     }
     setLogoFile(selectedFile);
+    if (formErrors.logoFile) {
+      setFormErrors((prev) => ({ ...prev, logoFile: undefined }));
+    }
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64 = String(reader.result || "").split(",")[1] || "";
@@ -203,9 +281,9 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
           <div className={styles.mainBoxDesign}>
             <div className={styles.subbox}>
               <div className={styles.maingrid}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                <div className={styles.referenceCol}>
                   <div className={styles.uploadText}>
-                    <label>Reference Image</label>
+                    <label>Reference Image <span style={{ color: '#E23030' }}>*</span></label>
                   </div>
                   <UploadPhoto
                     file={referenceFile}
@@ -213,13 +291,15 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     onRemove={() => setReferenceFile(null)}
                     placeholderTitle="Upload Reference"
                     placeholderSubTitle="Drag & drop or click to select a reference image"
-                    placeholderMeta="PNG, JPG, WebP (Max 7MB)"
+                    placeholderMeta="PNG, JPG, WebP"
+                    placeholderNote="Please upload an image containing a single model only. Do not upload only garment images, a model image is mandatory for generation."
                     error={formErrors.referenceFile}
+                    className={styles.referenceUpload}
                   />
                 </div>
                 <div>
                   <div className={styles.textareaDesign}>
-                    <label>Video prompt</label>
+                    <label>Video prompt <span style={{ color: '#E23030' }}>*</span></label>
                     <textarea
                       data-lenis-prevent={true}
                       placeholder="Describe the motion and atmosphere (e.g., 'Slow cinematic pan, dust particles floating in light rays')"
@@ -230,7 +310,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     {formErrors.prompt ? <p style={{ color: "#E23030", fontSize: "14px", marginTop: "6px" }}>{formErrors.prompt}</p> : null}
                   </div>
                   <div className={styles.uploadText}>
-                    <label>Logo</label>
+                    <label>Logo <span style={{ color: '#E23030' }}>*</span></label>
                   </div>
                   <UploadPhoto
                     file={logoFile}
@@ -238,7 +318,8 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     onRemove={handleRemoveLogo}
                     placeholderTitle="Upload logo"
                     placeholderSubTitle="Drag & drop or click to select a logo"
-                    placeholderMeta="PNG, JPG, WebP (Max 7MB)"
+                    placeholderMeta="PNG, JPG, WebP"
+                    error={formErrors.logoFile}
                   />
                 </div>
               </div>
@@ -340,10 +421,14 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
               <div className={styles.topbottomAlignment}>
                 <Dropdown
                   label="Duration"
-                  placeholder="10 seconds"
+                  placeholder="15 seconds"
                   options={durationOptions}
                   value={durationOptions.find((option) => option.value === formData.duration) || null}
                   onChange={(selectedOption) => handleChange("duration", selectedOption?.value || "10")}
+                  components={{ SingleValue: DurationSingleValue, Option: DurationOption }}
+                  availableCredits={availableCredits}
+                  creditsLoading={creditsLoading}
+                  disabled
                 />
               </div>
               <div className={styles.ratio}>
@@ -460,7 +545,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
               <div className={styles.estimateBox}>
                 <div className={styles.contentAlignment}>
                   <div className={styles.leftAlignment}>
-                    <p>Estimated Cost</p>
+                    <p>Cost</p>
                     <button>{estimatedCost} credits</button>
                   </div>
                   <div className={styles.line}>

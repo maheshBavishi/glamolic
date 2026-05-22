@@ -27,6 +27,7 @@ const createInitialSettings = () => ({
   isEcommerce: false,
   ecommerceViewTypes: [],
   additionalImagesCount: 0,
+  multipleModal: false,
 });
 
 const createInitialProduct = (id = "1", imagesPerProduct = 2) => ({
@@ -70,6 +71,8 @@ const createInitialState = (settingsOverrides = {}) => {
     products: [createInitialProduct("1", settings.imagesPerProduct)],
     settings,
     preserveState: false,
+    previousSettings: null,
+    previousProducts: null,
   };
 };
 
@@ -79,6 +82,75 @@ export const useGenerateStore = create(
       ...createInitialState(),
 
       setPreserveState: (preserve) => set({ preserveState: preserve }),
+
+      setMultipleModal: (enabled) =>
+        set((state) => {
+          if (!enabled) {
+            let nextProducts = state.previousProducts ? state.previousProducts : state.products;
+            if (!state.previousProducts && nextProducts.length > 1) {
+              nextProducts = [nextProducts[0]];
+            }
+            return {
+              ...state,
+              products: nextProducts,
+              settings: {
+                ...state.settings,
+                multipleModal: false,
+                ...(state.previousSettings ? state.previousSettings : {}),
+              },
+              previousSettings: null,
+              previousProducts: null,
+            };
+          }
+
+          const previousSettings = {
+            isEcommerce: state.settings.isEcommerce,
+            ecommerceViewTypes: state.settings.ecommerceViewTypes,
+            additionalImagesCount: state.settings.additionalImagesCount,
+            modelConsistency: state.settings.modelConsistency,
+            sameBackground: state.settings.sameBackground,
+          };
+          const previousProducts = state.products;
+
+          let nextProducts = [...state.products];
+          if (nextProducts.length === 1) {
+            const firstProduct = nextProducts[0];
+            const newProduct = {
+              id: Date.now().toString(),
+              clothingType: firstProduct?.clothingType || "",
+              subCategory: firstProduct?.subCategory || "",
+              otherCategory: firstProduct?.otherCategory || "",
+              frontImage: null,
+              backImage: null,
+              bottomBackImage: null,
+              blouseImage: null,
+              topImage: null,
+              bottomImage: null,
+              dupattaImage: null,
+              referenceImage: null,
+              additionalInstructions: Array(state.settings.imagesPerProduct).fill(""),
+            };
+            nextProducts.push(newProduct);
+          } else if (nextProducts.length > 2) {
+            nextProducts = nextProducts.slice(0, 2);
+          }
+
+          return {
+            ...state,
+            previousSettings,
+            previousProducts,
+            products: nextProducts,
+            settings: {
+              ...state.settings,
+              multipleModal: true,
+              isEcommerce: false,
+              ecommerceViewTypes: [],
+              additionalImagesCount: 0,
+              modelConsistency: false,
+              sameBackground: false,
+            },
+          };
+        }),
 
       addProduct: () =>
         set((state) => {
@@ -165,6 +237,8 @@ export const useGenerateStore = create(
       partialize: (state) => ({
         settings: state.settings,
         products: sanitizeProductsForRetention(state.products),
+        previousSettings: state.previousSettings,
+        previousProducts: state.previousProducts ? sanitizeProductsForRetention(state.previousProducts) : null,
       }),
     },
   ),

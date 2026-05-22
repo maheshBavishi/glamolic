@@ -20,6 +20,7 @@ import styles from "./womenCollection.module.scss";
 const PlusIcon = "/assets/icons/plus.svg";
 const LineIcon = "/assets/icons/line.svg";
 const DangerIcon = "/assets/icons/danger.svg";
+const multipleUserIcon = "/assets/icons/user_icon.svg";
 
 import {
   backgroundTypeOptions,
@@ -240,7 +241,7 @@ export default function WomenCollection() {
   const router = useRouter();
   const { user, profile, userTransactions } = useAuth();
   const { credits, loading: creditsLoading, fetchCredits } = useCreditsStore();
-  const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, clearProductImages, preserveState, setPreserveState } =
+  const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, clearProductImages, preserveState, setPreserveState, setMultipleModal } =
     useGenerateStore();
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -270,6 +271,8 @@ export default function WomenCollection() {
     }
     return resolutionOptions;
   }, [userTransactions?.transaction_type]);
+
+  const isUnpaidUser = !userTransactions || userTransactions?.transaction_type === "SIGNUP_BONUS";
 
   const getCategoryNameById = useCallback(
     (id) => {
@@ -577,8 +580,8 @@ export default function WomenCollection() {
             additionalInstructions: Array.isArray(product.additionalInstructions) ? product.additionalInstructions : [],
             poses: settings.isEcommerce
               ? getSortedViews(settings.ecommerceViewTypes || [])
-                  .filter((viewType) => VIEW_ORDER.includes(viewType))
-                  .map(formatViewLabel)
+                .filter((viewType) => VIEW_ORDER.includes(viewType))
+                .map(formatViewLabel)
               : [],
           };
 
@@ -638,12 +641,11 @@ export default function WomenCollection() {
           aspectRatio: getAspectRatio(settings.imageSize),
           startingVariationIdx: 0,
           low_cost: profile?.low_cost,
+          doubleimage: Boolean(settings.multipleModal),
         },
       };
-
       loadingToast = toast.loading("Starting generation...");
       const response = await generateImage(payload);
-      console.log("🚀 ~ handleGenerate ~ response:", response);
 
       if (response?.status === "failed") {
         toast.dismiss(loadingToast);
@@ -695,6 +697,14 @@ export default function WomenCollection() {
               <p>Upload your product images and customize the generation settings to create professional, on model photoshoots.</p>
             </div>
           </div>
+          {isUnpaidUser ? (
+            <div className={styles.demoAssistanceAlert}>
+              <svg className={styles.infoIcon} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 1C4.13438 1 1 4.13438 1 8C1 11.8656 4.13438 15 8 15C11.8656 15 15 11.8656 15 8C15 4.13438 11.8656 1 8 1ZM8.5 11.5H7.5V7H8.5V11.5ZM8 6C7.72386 6 7.5 5.77614 7.5 5.5C7.5 5.22386 7.72386 5 8 5C8.27614 5 8.5 5.22386 8.5 5.5C8.5 5.77614 8.27614 6 8 6Z" fill="currentColor"/>
+              </svg>
+              <span>For platform understanding and demo assistance, please contact us on +91 82000 58875 before your first generation.</span>
+            </div>
+          ) : null}
           <div className={styles.grid}>
             <div className={styles.items}>
               <div className={styles.leftBox}>
@@ -879,6 +889,22 @@ export default function WomenCollection() {
                     <div className={styles.items}>
                       <div className={styles.icontext}>
                         <div className={styles.icon}>
+                          <img src={multipleUserIcon} alt="multipleUserIcon" />
+                        </div>
+                        <div>
+                          <h5>Multiple Modal</h5>
+                          <p>2 modals in one image</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={Boolean(settings.multipleModal)}
+                        onChange={(checked) => setMultipleModal(checked)}
+                      />
+                    </div>
+
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div className={styles.icon}>
                           <ShopIcon />
                         </div>
                         <div>
@@ -888,6 +914,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.isEcommerce)}
+                        disabled={Boolean(settings.multipleModal)}
                         onChange={(checked) => {
                           if (!checked) {
                             updateSettings({
@@ -920,6 +947,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.modelConsistency)}
+                        disabled={Boolean(settings.multipleModal)}
                         onChange={(checked) => updateSettings({ modelConsistency: checked })}
                       />
                     </div>
@@ -936,6 +964,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.sameBackground)}
+                        disabled={Boolean(settings.multipleModal)}
                         onChange={(checked) => updateSettings({ sameBackground: checked })}
                       />
                     </div>
@@ -974,7 +1003,7 @@ export default function WomenCollection() {
                           {products.length > 1 ? (
                             <div className={styles.productHeader}>
                               <p>Product {index + 1}</p>
-                              {index > 0 ? (
+                              {index > 0 && !settings.multipleModal ? (
                                 <button type="button" onClick={() => removeProduct(product.id)} className={styles.removeProductBtn}>
                                   Remove
                                 </button>
@@ -1068,101 +1097,108 @@ export default function WomenCollection() {
                           <div className={styles.textareaGrid}>
                             {settings.isEcommerce
                               ? (() => {
-                                  const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
-                                  const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
-                                  const standardCount = standardViews.length;
-                                  const totalImages = settings.imagesPerProduct || 1;
+                                const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
+                                const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
+                                const standardCount = standardViews.length;
+                                const totalImages = settings.imagesPerProduct || 1;
 
-                                  if (totalImages <= 0) {
-                                    return (
+                                if (totalImages <= 0) {
+                                  return (
+                                    <div>
+                                      <label>Instructions</label>
+                                      <textarea
+                                        data-lenis-prevent={true}
+                                        placeholder="Instructions..."
+                                        value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                        onChange={(event) => {
+                                          updateProduct(product.id, "additionalInstructions", [event.target.value]);
+                                        }}
+                                      />
+                                    </div>
+                                  );
+                                }
+                                return (
+                                  <>
+                                    {standardCount > 0 ? (
                                       <div>
-                                        <label>Instructions</label>
+                                        <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
                                         <textarea
                                           data-lenis-prevent={true}
-                                          placeholder="Instructions..."
+                                          placeholder="Instructions for selected views..."
                                           value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
                                           onChange={(event) => {
-                                            updateProduct(product.id, "additionalInstructions", [event.target.value]);
+                                            const next = resizeInstructions(product.additionalInstructions, totalImages);
+                                            for (let i = 0; i < standardCount; i += 1) {
+                                              next[i] = event.target.value;
+                                            }
+                                            updateProduct(product.id, "additionalInstructions", next);
                                           }}
                                         />
                                       </div>
-                                    );
-                                  }
-                                  return (
-                                    <>
-                                      {standardCount > 0 ? (
-                                        <div>
-                                          <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
+                                    ) : null}
+                                    {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
+                                      const realIndex = standardCount + additionalIndex;
+                                      return (
+                                        <div key={`additional-${product.id}-${additionalIndex}`}>
+                                          <label>Additional Image {additionalIndex + 1}</label>
                                           <textarea
                                             data-lenis-prevent={true}
-                                            placeholder="Instructions for selected views..."
-                                            value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                            placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
+                                            value={
+                                              Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""
+                                            }
                                             onChange={(event) => {
                                               const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                              for (let i = 0; i < standardCount; i += 1) {
-                                                next[i] = event.target.value;
-                                              }
+                                              next[realIndex] = event.target.value;
                                               updateProduct(product.id, "additionalInstructions", next);
                                             }}
                                           />
                                         </div>
-                                      ) : null}
-                                      {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
-                                        const realIndex = standardCount + additionalIndex;
-                                        return (
-                                          <div key={`additional-${product.id}-${additionalIndex}`}>
-                                            <label>Additional Image {additionalIndex + 1}</label>
-                                            <textarea
-                                              data-lenis-prevent={true}
-                                              placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
-                                              value={
-                                                Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""
-                                              }
-                                              onChange={(event) => {
-                                                const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                                next[realIndex] = event.target.value;
-                                                updateProduct(product.id, "additionalInstructions", next);
-                                              }}
-                                            />
-                                          </div>
-                                        );
-                                      })}
-                                    </>
-                                  );
-                                })()
+                                      );
+                                    })}
+                                  </>
+                                );
+                              })()
                               : Array.from({ length: settings.imagesPerProduct || 1 }).map((_, imageIndex) => (
-                                  <div key={`${product.id}-${imageIndex}`}>
-                                    <label>Image {imageIndex + 1}</label>
-                                    <textarea
-                                      data-lenis-prevent={true}
-                                      placeholder={`Instruction image ${imageIndex + 1}...`}
-                                      value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
-                                      onChange={(event) => {
-                                        const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
-                                        next[imageIndex] = event.target.value;
-                                        updateProduct(product.id, "additionalInstructions", next);
-                                      }}
-                                    />
-                                  </div>
-                                ))}
+                                <div key={`${product.id}-${imageIndex}`}>
+                                  <label>Image {imageIndex + 1}</label>
+                                  <textarea
+                                    data-lenis-prevent={true}
+                                    placeholder={`Instruction image ${imageIndex + 1}...`}
+                                    value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
+                                    onChange={(event) => {
+                                      const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
+                                      next[imageIndex] = event.target.value;
+                                      updateProduct(product.id, "additionalInstructions", next);
+                                    }}
+                                  />
+                                </div>
+                              ))}
                           </div>
                           {isLastProduct ? (
                             <>
-                              <div
-                                className={styles.addanother}
-                                style={{ cursor: canAddProduct ? "pointer" : "not-allowed", opacity: canAddProduct ? 0.9 : 0.6 }}
-                                onClick={handleAddProduct}
-                              >
-                                <div className={styles.iconcenter}>
-                                  <img src={PlusIcon} alt="PlusIcon" />
-                                </div>
-                                <p>Add another product</p>
-                              </div>
-                              {!canAddProduct ? (
-                                <div className={styles.importantMessage}>
-                                  <p>Please complete all required fields (at least one image) in the current product before adding another.</p>
-                                </div>
-                              ) : null}
+                              {!settings.multipleModal && (
+                                <>
+                                  <div
+                                    className={styles.addanother}
+                                    style={{
+                                      cursor: canAddProduct ? "pointer" : "not-allowed",
+                                      opacity: canAddProduct ? 0.9 : 0.6,
+                                    }}
+                                    onClick={handleAddProduct}
+                                  >
+                                    <div className={styles.iconcenter}>
+                                      <img src={PlusIcon} alt="PlusIcon" />
+                                    </div>
+                                    <p>Add another product</p>
+                                  </div>
+                                  {!canAddProduct ? (
+                                    <div className={styles.importantMessage}>
+                                      <p>Please complete all required fields (at least one image) in the current product before adding another.</p>
+                                    </div>
+                                  ) : null}
+                                </>
+                              )}
                               <div className={styles.estimateBox}>
                                 <div className={styles.contentAlignment}>
                                   <div className={styles.leftAlignment}>

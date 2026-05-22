@@ -92,6 +92,39 @@
             }
         }
 
+        .demoAssistanceAlert {
+            border: 1px solid rgba(234, 179, 8, 0.4);
+            background: rgba(234, 179, 8, 0.08);
+            color: #b8860b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            
+            .infoIcon {
+                width: 18px;
+                min-width: 18px;
+                height: 18px;
+                color: #b8860b;
+            }
+
+            @include respond-to("sm") {
+                font-size: 14px;
+                padding: 10px 12px;
+                margin-bottom: 20px;
+                align-items: flex-start;
+                
+                .infoIcon {
+                    margin-top: 2px;
+                }
+            }
+        }
+
         .grid {
             display: grid;
             grid-template-columns: 450px 1fr;
@@ -174,9 +207,11 @@
                                 align-items: center;
                                 justify-content: center;
 
-                                svg {
+                                svg,
+                                img {
                                     width: 20px;
                                     height: 20px;
+                                    object-fit: contain;
                                 }
                             }
                         }
