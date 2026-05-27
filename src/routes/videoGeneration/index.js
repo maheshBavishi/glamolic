@@ -24,12 +24,14 @@ import { components as selectComponents } from 'react-select';
 const DefaultVideoImage = "/assets/images/video-img.png";
 const LineIcon = "/assets/icons/line.svg";
 const durationOptions = [
+  { value: "5", label: "5 seconds" },
+  { value: "10", label: "10 seconds" },
   { value: "15", label: "15 seconds" },
 ];
 
 const getEstimatedCostByDuration = (duration) => {
-  // if (duration === "5") return 6;
-  // if (duration === "10") return 11;
+  if (duration === "5") return 6;
+  if (duration === "10") return 11;
   if (duration === "15") return 18;
   // if (duration === "20") return 18;
   // if (duration === "30") return 24;
@@ -39,6 +41,7 @@ const getEstimatedCostByDuration = (duration) => {
 const normalizeLogoPosition = (position) => (position === "center" ? "right_top" : position);
 
 const DurationSingleValue = ({ children, selectProps, ...props }) => {
+  const cost = getEstimatedCostByDuration(props.data.value);
   return (
     <selectComponents.SingleValue {...props} selectProps={selectProps}>
       <div style={{
@@ -63,7 +66,7 @@ const DurationSingleValue = ({ children, selectProps, ...props }) => {
           <span style={{
             color: 'rgba(18, 18, 18, 0.60)',
             fontWeight: 500
-          }}>18 credits</span>
+          }}>{cost} credits</span>
           <span style={{
             width: '1px',
             height: '16px',
@@ -81,6 +84,7 @@ const DurationSingleValue = ({ children, selectProps, ...props }) => {
 };
 
 const DurationOption = ({ children, ...props }) => {
+  const cost = getEstimatedCostByDuration(props.data.value);
   return (
     <selectComponents.Option {...props}>
       <div style={{
@@ -99,7 +103,7 @@ const DurationOption = ({ children, ...props }) => {
           color: 'rgba(18, 18, 18, 0.60)',
           fontWeight: 500
         }}>
-          18 credits
+          {cost} credits
         </span>
       </div>
     </selectComponents.Option>
@@ -116,7 +120,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   const [logoFile, setLogoFile] = useState(null);
   const [formData, setFormData] = useState({
     prompt: "",
-    duration: "15",
+    duration: "10",
     aspectRatio: "portrait",
     audioType: "none",
     logo: null,
@@ -421,14 +425,14 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
               <div className={styles.topbottomAlignment}>
                 <Dropdown
                   label="Duration"
-                  placeholder="15 seconds"
+                  placeholder="10 seconds"
                   options={durationOptions}
                   value={durationOptions.find((option) => option.value === formData.duration) || null}
                   onChange={(selectedOption) => handleChange("duration", selectedOption?.value || "10")}
                   components={{ SingleValue: DurationSingleValue, Option: DurationOption }}
                   availableCredits={availableCredits}
                   creditsLoading={creditsLoading}
-                  disabled
+                  // disabled
                 />
               </div>
               <div className={styles.ratio}>
