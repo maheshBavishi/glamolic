@@ -27,14 +27,18 @@ const durationOptions = [
   { value: "5", label: "5 seconds" },
   { value: "10", label: "10 seconds" },
   { value: "15", label: "15 seconds" },
+  { value: "20", label: "20 seconds" },
+  { value: "25", label: "25 seconds" },
+  { value: "30", label: "30 seconds" },
 ];
 
 const getEstimatedCostByDuration = (duration) => {
   if (duration === "5") return 6;
   if (duration === "10") return 11;
   if (duration === "15") return 18;
-  // if (duration === "20") return 18;
-  // if (duration === "30") return 24;
+  if (duration === "20") return 24;
+  if (duration === "25") return 30;
+  if (duration === "30") return 36;
   return 0;
 };
 
@@ -116,7 +120,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   const { loading: creditsLoading, credits, fetchCredits } = useCreditsStore();
   const { uploadImage, validateImageFile, isUploading } = useImageUpload();
 
-  const [referenceFile, setReferenceFile] = useState(imageUrl || null);
+  const [referenceFiles, setReferenceFiles] = useState(imageUrl ? [imageUrl] : []);
   const [logoFile, setLogoFile] = useState(null);
   const [formData, setFormData] = useState({
     prompt: "",
@@ -153,8 +157,8 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   const validateForm = () => {
     const errors = {};
     let isValid = true;
-    if (!referenceFile) {
-      errors.referenceFile = "Please upload a reference image";
+    if (!referenceFiles.length) {
+      errors.referenceFile = "Please upload at least one reference image";
       isValid = false;
     }
     if (!String(formData.prompt || "").trim()) {
@@ -186,20 +190,35 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
     }));
   };
 
-  const handleReferenceUpload = (selectedFile) => {
-    if (!selectedFile) {
-      setReferenceFile(null);
-      return;
+  const handleReferenceUpload = (filesOrFile) => {
+    const files = Array.isArray(filesOrFile) ? filesOrFile : [filesOrFile];
+    const validFiles = [];
+    for (const f of files) {
+      if (!f) continue;
+      const validation = validateImageFile(f, Infinity);
+      if (!validation.valid) {
+        toast.error(validation.error);
+        continue;
+      }
+      validFiles.push(f);
     }
-    const validation = validateImageFile(selectedFile, Infinity);
-    if (!validation.valid) {
-      toast.error(validation.error);
-      return;
+    if (validFiles.length) {
+      setReferenceFiles((prev) => [...prev, ...validFiles]);
+      if (formErrors.referenceFile) {
+        setFormErrors((prev) => ({ ...prev, referenceFile: undefined }));
+      }
     }
-    setReferenceFile(selectedFile);
-    if (formErrors.referenceFile) {
-      setFormErrors((prev) => ({ ...prev, referenceFile: undefined }));
-    }
+  };
+
+  const handleRemoveReference = (index) => {
+    setReferenceFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const getReferencePreviewUrl = (file) => {
+    if (!file) return '';
+    if (typeof file === 'string') return file;
+    if (file instanceof Blob) return URL.createObjectURL(file);
+    return '';
   };
 
   const handleLogoUpload = (selectedFile) => {
@@ -235,26 +254,25 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
     }
     setIsGenerating(true);
     try {
-      let finalImageUrl = "";
-      if (referenceFile instanceof File) {
-        finalImageUrl = await uploadImage(referenceFile, user?.id, "video-references");
-      } else if (typeof referenceFile === "string") {
-        finalImageUrl = referenceFile;
+      const imageLinks = [];
+      for (const ref of referenceFiles) {
+        if (ref instanceof File) {
+          const url = await uploadImage(ref, user?.id, "video-references");
+          if (url) imageLinks.push(url);
+        } else if (typeof ref === "string") {
+          imageLinks.push(ref);
+        }
       }
 
       const payload = {
-        ...(finalImageUrl ? { image_link: finalImageUrl } : {}),
+        ...(imageLinks.length ? { image_link: imageLinks } : {}),
         user_input: formData.prompt,
         video_duration: parseInt(formData.duration, 10),
         aspect_ratio: formData.aspectRatio,
         audio_type: formData.audioType,
-        ...(formData.logo
-          ? {
-            logo: formData.logo,
-            logo_position: normalizeLogoPosition(formData.logo_position) || "right_top",
-            logo_size: formData.logo_size || "small",
-          }
-          : {}),
+        logo: formData.logo || null,
+        logo_position: formData.logo_position ? normalizeLogoPosition(formData.logo_position) : "right_top",
+        logo_size: formData.logo_size || "small",
         ...(productName ? { product_name: productName } : {}),
         show_product_name: Boolean(formData.show_product_name),
         model: "bytedance/seedance-2.0",
@@ -290,9 +308,9 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     <label>Reference Image <span style={{ color: '#E23030' }}>*</span></label>
                   </div>
                   <UploadPhoto
-                    file={referenceFile}
+                    file={null}
+                    multiple
                     onFileChange={handleReferenceUpload}
-                    onRemove={() => setReferenceFile(null)}
                     placeholderTitle="Upload Reference"
                     placeholderSubTitle="Drag & drop or click to select a reference image"
                     placeholderMeta="PNG, JPG, WebP"
@@ -300,7 +318,27 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     error={formErrors.referenceFile}
                     className={styles.referenceUpload}
                   />
-                </div>
+                  {referenceFiles.length > 0 && (
+                    <div className={styles.referenceThumbnails}>
+                      {referenceFiles.map((file, index) => {
+                        const url = getReferencePreviewUrl(file);
+                        return (
+                          <div key={index} className={styles.thumbnailItem}>
+                            <img src={url} alt={`Reference ${index + 1}`} className={styles.thumbnailImage} />
+                            <button
+                              type="button"
+                              className={styles.thumbnailRemove}
+                              onClick={() => handleRemoveReference(index)}
+                              aria-label={`Remove reference image ${index + 1}`}
+                            >
+                              <img src="/assets/icons/close.svg" alt="Remove" />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                 </div>
                 <div>
                   <div className={styles.textareaDesign}>
                     <label>Video prompt <span style={{ color: '#E23030' }}>*</span></label>

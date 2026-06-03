@@ -9,6 +9,7 @@ export default function UploadPhoto({
     error = "",
     hasError = false,
     disabled = false,
+    multiple = false,
     onFileChange,
     onRemove,
     placeholderTitle = 'Upload Photo',
@@ -51,8 +52,13 @@ export default function UploadPhoto({
     const handleDrop = (event) => {
         if (!canUpload) return;
         event.preventDefault();
-        const selectedFile = event.dataTransfer?.files?.[0] || null;
-        handleFileSelect(selectedFile);
+        if (multiple) {
+            const files = Array.from(event.dataTransfer?.files || []);
+            if (files.length) onFileChange?.(files);
+        } else {
+            const selectedFile = event.dataTransfer?.files?.[0] || null;
+            handleFileSelect(selectedFile);
+        }
     };
 
     const handleDragOver = (event) => {
@@ -120,11 +126,17 @@ export default function UploadPhoto({
                     ref={inputRef}
                     type="file"
                     accept={accept}
+                    multiple={multiple}
                     className={styles.hiddenInput}
                     onClick={(event) => event.stopPropagation()}
                     onChange={(event) => {
-                        const selectedFile = event.target.files?.[0] || null;
-                        handleFileSelect(selectedFile);
+                        if (multiple) {
+                            const files = Array.from(event.target.files || []);
+                            if (files.length) onFileChange?.(files);
+                        } else {
+                            const selectedFile = event.target.files?.[0] || null;
+                            handleFileSelect(selectedFile);
+                        }
                         event.target.value = "";
                     }}
                 />
