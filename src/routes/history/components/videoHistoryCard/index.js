@@ -95,7 +95,12 @@ export default function VideoHistoryCard({ item, isExpanded, onToggleExpand }) {
       const thumbnail = item.generated_images[0];
       return typeof thumbnail === "string" ? thumbnail.trim() : "";
     }
-    return typeof item?.settings?.image_link === "string" ? item.settings.image_link.trim() : "";
+    const imageLink = item?.settings?.image_link;
+    if (Array.isArray(imageLink) && imageLink.length > 0) {
+      const firstImg = imageLink[0];
+      return typeof firstImg === "string" ? firstImg.trim() : "";
+    }
+    return typeof imageLink === "string" ? imageLink.trim() : "";
   };
 
   const thumbnailUrl = getThumbnail();
