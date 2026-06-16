@@ -77,9 +77,9 @@ export default function Profile() {
   const displayEmail = user?.email || "";
   const displayCreatedAt = user?.created_at
     ? (() => {
-        const d = new Date(user.created_at);
-        return `${d.toLocaleString("en-US", { month: "short" })}, ${d.getFullYear()}`;
-      })()
+      const d = new Date(user.created_at);
+      return `${d.toLocaleString("en-US", { month: "short" })}, ${d.getFullYear()}`;
+    })()
     : "Unknown";
 
   return (
@@ -157,9 +157,9 @@ export default function Profile() {
                       style={{
                         padding: "10px 24px",
                         background: "transparent",
-                        color: "#527475",
+                        color: "#4A3223",
                         borderRadius: "100px",
-                        border: "1px solid #527475",
+                        border: "1px solid #4A3223",
                         cursor: "pointer",
                         fontWeight: "600",
                       }}
@@ -170,7 +170,7 @@ export default function Profile() {
                       onClick={handleUpdateProfile}
                       style={{
                         padding: "10px 24px",
-                        background: "#527475",
+                        background: "#4A3223",
                         color: "#fff",
                         borderRadius: "100px",
                         border: "none",

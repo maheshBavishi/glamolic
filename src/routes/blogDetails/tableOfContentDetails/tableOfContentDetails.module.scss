@@ -270,8 +270,8 @@
 
                 a {
                     line-height: 1.15;
-                    color: #527475;
-                    border-bottom: 2px solid #527475;
+                    color: #4A3223;
+                    border-bottom: 2px solid #4A3223;
                     transition: 0.5s ease-in-out all;
 
                     &:hover {
@@ -294,7 +294,7 @@
                     margin: 15px 0;
                     border: rem(1) solid rgba(18, 18, 18, 0.10);
                     background: #EEF6F3;
-                    border-left: 3px solid #527475;
+                    border-left: 3px solid #4A3223;
 
                     @include breakpoint("max-xl") {
                         margin: 12px 0;
@@ -316,7 +316,7 @@
                     width: 100%;
                     margin: 25px 0;
                     border-radius: 25px;
-                    border-bottom: 8px solid #527475;
+                    border-bottom: 8px solid #4A3223;
                     cursor: zoom-in;
 
                     @include breakpoint("md-max") {
@@ -439,7 +439,7 @@
                     }
 
                     thead {
-                        background: linear-gradient(101deg, #527475 0%, #647F80 100%);
+                        background: linear-gradient(101deg, #4A3223 0%, #4a3223 100%);
                     }
 
                     tbody {

@@ -14,7 +14,7 @@
     &::before {
         filter: blur(100px);
         content: "";
-        background-color: #085F62;
+        background: #4A3223;
         opacity: 0.9;
         width: 120px;
         height: 150px;
@@ -26,7 +26,7 @@
     &::after {
         filter: blur(100px);
         content: "";
-        background-color: #085F62;
+        background: #4A3223;
         opacity: 0.9;
         width: 120px;
         height: 150px;
@@ -106,7 +106,7 @@
             &::before {
                 filter: blur(100px);
                 content: "";
-                background-color: #647F80;
+                background-color: #4a3223;
                 opacity: 0.9;
                 width: 100px;
                 height: 100px;

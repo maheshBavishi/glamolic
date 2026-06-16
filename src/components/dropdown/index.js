@@ -14,7 +14,7 @@ const customStyles = (hasError) => {
       border: hasError
         ? '1px solid #E23030'
         : state.isFocused
-          ? '1px solid #647F80'
+          ? '1px solid #4a3223'
           : '1px solid rgba(18, 18, 18, 0.10)',
       background: '#FFF',
       padding: '0 4px',

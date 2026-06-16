@@ -96,8 +96,8 @@
                 gap: 10px;
                 cursor: pointer;
                 border-radius: 12px;
-                background: #527475;
-                border: 1px solid #527475;
+                background: #4A3223;
+                border: 1px solid #4A3223;
 
                 @include respond-to("sm") {
                     justify-content: center;
@@ -106,7 +106,7 @@
                 &.lightButton {
                     color: #121212;
                     border: 1px solid rgba(18, 18, 18, 0.10);
-                    background: rgba(255, 255, 255, 0.10);
+                    background: linear-gradient(123deg, #FFF 1.02%, #DDE1E1 98.98%);
                     box-shadow: 0 0 44.8px 0 rgba(0, 0, 0, 0.09);
                     backdrop-filter: blur(123.94999694824219px);
                 }
@@ -139,7 +139,7 @@
         .box {
             border-radius: 20px;
             border: 1px solid #FFF;
-            background: linear-gradient(238deg, #FFF 0.38%, #DDE1E1 99.62%);
+            background: linear-gradient(228deg, #FFF 4.82%, rgba(74, 50, 35, 0.20) 99.53%);
             box-shadow: 0 0 39.4px 0 rgba(0, 0, 0, 0.06);
             padding: 24px;
 

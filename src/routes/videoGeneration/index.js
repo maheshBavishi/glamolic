@@ -78,7 +78,7 @@ const DurationSingleValue = ({ children, selectProps, ...props }) => {
             display: 'inline-block'
           }} />
           <span style={{
-            color: '#527475',
+            color: '#4A3223',
             fontWeight: 600
           }}></span>
         </span>
@@ -138,7 +138,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
   const estimatedCost = useMemo(() => getEstimatedCostByDuration(formData.duration), [formData.duration]);
   const availableCredits = credits?.available_credits ?? profile?.tokens ?? 0;
   const activeStyle = {
-    border: "1px solid #527475",
+    border: "1px solid #4A3223",
     background: "#EFF3F3",
   };
 
@@ -338,7 +338,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                       })}
                     </div>
                   )}
-                 </div>
+                </div>
                 <div>
                   <div className={styles.textareaDesign}>
                     <label>Video prompt <span style={{ color: '#E23030' }}>*</span></label>
@@ -470,7 +470,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                   components={{ SingleValue: DurationSingleValue, Option: DurationOption }}
                   availableCredits={availableCredits}
                   creditsLoading={creditsLoading}
-                  // disabled
+                // disabled
                 />
               </div>
               <div className={styles.ratio}>

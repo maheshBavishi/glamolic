@@ -91,7 +91,7 @@
                     height: 26px;
 
                     path {
-                        fill: #527475;
+                        fill: #4A3223;
                     }
                 }
             }
@@ -110,8 +110,8 @@
 
                 &.fill {
                     padding: 13px 30px;
-                    border: 1px solid #527475;
-                    background-color: #527475;
+                    border: 1px solid #4A3223;
+                    background-color: #4A3223;
                     color: #fff;
 
                     @include respond-to("sm") {
@@ -119,9 +119,9 @@
                     }
 
                     &:hover {
-                        border: 1px solid #527475;
+                        border: 1px solid #4A3223;
                         background-color: transparent;
-                        color: #527475;
+                        color: #4A3223;
                     }
                 }
 
@@ -134,8 +134,8 @@
                     }
 
                     &:hover {
-                        border: 1px solid #527475;
-                        background-color: #527475;
+                        border: 1px solid #4A3223;
+                        background-color: #4A3223;
                         color: #fff;
                     }
                 }
@@ -208,7 +208,7 @@
             height: 26px;
 
             path {
-                fill: #527475;
+                fill: #4A3223;
             }
         }
     }
@@ -236,16 +236,16 @@
 
             &.fill {
                 padding: 13px 30px;
-                border: 1px solid #527475;
-                background-color: #527475;
+                border: 1px solid #4A3223;
+                background-color: #4A3223;
                 color: #fff;
 
 
 
                 &:hover {
-                    border: 1px solid #527475;
+                    border: 1px solid #4A3223;
                     background-color: transparent;
-                    color: #527475;
+                    color: #4A3223;
                 }
             }
 
@@ -256,8 +256,8 @@
 
 
                 &:hover {
-                    border: 1px solid #527475;
-                    background-color: #527475;
+                    border: 1px solid #4A3223;
+                    background-color: #4A3223;
                     color: #fff;
                 }
             }
@@ -286,7 +286,7 @@
 
             &:hover,
             &:focus-visible {
-                color: #527475;
+                color: #4A3223;
             }
 
             &:last-child {
@@ -302,8 +302,8 @@
     gap: 8px;
     padding: 8px 16px;
     border-radius: 100px;
-    background: rgba(#527475, 0.1);
-    border: 1px solid rgba(#527475, 0.2);
+    background: rgba(#4A3223, 0.1);
+    border: 1px solid rgba(#4A3223, 0.2);
     
     .label {
         font-size: 14px;
@@ -311,7 +311,7 @@
     }
     .value {
         font-weight: 600;
-        color: #527475;
+        color: #4A3223;
     }
 
     @include respond-to("sm") {
@@ -326,7 +326,7 @@
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        background: #527475;
+        background: #4A3223;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -397,11 +397,11 @@
             svg {
                 width: 18px;
                 height: 18px;
-                stroke: #527475;
+                stroke: #4A3223;
             }
 
             &:hover {
-                background: rgba(#527475, 0.05);
+                background: rgba(#4A3223, 0.05);
             }
 
             &.separator {

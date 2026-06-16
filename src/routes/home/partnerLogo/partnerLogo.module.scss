@@ -3,7 +3,7 @@
 
 .partnerLogo {
     padding: 40px 0;
-    background: #527475;
+    background: #4A3223;
     overflow: hidden;
     position: relative;
 
@@ -31,12 +31,12 @@
 
     &::before {
         left: 0;
-        background: linear-gradient(to right, #527475 0%, rgba(82, 116, 117, 0) 100%);
+        background: linear-gradient(to right, #4A3223 0%, rgba(82, 116, 117, 0) 100%);
     }
 
     &::after {
         right: 0;
-        background: linear-gradient(to left, #527475 0%, rgba(82, 116, 117, 0) 100%);
+        background: linear-gradient(to left, #4A3223 0%, rgba(82, 116, 117, 0) 100%);
     }
 
     .logoMarqueeContainer {

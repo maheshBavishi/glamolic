@@ -10,7 +10,7 @@
     &::before {
         filter: blur(100px);
         content: "";
-        background: #527475;
+        background: #4A3223;
         width: 120px;
         height: 150px;
         position: absolute;
@@ -68,7 +68,7 @@
             transition: .3s ease-in-out;
 
             &:hover {
-                border: 1px solid #527475;
+                border: 1px solid #4A3223;
             }
 
             h3 {

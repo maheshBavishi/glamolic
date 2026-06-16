@@ -624,12 +624,12 @@
     inset: 0;
     border-radius: 50%;
     border: 2px solid rgba(82, 116, 117, 0.12);
-    border-top-color: #527475;
+    border-top-color: #4A3223;
     animation: drawer-spin 0.9s linear infinite;
 }
 
 .downloadDrawerIcon {
-    color: #527475;
+    color: #4A3223;
     flex-shrink: 0;
 }
 
@@ -677,7 +677,7 @@
 .downloadDrawerBar {
     height: 100%;
     border-radius: 999px;
-    background: linear-gradient(90deg, #527475 0%, #769C9D 100%);
+    background: linear-gradient(90deg, #4A3223 0%, #769C9D 100%);
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 4px;
 }
@@ -692,7 +692,7 @@
 }
 
 .downloadDrawerPercent {
-    color: #527475;
+    color: #4A3223;
     font-size: 14px;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -703,7 +703,7 @@
     border-radius: 8px;
     border: 1px solid rgba(82, 116, 117, 0.15);
     background: rgba(82, 116, 117, 0.06);
-    color: #527475;
+    color: #4A3223;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;

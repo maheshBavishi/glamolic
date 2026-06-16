@@ -123,7 +123,7 @@
                 &.active {
                     border-radius: 100px;
                     color: #fff;
-                    background: #527475;
+                    background: #4A3223;
                 }
             }
         }
@@ -199,7 +199,7 @@
             }
 
             &:hover {
-                border-color: #527475;
+                border-color: #4A3223;
             }
 
             &.popularItem {
@@ -231,7 +231,7 @@
                 }
 
                 .infoBox {
-                    background-color: #527475;
+                    background-color: #4A3223;
                     background-image: url('/assets/images/noise.png'); // Subtle texture if available
                     background-size: cover;
 
@@ -290,7 +290,7 @@
                 button {
                     width: 100%;
                     border-radius: 12px;
-                    background: #647F80;
+                    background: #4a3223;
                     max-width: 270px;
                     color: #FFF;
                     text-align: center;
@@ -312,7 +312,7 @@
                     }
 
                     &:hover {
-                        background: #527475;
+                        background: #4A3223;
 
                         svg {
                             transform: translateX(6px);
@@ -322,8 +322,8 @@
             }
 
             .infoBox {
-                background-color: rgba(106, 130, 131, 0.10);
-                border: 1px solid rgba(94, 124, 124, 0.20);
+                background-color: rgba(74, 50, 35, 0.10);
+                border: 1px solid rgba(74, 50, 35, 0.20);
                 padding: 30px;
                 border-radius: 20px;
                 position: relative;
@@ -512,7 +512,7 @@
         height: 40px;
         border-radius: 999px;
         border: 3px solid rgba(82, 116, 117, 0.2);
-        border-top-color: #527475;
+        border-top-color: #4A3223;
         animation: spin 0.9s linear infinite;
     }
 

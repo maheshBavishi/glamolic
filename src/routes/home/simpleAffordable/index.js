@@ -386,7 +386,7 @@ export default function SimpleAffordable() {
                       <motion.div
                         className={`${styles.items} ${isPopular ? styles.popularItem : ""}`}
                         variants={cardVariants}
-                        whileHover={{ y: -10 }}
+
                       >
                         {isPopular && (
                           <div className={styles.popularBadge}>

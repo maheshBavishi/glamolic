@@ -10,7 +10,7 @@
     &::before {
         filter: blur(100px);
         content: "";
-        background: #527475;
+        background: #4A3223;
         width: 120px;
         height: 150px;
         position: absolute;
@@ -21,7 +21,7 @@
     &::after {
         filter: blur(100px);
         content: "";
-        background: #527475;
+        background: #4A3223;
         width: 120px;
         height: 150px;
         position: absolute;
@@ -126,12 +126,14 @@
 
         .lightbox {
             border-radius: 33.643px;
-            background: linear-gradient(180deg, #FFF 0%, #E3E8E8 100%);
+            background: linear-gradient(180deg, #FFF 0%, rgba(74, 50, 35, 0.20) 100%);
+
             box-shadow: 0 0 26.774px 0 rgba(0, 0, 0, 0.08);
             padding: 16px;
 
             img {
                 display: block;
+                border-radius: 12px;
                 width: 100%;
             }
         }
