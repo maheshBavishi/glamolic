@@ -12,9 +12,12 @@
 
     .box {
         border-radius: 20px;
-        background: linear-gradient(279deg, #FFF 0.82%, #DFE1E2 45.15%, #86989A 99.18%);
+        border-radius: 20px;
+        background: linear-gradient(238deg, #ACA19A 0.38%, rgba(255, 255, 255, 0.50) 99.62%);
         backdrop-filter: blur(206.3000030517578px);
         padding: 60px;
+        box-shadow: 0 0 39.4px 0 rgba(0, 0, 0, 0.06);
+
 
         @include respond-to("xl") {
             padding: 40px;
@@ -101,7 +104,7 @@
                         border: none;
                         cursor: pointer;
                         border-radius: 12px;
-                        background: #527475;
+                        background: #4A3223;
                         padding: 14px 20px;
                         color: #FFF;
                         text-align: center;

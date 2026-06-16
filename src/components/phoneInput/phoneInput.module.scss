@@ -28,6 +28,7 @@
     }
 
     .phoneInputErrorState {
+
         :global(.form-control),
         :global(.flag-dropdown) {
             border-color: #dc2626;
@@ -90,11 +91,11 @@
     }
 
     .phoneInputContainer :global(.form-control:focus) {
-        border: 1px solid #647F80;
+        border: 1px solid #4a3223;
     }
 
     .phoneInputContainer:focus-within :global(.form-control) {
-        border-color: #647F80;
+        border-color: #4a3223;
     }
 
     .phoneInputContainer :global(.flag-dropdown) {
@@ -111,15 +112,15 @@
     }
 
     .phoneInputContainer:focus-within :global(.flag-dropdown) {
-        border-left-color: #647F80;
-        border-top-color: #647F80;
-        border-bottom-color: #647F80;
+        border-left-color: #4a3223;
+        border-top-color: #4a3223;
+        border-bottom-color: #4a3223;
     }
 
     .phoneInputContainer :global(.form-control:focus + .flag-dropdown) {
-        border-left-color: #647F80;
-        border-top-color: #647F80;
-        border-bottom-color: #647F80;
+        border-left-color: #4a3223;
+        border-top-color: #4a3223;
+        border-bottom-color: #4a3223;
     }
 
     .phoneInputErrorState:focus-within :global(.flag-dropdown),
@@ -153,7 +154,7 @@
     }
 
     .phoneInputContainer:focus-within :global(.selected-flag::after) {
-        background: #647F80;
+        background: #4A3223;
     }
 
     .phoneInputContainer :global(.selected-flag:hover),

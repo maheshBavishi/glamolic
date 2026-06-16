@@ -17,7 +17,7 @@
     .box {
         overflow: hidden;
         border-radius: 20px;
-        background: linear-gradient(279deg, #86989A 0.82%, #DFE1E2 54.85%, #FFF 99.18%);
+        background: linear-gradient(279deg, rgba(74, 50, 35, 0.60) 0.82%, rgba(171, 162, 157, 0.50) 54.85%, #FFF 99.18%);
         backdrop-filter: blur(206.3000030517578px);
         padding: 60px;
 
@@ -98,7 +98,7 @@
                                 font-weight: 600;
                                 line-height: normal;
                                 border-radius: 10.994px;
-                                background: #647F80;
+                                background: #4A3223;
                                 display: flex;
                                 align-items: center;
                                 padding: 10px;
@@ -204,7 +204,7 @@
                     border: none;
                     cursor: pointer;
                     border-radius: 12px;
-                    background: #647F80;
+                    background: #4A3223;
                     max-width: 270px;
                     padding: 14px;
                     color: #FFF;

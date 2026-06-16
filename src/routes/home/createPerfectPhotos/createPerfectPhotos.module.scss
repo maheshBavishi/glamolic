@@ -111,7 +111,7 @@
                         border-top: 4px solid #FFF;
                         border-right: 4px solid #FFF;
                         border-left: 4px solid #FFF;
-                        background: #527475;
+                        background: #4A3223;
 
                         @include respond-to("sm") {
                             border-top: 2px solid #FFF;
@@ -198,7 +198,8 @@
             overflow: hidden;
             border-radius: 34px;
             border: 1px solid rgba(0, 0, 0, 0.10);
-            background: #FFF;
+            background: linear-gradient(238deg, #FFF 0.38%, rgba(74, 50, 35, 0.10) 99.62%);
+
             box-shadow: 0 0 43.8px 0 rgba(0, 0, 0, 0.08);
             border-radius: 24px;
             position: relative;
@@ -285,7 +286,7 @@
                             border: none;
                             cursor: pointer;
                             border-radius: 12px;
-                            background: #527475;
+                            background: #4A3223;
                             padding: 14px 20px;
                             color: #FFF;
                             text-align: center;

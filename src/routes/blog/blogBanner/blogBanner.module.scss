@@ -58,9 +58,10 @@
                 text-transform: capitalize;
                 cursor: pointer;
             }
+
             .active {
-                background: #527475;
-                border: 1px solid #527475;
+                background: #4A3223;
+                border: 1px solid #4A3223;
                 color: #FFF;
             }
         }
@@ -93,7 +94,7 @@
                     outline: none;
                     transition: .3s ease-in-out;
                     border-radius: 50%;
-                    background: #527475;
+                    background: #4A3223;
                     cursor: pointer;
 
                     svg {
@@ -124,7 +125,7 @@
                     }
 
                     &:focus {
-                        border: 1px solid #647F80;
+                        border: 1px solid #4a3223;
                     }
                 }
 

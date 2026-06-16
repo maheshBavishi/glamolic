@@ -67,7 +67,7 @@
         transition: .3s ease-in-out;
 
         path {
-            fill: #647F80;
+            fill: #4a3223;
         }
     }
 }
@@ -129,8 +129,8 @@
         font-size: 16px;
         font-style: normal;
         border-radius: 58px;
-        border: 1px solid #647F80;
-        background: #647F80;
+        border: 1px solid #4a3223;
+        background: #4A3223;
         backdrop-filter: blur(100px);
         padding: 14px;
         width: 100%;
@@ -141,7 +141,7 @@
 
         &:hover:not(:disabled) {
             background-color: transparent;
-            color: #647F80;
+            color: #4a3223;
         }
 
         &:disabled {

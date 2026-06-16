@@ -148,8 +148,8 @@
                         gap: 10px;
                         cursor: pointer;
                         border-radius: 12px;
-                        background: #527475;
-                        border: 1px solid #527475;
+                        background: #4A3223;
+                        border: 1px solid #4A3223;
 
                         @include respond-to("sm") {
                             justify-content: center;
@@ -243,7 +243,7 @@
                         inset: 0;
                         padding: 1px;
                         border-radius: 30px;
-                        background: linear-gradient(250.81deg, #527475 0.92%, #FFFFFF 23.7%, #FFFFFF 61.43%, #527475 99.08%);
+                        background: linear-gradient(250.81deg, #4A3223 0.92%, #FFFFFF 23.7%, #FFFFFF 61.43%, #4A3223 99.08%);
                         -webkit-mask:
                             linear-gradient(#fff 0 0) content-box,
                             linear-gradient(#fff 0 0);
@@ -415,7 +415,7 @@
                         inset: 0;
                         padding: 1px;
                         border-radius: 30px;
-                        background: linear-gradient(250.81deg, #527475 0.92%, #FFFFFF 23.7%, #FFFFFF 61.43%, #527475 99.08%);
+                        background: linear-gradient(250.81deg, #4A3223 0.92%, #FFFFFF 23.7%, #FFFFFF 61.43%, #4A3223 99.08%);
                         -webkit-mask:
                             linear-gradient(#fff 0 0) content-box,
                             linear-gradient(#fff 0 0);
@@ -438,7 +438,7 @@
                         align-items: center;
                         gap: 10px;
                         margin: 0 0 18px 0;
-                        background: #EEF6F3;
+                        background: rgba(74, 50, 35, 0.10);
                         box-shadow: 0 -1px 2.6px 0 rgba(82, 116, 117, 0.10) inset;
 
                         @include respond-to("sm") {
@@ -479,7 +479,7 @@
 
                     .uploadPicture {
                         border-radius: 20px;
-                        border: 1.5px dashed #527475;
+                        border: 1.5px dashed #4A3223;
                         background: #FFF;
                         height: 249px;
                         display: flex;
@@ -497,7 +497,7 @@
                             button {
                                 padding: 13px 20px;
                                 border-radius: 10px;
-                                background: #527475;
+                                background: #4A3223;
                                 cursor: pointer;
                                 color: #FFF;
                                 display: flex;
@@ -508,7 +508,7 @@
                                 font-weight: 500;
                                 line-height: normal;
                                 color: #FFF;
-                                border: 1px solid #527475;
+                                border: 1px solid #4A3223;
                                 transition: all 0.3s ease-in-out;
 
                                 @include respond-to("xl") {
@@ -517,11 +517,11 @@
 
                                 &:hover {
                                     background-color: #fff;
-                                    color: #527475;
+                                    color: #4A3223;
 
                                     svg {
                                         path {
-                                            fill: #527475;
+                                            fill: #4A3223;
                                         }
                                     }
                                 }
