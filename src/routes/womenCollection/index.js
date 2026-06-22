@@ -337,7 +337,13 @@ export default function WomenCollection() {
       if (error) {
         console.error("Error fetching categories:", error);
       } else {
-        setCategories(data || []);
+        const visibleCategories = (data || []).filter((cat) => {
+          if (cat.category_name?.toLowerCase() === "intimates") {
+            return profile?.is_visible === true;
+          }
+          return cat.is_visible !== false;
+        });
+        setCategories(visibleCategories);
       }
 
       const { data: subData, error: subError } = await supabase.from("clothing_subcategory").select("*");
@@ -363,7 +369,7 @@ export default function WomenCollection() {
     return () => {
       mounted = false;
     };
-  }, [routeCategory]);
+  }, [routeCategory, profile?.is_visible]);
   useEffect(() => {
     if (user?.id) {
       fetchCredits(user.id);

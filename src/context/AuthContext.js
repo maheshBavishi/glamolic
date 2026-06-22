@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
         tokens: data.tokens || 0,
         video_generation: data.video_generation || false,
         whatsapp_verified: data.whatsapp_verified || false,
+        is_visible: data.is_visible || false,
       };
     } catch (error) {
       console.error("Error fetching profile:", error);
