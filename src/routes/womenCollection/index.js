@@ -12,6 +12,7 @@ import ModelIcon from "@/icons/modelIcon";
 import RightWhiteIcon from "@/icons/rightWhiteIcon";
 import SettingIcon from "@/icons/settingIcon";
 import ShopIcon from "@/icons/shopIcon";
+import NoteIcon from "@/icons/noteIcon";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useRouter } from "next/navigation";
@@ -669,6 +670,8 @@ export default function WomenCollection() {
           low_cost: profile?.low_cost,
           doubleimage: Boolean(settings.multipleModal),
           logoUrl: settings.applyLogo && profile?.brand_logo_url ? profile.brand_logo_url : "",
+          logoSize: settings.applyLogo ? (settings.logoSize || "medium") : "",
+          show_product_name: Boolean(settings.show_product_name),
         },
       };
       loadingToast = toast.loading("Starting generation...");
@@ -996,42 +999,78 @@ export default function WomenCollection() {
                       />
                     </div>
 
+                    <div className={styles.items} style={{ flexDirection: "column", alignItems: "flex-start", gap: "12px" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                        <div className={styles.icontext}>
+                          <div 
+                            className={styles.icon} 
+                            style={{ padding: profile?.brand_logo_url ? 0 : undefined, overflow: 'hidden', cursor: 'pointer', background: '#f0f0f0', position: 'relative' }} 
+                            onClick={() => document.getElementById('collection-logo-upload').click()}
+                            onMouseEnter={() => setIsLogoHovered(true)}
+                            onMouseLeave={() => setIsLogoHovered(false)}
+                          >
+                            {isUploading ? (
+                              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>...</div>
+                            ) : profile?.brand_logo_url ? (
+                              <>
+                                <img src={profile.brand_logo_url} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                {isLogoHovered && (
+                                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px' }}>
+                                    +
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', color: '#527475' }}>
+                                +
+                              </div>
+                            )}
+                            <input type="file" id="collection-logo-upload" accept="image/*" style={{ display: 'none' }} onChange={handleLogoUpload} />
+                          </div>
+                          <div>
+                            <h5>Brand Logo</h5>
+                            <p>Add logo to generated images</p>
+                          </div>
+                        </div>
+                        <Switch
+                          checked={Boolean(settings.applyLogo)}
+                          disabled={!profile?.brand_logo_url}
+                          onChange={(checked) => updateSettings({ applyLogo: checked })}
+                        />
+                      </div>
+                      
+                      {settings.applyLogo && (
+                        <div style={{ display: "flex", gap: "20px", paddingLeft: "64px", width: "100%", marginTop: "-4px", marginBottom: "4px" }}>
+                          {["small", "medium", "large"].map((size) => (
+                            <label key={size} style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", fontSize: "14px", color: "#3F4153", textTransform: "capitalize", lineHeight: 1 }}>
+                              <input
+                                type="radio"
+                                name="logoSize"
+                                value={size}
+                                checked={settings.logoSize === size || (!settings.logoSize && size === "medium")}
+                                onChange={() => updateSettings({ logoSize: size })}
+                                style={{ accentColor: "#4A3223", cursor: "pointer", margin: 0 }}
+                              />
+                              <span style={{ position: "relative", top: "1px" }}>{size}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
                     <div className={styles.items}>
                       <div className={styles.icontext}>
-                        <div 
-                          className={styles.icon} 
-                          style={{ padding: profile?.brand_logo_url ? 0 : undefined, overflow: 'hidden', cursor: 'pointer', background: '#f0f0f0', position: 'relative' }} 
-                          onClick={() => document.getElementById('collection-logo-upload').click()}
-                          onMouseEnter={() => setIsLogoHovered(true)}
-                          onMouseLeave={() => setIsLogoHovered(false)}
-                        >
-                          {isUploading ? (
-                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>...</div>
-                          ) : profile?.brand_logo_url ? (
-                            <>
-                              <img src={profile.brand_logo_url} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              {isLogoHovered && (
-                                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px' }}>
-                                  +
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', color: '#527475' }}>
-                              +
-                            </div>
-                          )}
-                          <input type="file" id="collection-logo-upload" accept="image/*" style={{ display: 'none' }} onChange={handleLogoUpload} />
+                        <div className={styles.icon}>
+                          <NoteIcon />
                         </div>
                         <div>
-                          <h5>Brand Logo</h5>
-                          <p>Add logo to generated images</p>
+                          <h5>Product Name</h5>
+                          <p>Show product name in image</p>
                         </div>
                       </div>
                       <Switch
-                        checked={Boolean(settings.applyLogo)}
-                        disabled={!profile?.brand_logo_url}
-                        onChange={(checked) => updateSettings({ applyLogo: checked })}
+                        checked={Boolean(settings.show_product_name)}
+                        onChange={(checked) => updateSettings({ show_product_name: checked })}
                       />
                     </div>
                   </div>

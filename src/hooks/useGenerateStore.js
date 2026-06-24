@@ -28,6 +28,9 @@ const createInitialSettings = () => ({
   ecommerceViewTypes: [],
   additionalImagesCount: 0,
   multipleModal: false,
+  applyLogo: false,
+  logoSize: "medium",
+  show_product_name: false,
 });
 
 const createInitialProduct = (id = "1", imagesPerProduct = 2) => ({
