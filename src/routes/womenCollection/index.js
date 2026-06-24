@@ -127,7 +127,7 @@ const getUploadFields = (categoryName) => {
     ];
   }
 
-  if (categoryName === "pair" || categoryName === "intimates") {
+  if (categoryName === "pair" || categoryName === "hosiery") {
     return [
       { key: "topImage", label: "Top" },
       { key: "bottomImage", label: "Bottom" },
@@ -359,7 +359,7 @@ export default function WomenCollection() {
         console.error("Error fetching categories:", error);
       } else {
         const visibleCategories = (data || []).filter((cat) => {
-          if (cat.category_name?.toLowerCase() === "intimates") {
+          if (cat.category_name?.toLowerCase() === "hosiery") {
             return profile?.is_visible === true;
           }
           return cat.is_visible !== false;
@@ -631,7 +631,7 @@ export default function WomenCollection() {
             if (bottomBase64) payloadProduct.bottomImage = bottomBase64;
           }
 
-          if (categoryName === "pair" || categoryName === "intimates") {
+          if (categoryName === "pair" || categoryName === "hosiery") {
             if (topBase64) payloadProduct.topImage = topBase64;
             if (bottomBase64) payloadProduct.bottomImage = bottomBase64;
           }
@@ -730,7 +730,7 @@ export default function WomenCollection() {
           {isUnpaidUser ? (
             <div className={styles.demoAssistanceAlert}>
               <svg className={styles.infoIcon} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8 1C4.13438 1 1 4.13438 1 8C1 11.8656 4.13438 15 8 15C11.8656 15 15 11.8656 15 8C15 4.13438 11.8656 1 8 1ZM8.5 11.5H7.5V7H8.5V11.5ZM8 6C7.72386 6 7.5 5.77614 7.5 5.5C7.5 5.22386 7.72386 5 8 5C8.27614 5 8.5 5.22386 8.5 5.5C8.5 5.77614 8.27614 6 8 6Z" fill="currentColor"/>
+                <path d="M8 1C4.13438 1 1 4.13438 1 8C1 11.8656 4.13438 15 8 15C11.8656 15 15 11.8656 15 8C15 4.13438 11.8656 1 8 1ZM8.5 11.5H7.5V7H8.5V11.5ZM8 6C7.72386 6 7.5 5.77614 7.5 5.5C7.5 5.22386 7.72386 5 8 5C8.27614 5 8.5 5.22386 8.5 5.5C8.5 5.77614 8.27614 6 8 6Z" fill="currentColor" />
               </svg>
               <span>For platform understanding and demo assistance, please contact us on +91 82000 58875 before your first generation.</span>
             </div>
@@ -1002,9 +1002,9 @@ export default function WomenCollection() {
                     <div className={styles.items} style={{ flexDirection: "column", alignItems: "flex-start", gap: "12px" }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                         <div className={styles.icontext}>
-                          <div 
-                            className={styles.icon} 
-                            style={{ padding: profile?.brand_logo_url ? 0 : undefined, overflow: 'hidden', cursor: 'pointer', background: '#f0f0f0', position: 'relative' }} 
+                          <div
+                            className={styles.icon}
+                            style={{ padding: profile?.brand_logo_url ? 0 : undefined, overflow: 'hidden', cursor: 'pointer', background: '#f0f0f0', position: 'relative' }}
                             onClick={() => document.getElementById('collection-logo-upload').click()}
                             onMouseEnter={() => setIsLogoHovered(true)}
                             onMouseLeave={() => setIsLogoHovered(false)}
@@ -1038,7 +1038,7 @@ export default function WomenCollection() {
                           onChange={(checked) => updateSettings({ applyLogo: checked })}
                         />
                       </div>
-                      
+
                       {settings.applyLogo && (
                         <div style={{ display: "flex", gap: "20px", paddingLeft: "64px", width: "100%", marginTop: "-4px", marginBottom: "4px" }}>
                           {["small", "medium", "large"].map((size) => (
