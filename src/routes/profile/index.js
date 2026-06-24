@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import styles from "./profile.module.scss";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 const ProfileImage = "/assets/images/profile.png";
 
@@ -20,8 +21,39 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ fullName: "", phone: "" });
   const [formErrors, setFormErrors] = useState({});
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
   const { user, profile, loading, updateProfile, userTransactions } = useAuth();
   const { loading: creditsLoading, credits, fetchCredits } = useCreditsStore();
+  const { uploadImage, isUploading } = useImageUpload();
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const url = await uploadImage(file, user.id, "brand-logos", "branding-assets");
+      const { error } = await updateProfile({ brand_logo_url: url });
+      if (error) {
+        toast.error("Failed to update logo");
+      } else {
+        toast.success("Logo updated successfully");
+      }
+    } catch (err) {
+      toast.error(err.message || "Failed to upload logo");
+    }
+  };
+
+  const handleLogoRemove = async () => {
+    try {
+      const { error } = await updateProfile({ brand_logo_url: null });
+      if (error) {
+        toast.error("Failed to remove logo");
+      } else {
+        toast.success("Logo removed successfully");
+      }
+    } catch (err) {
+      toast.error(err.message || "Failed to remove logo");
+    }
+  };
 
   useEffect(() => {
     if (!loading && !user) {
@@ -144,6 +176,55 @@ export default function Profile() {
                 />
                 <div className={styles.col}>
                   <Input label="Email Address" value={displayEmail} disabled={true} />
+                </div>
+
+                <div className={styles.col} style={{ width: '100%', marginTop: '16px' }}>
+                  <label style={{ display: 'block', marginBottom: '8px', color: '#527475', fontWeight: '600', fontSize: '14px' }}>Brand Logo</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div
+                      style={{ width: '80px', height: '80px', borderRadius: '8px', border: '1px dashed #527475', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#f5f5f5', position: 'relative', cursor: 'pointer' }}
+                      onClick={() => document.getElementById('profile-logo-upload').click()}
+                      onMouseEnter={() => setIsLogoHovered(true)}
+                      onMouseLeave={() => setIsLogoHovered(false)}
+                    >
+                      {profile?.brand_logo_url ? (
+                        <>
+                          <img src={profile.brand_logo_url} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                          {isLogoHovered && (
+                            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px' }}>
+                              +
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <span style={{ color: '#999', fontSize: '12px' }}>No Logo</span>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input type="file" id="profile-logo-upload" accept="image/*" style={{ display: 'none' }} onChange={handleLogoUpload} />
+                      <button
+                        onClick={() => document.getElementById('profile-logo-upload').click()}
+                        disabled={isUploading}
+                        style={{ padding: '8px 16px', background: '#527475', color: '#fff', borderRadius: '4px', border: 'none', cursor: 'pointer', fontSize: '14px' }}
+                      >
+                        {isUploading ? 'Uploading...' : (profile?.brand_logo_url ? 'Change Logo' : 'Upload Logo')}
+                      </button>
+                      {profile?.brand_logo_url && (
+                        <button
+                          onClick={handleLogoRemove}
+                          disabled={isUploading}
+                          style={{ padding: '8px', background: 'transparent', color: '#dc3545', border: '1px solid #dc3545', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          title="Remove Logo"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {isEditing && (

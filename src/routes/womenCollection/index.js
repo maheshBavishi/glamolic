@@ -12,6 +12,7 @@ import ModelIcon from "@/icons/modelIcon";
 import RightWhiteIcon from "@/icons/rightWhiteIcon";
 import SettingIcon from "@/icons/settingIcon";
 import ShopIcon from "@/icons/shopIcon";
+import { useImageUpload } from "@/hooks/useImageUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -125,7 +126,7 @@ const getUploadFields = (categoryName) => {
     ];
   }
 
-  if (categoryName === "pair") {
+  if (categoryName === "pair" || categoryName === "intimates") {
     return [
       { key: "topImage", label: "Top" },
       { key: "bottomImage", label: "Bottom" },
@@ -239,15 +240,34 @@ const validateProducts = ({ products, getCategoryNameById, subCategories }) => {
 export default function WomenCollection() {
   const params = useParams();
   const router = useRouter();
-  const { user, profile, userTransactions } = useAuth();
+  const { user, profile, userTransactions, updateProfile } = useAuth();
   const { credits, loading: creditsLoading, fetchCredits } = useCreditsStore();
   const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, clearProductImages, preserveState, setPreserveState, setMultipleModal } =
     useGenerateStore();
+  const { uploadImage, isUploading } = useImageUpload();
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const url = await uploadImage(file, user.id, "brand-logos", "branding-assets");
+      const { error } = await updateProfile({ brand_logo_url: url });
+      if (error) {
+        toast.error("Failed to update logo");
+      } else {
+        toast.success("Logo updated successfully");
+        updateSettings({ applyLogo: true });
+      }
+    } catch (err) {
+      toast.error(err.message || "Failed to upload logo");
+    }
+  };
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState({});
   const [formErrors, setFormErrors] = useState({ products: [] });
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
 
   const productsSectionRef = useRef(null);
   const isSubmittingRef = useRef(false);
@@ -610,7 +630,7 @@ export default function WomenCollection() {
             if (bottomBase64) payloadProduct.bottomImage = bottomBase64;
           }
 
-          if (categoryName === "pair") {
+          if (categoryName === "pair" || categoryName === "intimates") {
             if (topBase64) payloadProduct.topImage = topBase64;
             if (bottomBase64) payloadProduct.bottomImage = bottomBase64;
           }
@@ -648,6 +668,7 @@ export default function WomenCollection() {
           startingVariationIdx: 0,
           low_cost: profile?.low_cost,
           doubleimage: Boolean(settings.multipleModal),
+          logoUrl: settings.applyLogo && profile?.brand_logo_url ? profile.brand_logo_url : "",
         },
       };
       loadingToast = toast.loading("Starting generation...");
@@ -972,6 +993,45 @@ export default function WomenCollection() {
                         checked={Boolean(settings.sameBackground)}
                         disabled={Boolean(settings.multipleModal)}
                         onChange={(checked) => updateSettings({ sameBackground: checked })}
+                      />
+                    </div>
+
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div 
+                          className={styles.icon} 
+                          style={{ padding: profile?.brand_logo_url ? 0 : undefined, overflow: 'hidden', cursor: 'pointer', background: '#f0f0f0', position: 'relative' }} 
+                          onClick={() => document.getElementById('collection-logo-upload').click()}
+                          onMouseEnter={() => setIsLogoHovered(true)}
+                          onMouseLeave={() => setIsLogoHovered(false)}
+                        >
+                          {isUploading ? (
+                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>...</div>
+                          ) : profile?.brand_logo_url ? (
+                            <>
+                              <img src={profile.brand_logo_url} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              {isLogoHovered && (
+                                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '24px' }}>
+                                  +
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', color: '#527475' }}>
+                              +
+                            </div>
+                          )}
+                          <input type="file" id="collection-logo-upload" accept="image/*" style={{ display: 'none' }} onChange={handleLogoUpload} />
+                        </div>
+                        <div>
+                          <h5>Brand Logo</h5>
+                          <p>Add logo to generated images</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={Boolean(settings.applyLogo)}
+                        disabled={!profile?.brand_logo_url}
+                        onChange={(checked) => updateSettings({ applyLogo: checked })}
                       />
                     </div>
                   </div>
