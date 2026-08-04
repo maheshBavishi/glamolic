@@ -136,6 +136,7 @@ export const AuthProvider = ({ children }) => {
           data: {
             full_name: fullName,
             phone: phone,
+            low_cost: false,
           },
         },
       });
@@ -183,6 +184,9 @@ export const AuthProvider = ({ children }) => {
           queryParams: {
             access_type: "offline",
             prompt: "consent",
+          },
+          data: {
+            low_cost: false,
           },
         },
       });

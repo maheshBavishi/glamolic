@@ -29,6 +29,11 @@ export const generateVideo = async (payload) => {
     throw new Error("No authentication token found. Please log in again.");
   }
 
+  const updatedPayload = {
+    ...payload,
+    low_cost: false,
+  };
+
   const response = await fetch(`${BACKEND_URL}/video-generate`, {
     method: "POST",
     headers: {
@@ -36,7 +41,7 @@ export const generateVideo = async (payload) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(updatedPayload),
   });
 
   if (response?.status === 401) {
