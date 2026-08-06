@@ -165,6 +165,10 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
       errors.prompt = "Please enter a prompt for the video";
       isValid = false;
     }
+    if (!logoFile) {
+      errors.logoFile = "Please upload a logo";
+      isValid = false;
+    }
     setFormErrors(errors);
     return isValid;
   };
@@ -267,8 +271,8 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
         aspect_ratio: formData.aspectRatio,
         audio_type: formData.audioType,
         logo: formData.logo || null,
-        logo_position: formData.logo ? (formData.logo_position ? normalizeLogoPosition(formData.logo_position) : "right_top") : null,
-        logo_size: formData.logo ? (formData.logo_size || "small") : null,
+        logo_position: formData.logo_position ? normalizeLogoPosition(formData.logo_position) : "right_top",
+        logo_size: formData.logo_size || "small",
         ...(productName ? { product_name: productName } : {}),
         show_product_name: Boolean(formData.show_product_name),
         model: "bytedance/seedance-2.0",
@@ -334,7 +338,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                       })}
                     </div>
                   )}
-                 </div>
+                </div>
                 <div>
                   <div className={styles.textareaDesign}>
                     <label>Video prompt <span style={{ color: '#E23030' }}>*</span></label>
@@ -348,7 +352,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                     {formErrors.prompt ? <p style={{ color: "#E23030", fontSize: "14px", marginTop: "6px" }}>{formErrors.prompt}</p> : null}
                   </div>
                   <div className={styles.uploadText}>
-                    <label>Logo</label>
+                    <label>Logo <span style={{ color: '#E23030' }}>*</span></label>
                   </div>
                   <UploadPhoto
                     file={logoFile}
@@ -361,105 +365,101 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                   />
                 </div>
               </div>
-              {logoFile && (
-                <>
-                  <div className={styles.logoposition}>
-                    <p>Logo Position</p>
-                    <div className={styles.logogrid}>
-                      <div
-                        className={styles.items}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => handleChange("logo_position", "left_bottom")}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") {
-                            event.preventDefault();
-                            handleChange("logo_position", "left_bottom");
-                          }
-                        }}
-                        style={formData.logo_position === "left_bottom" ? activeStyle : undefined}
-                      >
-                        <BottomIcon />
-                        <span>Bottom Left</span>
-                      </div>
-                      <div
-                        className={styles.items}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => handleChange("logo_position", "right_bottom")}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") {
-                            event.preventDefault();
-                            handleChange("logo_position", "right_bottom");
-                          }
-                        }}
-                        style={formData.logo_position === "right_bottom" ? activeStyle : undefined}
-                      >
-                        <BottomRightIcon />
-                        <span>Bottom Right</span>
-                      </div>
-                      <div
-                        className={styles.items}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => handleChange("logo_position", "right_top")}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") {
-                            event.preventDefault();
-                            handleChange("logo_position", "right_top");
-                          }
-                        }}
-                        style={formData.logo_position === "right_top" ? activeStyle : undefined}
-                      >
-                        <TopRightIcon />
-                        <span>Top Right</span>
-                      </div>
-                      <div
-                        className={styles.items}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => handleChange("logo_position", "left_top")}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") {
-                            event.preventDefault();
-                            handleChange("logo_position", "left_top");
-                          }
-                        }}
-                        style={formData.logo_position === "left_top" ? activeStyle : undefined}
-                      >
-                        <TopLeftIcon />
-                        <span>Top Left</span>
-                      </div>
-                    </div>
+              <div className={styles.logoposition}>
+                <p>Logo Position</p>
+                <div className={styles.logogrid}>
+                  <div
+                    className={styles.items}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleChange("logo_position", "left_bottom")}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        handleChange("logo_position", "left_bottom");
+                      }
+                    }}
+                    style={formData.logo_position === "left_bottom" ? activeStyle : undefined}
+                  >
+                    <BottomIcon />
+                    <span>Bottom Left</span>
                   </div>
-                  <div className={styles.logosize}>
-                    <p>Logo Size</p>
-                    <div className={styles.threeCol}>
-                      <input
-                        type="text"
-                        value="small"
-                        readOnly
-                        onClick={() => handleChange("logo_size", "small")}
-                        style={formData.logo_size === "small" ? activeStyle : undefined}
-                      />
-                      <input
-                        type="text"
-                        value="Medium"
-                        readOnly
-                        onClick={() => handleChange("logo_size", "medium")}
-                        style={formData.logo_size === "medium" ? activeStyle : undefined}
-                      />
-                      <input
-                        type="text"
-                        value="Large"
-                        readOnly
-                        onClick={() => handleChange("logo_size", "large")}
-                        style={formData.logo_size === "large" ? activeStyle : undefined}
-                      />
-                    </div>
+                  <div
+                    className={styles.items}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleChange("logo_position", "right_bottom")}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        handleChange("logo_position", "right_bottom");
+                      }
+                    }}
+                    style={formData.logo_position === "right_bottom" ? activeStyle : undefined}
+                  >
+                    <BottomRightIcon />
+                    <span>Bottom Right</span>
                   </div>
-                </>
-              )}
+                  <div
+                    className={styles.items}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleChange("logo_position", "right_top")}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        handleChange("logo_position", "right_top");
+                      }
+                    }}
+                    style={formData.logo_position === "right_top" ? activeStyle : undefined}
+                  >
+                    <TopRightIcon />
+                    <span>Top Right</span>
+                  </div>
+                  <div
+                    className={styles.items}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleChange("logo_position", "left_top")}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        handleChange("logo_position", "left_top");
+                      }
+                    }}
+                    style={formData.logo_position === "left_top" ? activeStyle : undefined}
+                  >
+                    <TopLeftIcon />
+                    <span>Top Left</span>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.logosize}>
+                <p>Logo Size</p>
+                <div className={styles.threeCol}>
+                  <input
+                    type="text"
+                    value="small"
+                    readOnly
+                    onClick={() => handleChange("logo_size", "small")}
+                    style={formData.logo_size === "small" ? activeStyle : undefined}
+                  />
+                  <input
+                    type="text"
+                    value="Medium"
+                    readOnly
+                    onClick={() => handleChange("logo_size", "medium")}
+                    style={formData.logo_size === "medium" ? activeStyle : undefined}
+                  />
+                  <input
+                    type="text"
+                    value="Large"
+                    readOnly
+                    onClick={() => handleChange("logo_size", "large")}
+                    style={formData.logo_size === "large" ? activeStyle : undefined}
+                  />
+                </div>
+              </div>
               <div className={styles.topbottomAlignment}>
                 <Dropdown
                   label="Duration"
@@ -470,7 +470,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
                   components={{ SingleValue: DurationSingleValue, Option: DurationOption }}
                   availableCredits={availableCredits}
                   creditsLoading={creditsLoading}
-                  // disabled
+                // disabled
                 />
               </div>
               <div className={styles.ratio}>
