@@ -79,18 +79,58 @@ const validateImageFile = (file) => {
   return { valid: true };
 };
 
-const fileToBase64 = (file) =>
+const compressAndConvertToBase64 = (file, maxWidthPx = 1200, quality = 0.80) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result;
-      if (typeof result !== "string") {
-        resolve("");
-        return;
-      }
-      resolve(result.split(",")[1] || result);
-    };
     reader.onerror = reject;
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxWidthPx || height > maxWidthPx) {
+          if (width >= height) {
+            height = Math.round((height * maxWidthPx) / width);
+            width = maxWidthPx;
+          } else {
+            width = Math.round((width * maxWidthPx) / height);
+            height = maxWidthPx;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to JPEG with compression; fall back to raw base64 on error
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              const rawReader = new FileReader();
+              rawReader.onerror = reject;
+              rawReader.onload = () => {
+                const result = rawReader.result;
+                resolve(typeof result === "string" ? result.split(",")[1] || result : "");
+              };
+              rawReader.readAsDataURL(file);
+              return;
+            }
+            const blobReader = new FileReader();
+            blobReader.onerror = reject;
+            blobReader.onload = () => {
+              const result = blobReader.result;
+              resolve(typeof result === "string" ? result.split(",")[1] || result : "");
+            };
+            blobReader.readAsDataURL(blob);
+          },
+          "image/jpeg",
+          quality,
+        );
+      };
+      img.src = e.target.result;
+    };
     reader.readAsDataURL(file);
   });
 
@@ -585,13 +625,23 @@ export default function WomenCollection() {
       const productsWithBase64 = await Promise.all(
         products.map(async (product) => {
           const categoryName = normalizeCategoryName(getCategoryNameById(product.clothingType));
-          const frontBase64 = product.frontImage ? await fileToBase64(product.frontImage) : undefined;
-          const backBase64 = product.backImage ? await fileToBase64(product.backImage) : undefined;
-          const blouseBase64 = product.blouseImage ? await fileToBase64(product.blouseImage) : undefined;
-          const topBase64 = product.topImage ? await fileToBase64(product.topImage) : undefined;
-          const bottomBase64 = product.bottomImage ? await fileToBase64(product.bottomImage) : undefined;
-          const bottomBackBase64 = product.bottomBackImage ? await fileToBase64(product.bottomBackImage) : undefined;
-          const dupattaBase64 = product.dupattaImage ? await fileToBase64(product.dupattaImage) : undefined;
+          const [
+            frontBase64,
+            backBase64,
+            blouseBase64,
+            topBase64,
+            bottomBase64,
+            bottomBackBase64,
+            dupattaBase64,
+          ] = await Promise.all([
+            product.frontImage ? compressAndConvertToBase64(product.frontImage) : Promise.resolve(undefined),
+            product.backImage ? compressAndConvertToBase64(product.backImage) : Promise.resolve(undefined),
+            product.blouseImage ? compressAndConvertToBase64(product.blouseImage) : Promise.resolve(undefined),
+            product.topImage ? compressAndConvertToBase64(product.topImage) : Promise.resolve(undefined),
+            product.bottomImage ? compressAndConvertToBase64(product.bottomImage) : Promise.resolve(undefined),
+            product.bottomBackImage ? compressAndConvertToBase64(product.bottomBackImage) : Promise.resolve(undefined),
+            product.dupattaImage ? compressAndConvertToBase64(product.dupattaImage) : Promise.resolve(undefined),
+          ]);
           const payloadProduct = {
             gender: routeCategory,
             itemType: getCategoryNameById(product.clothingType),
