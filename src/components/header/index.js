@@ -253,6 +253,9 @@ export default function Header() {
                   History
                 </Link>
               )}
+              <Link href="/gallery" aria-label="Gallery" className={pathname === "/gallery" ? styles.active : ""}>
+                Gallery
+              </Link>
               <Link href="/contact-us" aria-label="Contact US" className={pathname === "/contact-us" ? styles.active : ""}>
                 Contact Us
               </Link>
@@ -386,6 +389,19 @@ export default function Header() {
                 }}
               >
                 History
+              </motion.a>
+              <motion.a
+                href="/gallery"
+                variants={itemVariants}
+                aria-label="Gallery"
+                className={styles.mobileLink}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setHeaderOpen(false);
+                  router.push("/gallery");
+                }}
+              >
+                Gallery
               </motion.a>
               <motion.a
                 href="/contact-us"
