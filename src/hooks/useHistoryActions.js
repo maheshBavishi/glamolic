@@ -9,7 +9,7 @@ import { collectImageUrls } from "@/utils/imageUrlUtils";
 /** Maximum simultaneous image fetches to avoid network saturation */
 const DOWNLOAD_CONCURRENCY = 3;
 
-const FETCH_TIMEOUT_MS = 30_000;
+const FETCH_TIMEOUT_MS = 90_000; // increased: AI images are 8-10MB, 30s was too short
 
 function parseSupabaseStorageUrl(url) {
   if (!url) return null;

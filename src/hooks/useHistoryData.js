@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { collectThumbnailUrls } from "@/utils/imageUrlUtils";
 
@@ -8,6 +8,9 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
   const [totalCount, setTotalCount] = useState(0);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [realtimeConnected, setRealtimeConnected] = useState(false);
+  const reconnectTimerRef = useRef(null);
+  const reconnectAttemptsRef = useRef(0);
+  const MAX_RECONNECT_ATTEMPTS = 5;
 
   useEffect(() => {
     if (!user) return;
@@ -36,7 +39,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
           try {
             const path = new URL(url).pathname.split("/").slice(-2).join("/");
             filesToDelete.push(path);
-          } catch {}
+          } catch { }
         });
       });
 
@@ -101,9 +104,9 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
       productName: productName,
       description: Array.isArray(settings.additionalInstructions)
         ? settings.additionalInstructions
-            .map((instr, idx) => instr ? `Image ${idx + 1}: ${instr}` : null)
-            .filter(Boolean)
-            .join("\n") || "No additional instructions provided."
+          .map((instr, idx) => instr ? `Image ${idx + 1}: ${instr}` : null)
+          .filter(Boolean)
+          .join("\n") || "No additional instructions provided."
         : settings.additionalInstructions || "No additional instructions provided.",
       prompt: item.prompt || "",
       products: normalizedProductMetadata.length || 1,
@@ -176,7 +179,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
       } else {
         setTotalCount(count || 0);
       }
-      
+
       const { data, error } = await supabase
         .from("generated_images")
         .select("id, user_id, settings, product_metadata, created_at, status, thumbnail_urls")
@@ -195,7 +198,7 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
         setLoadingHistory(false);
         return;
       }
-      
+
       const mapped = data.map((item) => {
         return processHistoryItem(item);
       });
@@ -213,46 +216,67 @@ export const useHistoryData = (user, page = 1, itemsPerPage = 5) => {
     setLoadingHistory(true);
     fetchHistory();
 
-    const channel = supabase
-      .channel(`generated_images_changes_${user.id}`, {
-        config: {
-          broadcast: { self: true },
-          presence: { key: user.id },
-        },
-      })
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "generated_images",
-          filter: `user_id=eq.${user.id}`,
-        },
-        (payload) => {
-          if (payload.eventType === "INSERT") {
-            handleRealtimeInsert(payload.new);
-          } else if (payload.eventType === "UPDATE") {
-            handleRealtimeUpdate(payload.new);
-          } else if (payload.eventType === "DELETE") {
-            handleRealtimeDelete(payload.old);
+    let channel;
+
+    const subscribeChannel = () => {
+      channel = supabase
+        .channel(`generated_images_changes_${user.id}_${Date.now()}`, {
+          config: {
+            broadcast: { self: true },
+            presence: { key: user.id },
+          },
+        })
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "generated_images",
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            if (payload.eventType === "INSERT") {
+              handleRealtimeInsert(payload.new);
+            } else if (payload.eventType === "UPDATE") {
+              handleRealtimeUpdate(payload.new);
+            } else if (payload.eventType === "DELETE") {
+              handleRealtimeDelete(payload.old);
+            }
           }
-        }
-      )
-      .subscribe((status, err) => {
-        if (err) {
-          console.error("Subscription error:", err);
-        }
-        if (status === "SUBSCRIBED") {
-          setRealtimeConnected(true);
-        } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
-          setRealtimeConnected(false);
-        } else if (status === "CLOSED") {
-          setRealtimeConnected(false);
-        }
-      });
+        )
+        .subscribe((status, err) => {
+          if (err) {
+            console.error("Subscription error:", err);
+          }
+          if (status === "SUBSCRIBED") {
+            setRealtimeConnected(true);
+            reconnectAttemptsRef.current = 0;
+          } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+            setRealtimeConnected(false);
+            if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
+              const delay = Math.min(2000 * Math.pow(2, reconnectAttemptsRef.current), 30000);
+              reconnectAttemptsRef.current += 1;
+              console.warn(`[Realtime] Connection lost. Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current}/${MAX_RECONNECT_ATTEMPTS})`);
+              reconnectTimerRef.current = setTimeout(() => {
+                channel?.unsubscribe();
+                subscribeChannel();
+                fetchHistory();
+              }, delay);
+            } else {
+              console.error("[Realtime] Max reconnect attempts reached. Please refresh the page to see new images.");
+            }
+          } else if (status === "CLOSED") {
+            setRealtimeConnected(false);
+          }
+        });
+    };
+    subscribeChannel();
 
     return () => {
-      channel.unsubscribe();
+      if (reconnectTimerRef.current) {
+        clearTimeout(reconnectTimerRef.current);
+      }
+      channel?.unsubscribe();
     };
   }, [user, page, itemsPerPage]);
 

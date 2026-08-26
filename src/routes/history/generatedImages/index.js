@@ -21,8 +21,8 @@ const VideoIcon = "/assets/icons/video.svg";
 const DangerIcon = "/assets/icons/danger.svg";
 const INITIAL_VISIBLE_IMAGES = 6;
 const IMAGE_BATCH_SIZE = 6;
-const IMAGE_LOAD_TIMEOUT_MS = 12000;
-const MAX_IMAGE_RETRIES = 2;
+const IMAGE_LOAD_TIMEOUT_MS = 30000; // increased: tasks take 60-240s, images upload slowly
+const MAX_IMAGE_RETRIES = 3;
 
 const getPublicFallbackUrl = (url) => {
   if (!url) return "";

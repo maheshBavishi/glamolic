@@ -4,7 +4,7 @@ import DateIcon from "@/icons/dateIcon";
 import moment from "moment";
 const ProfileImage = "/assets/images/profile.png";
 export default function BlogInformation({ BlogDetail }) {
-  console.log("🚀 ~ BlogInformation ~ Author:", BlogDetail?.attributes?.Author?.authorProfile?.data?.attributes?.url)
+
   return (
     <div>
       <div className={styles.blogInformation}>
