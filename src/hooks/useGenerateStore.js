@@ -28,6 +28,7 @@ const createInitialSettings = () => ({
   ecommerceViewTypes: [],
   additionalImagesCount: 0,
   multipleModal: false,
+  dynamicModel: false,
   applyLogo: false,
   logoSize: "medium",
   show_product_name: false,
@@ -146,6 +147,7 @@ export const useGenerateStore = create(
             settings: {
               ...state.settings,
               multipleModal: true,
+              dynamicModel: false,
               isEcommerce: false,
               ecommerceViewTypes: [],
               additionalImagesCount: 0,
@@ -155,11 +157,62 @@ export const useGenerateStore = create(
           };
         }),
 
+      setDynamicModel: (enabled) =>
+        set((state) => {
+          if (!enabled) {
+            let nextProducts = state.products;
+            if (nextProducts.length > 8) {
+              nextProducts = nextProducts.slice(0, 8);
+            }
+            return {
+              ...state,
+              products: nextProducts,
+              settings: { ...state.settings, dynamicModel: false },
+            };
+          }
+
+          const clearedSettings = {
+            isEcommerce: false,
+            ecommerceViewTypes: [],
+            additionalImagesCount: 0,
+            modelConsistency: false,
+            sameBackground: false,
+          };
+
+          // Dynamic Model and Multiple Modal are mutually exclusive
+          if (!state.settings.multipleModal) {
+            return {
+              ...state,
+              settings: { ...state.settings, ...clearedSettings, dynamicModel: true },
+            };
+          }
+
+          let nextProducts = state.previousProducts ? state.previousProducts : state.products;
+          if (!state.previousProducts && nextProducts.length > 1) {
+            nextProducts = [nextProducts[0]];
+          }
+
+          return {
+            ...state,
+            products: nextProducts,
+            settings: {
+              ...state.settings,
+              ...(state.previousSettings ? state.previousSettings : {}),
+              ...clearedSettings,
+              multipleModal: false,
+              dynamicModel: true,
+            },
+            previousSettings: null,
+            previousProducts: null,
+          };
+        }),
+
       addProduct: () =>
         set((state) => {
-          if (state.products.length >= 10) {
+          const maxProducts = state.settings.dynamicModel ? 8 : 10;
+          if (state.products.length >= maxProducts) {
             // Using standard alert instead of library-specific toast
-            alert("Maximum 10 products allowed");
+            alert(`Maximum ${maxProducts} products allowed`);
             return state;
           }
           const firstProduct = state.products[0];
