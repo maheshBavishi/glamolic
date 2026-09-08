@@ -1,5 +1,6 @@
 "use client";
 import { generateImage } from "@/api/generateImage";
+import { generatePoster } from "@/api/generatePoster";
 import Dropdown from "@/components/dropdown";
 import Input from "@/components/input";
 import Switch from "@/components/switch";
@@ -23,6 +24,7 @@ const PlusIcon = "/assets/icons/plus.svg";
 const LineIcon = "/assets/icons/line.svg";
 const DangerIcon = "/assets/icons/danger.svg";
 const multipleUserIcon = "/assets/icons/user_icon.svg";
+const dynamicModelIcon = "/assets/icons/profile-group.svg";
 
 import {
   backgroundTypeOptions,
@@ -283,8 +285,20 @@ export default function WomenCollection() {
   const router = useRouter();
   const { user, profile, userTransactions, updateProfile } = useAuth();
   const { credits, loading: creditsLoading, fetchCredits } = useCreditsStore();
-  const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, clearProductImages, preserveState, setPreserveState, setMultipleModal } =
-    useGenerateStore();
+  const {
+    products,
+    settings,
+    addProduct,
+    removeProduct,
+    updateProduct,
+    updateSettings,
+    resetStore,
+    clearProductImages,
+    preserveState,
+    setPreserveState,
+    setMultipleModal,
+    setDynamicModel,
+  } = useGenerateStore();
   const { uploadImage, isUploading } = useImageUpload();
 
   const handleLogoUpload = async (e) => {
@@ -594,6 +608,11 @@ export default function WomenCollection() {
       return;
     }
 
+    if (settings.dynamicModel && products.length >= 8) {
+      toast.error("Dynamic Model posters support a maximum of 8 products.");
+      return;
+    }
+
     addProduct();
   };
 
@@ -704,28 +723,49 @@ export default function WomenCollection() {
         }),
       );
 
-      const payload = {
-        products: productsWithBase64,
-        settings: {
-          productName: settings.productName || "AI Photoshoot",
-          resolution: settings.resolution || "1k",
-          imageSize: settings.imageSize || "6x9",
-          backgroundType: settings.backgroundType || "studio",
-          unifiedBackground: settings.sameBackground || false,
-          modelConsistency: settings.modelConsistency || false,
-          additionalInstructions: settings.additionalInstructions || [],
-          numberOfImages: settings.imagesPerProduct || 1,
-          aspectRatio: getAspectRatio(settings.imageSize),
-          startingVariationIdx: 0,
-          low_cost: profile?.low_cost,
-          doubleimage: Boolean(settings.multipleModal),
-          logoUrl: settings.applyLogo && profile?.brand_logo_url ? profile.brand_logo_url : "",
-          logoSize: settings.applyLogo ? (settings.logoSize || "medium") : "",
-          show_product_name: Boolean(settings.show_product_name),
-        },
+      const isDynamicModel = Boolean(settings.dynamicModel);
+
+      if (isDynamicModel && (productsWithBase64.length < 1 || productsWithBase64.length > 8)) {
+        toast.error("Dynamic Model posters require between 1 and 8 products.");
+        return;
+      }
+
+      const commonSettings = {
+        productName: settings.productName || "AI Photoshoot",
+        resolution: settings.resolution || "1k",
+        imageSize: settings.imageSize || "6x9",
+        backgroundType: settings.backgroundType || "studio",
+        additionalInstructions: settings.additionalInstructions || [],
+        numberOfImages: settings.imagesPerProduct || 1,
+        aspectRatio: getAspectRatio(settings.imageSize),
+        low_cost: profile?.low_cost,
+        logoUrl: settings.applyLogo && profile?.brand_logo_url ? profile.brand_logo_url : "",
+        logoSize: settings.applyLogo ? (settings.logoSize || "medium") : "",
+        show_product_name: Boolean(settings.show_product_name),
       };
+
       loadingToast = toast.loading("Starting generation...");
-      const response = await generateImage(payload);
+
+      let response;
+      if (isDynamicModel) {
+        // Dynamic Model: combine all products into ONE shared poster image.
+        response = await generatePoster({
+          products: productsWithBase64,
+          settings: commonSettings,
+        });
+      } else {
+        const payload = {
+          products: productsWithBase64,
+          settings: {
+            ...commonSettings,
+            unifiedBackground: settings.sameBackground || false,
+            modelConsistency: settings.modelConsistency || false,
+            startingVariationIdx: 0,
+            doubleimage: Boolean(settings.multipleModal),
+          },
+        };
+        response = await generateImage(payload);
+      }
 
       if (response?.status === "failed") {
         toast.dismiss(loadingToast);
@@ -969,6 +1009,23 @@ export default function WomenCollection() {
                     <div className={styles.items}>
                       <div className={styles.icontext}>
                         <div className={styles.icon}>
+                          <img src={dynamicModelIcon} alt="dynamicModelIcon" />
+                        </div>
+                        <div>
+                          <h5>Dynamic Model</h5>
+                          <p>Combine 1-8 models in one image</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={Boolean(settings.dynamicModel)}
+                        disabled={Boolean(settings.multipleModal)}
+                        onChange={(checked) => setDynamicModel(checked)}
+                      />
+                    </div>
+
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div className={styles.icon}>
                           <img src={multipleUserIcon} alt="multipleUserIcon" />
                         </div>
                         <div>
@@ -978,6 +1035,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.multipleModal)}
+                        disabled={Boolean(settings.dynamicModel)}
                         onChange={(checked) => setMultipleModal(checked)}
                       />
                     </div>
@@ -994,7 +1052,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.isEcommerce)}
-                        disabled={Boolean(settings.multipleModal)}
+                        disabled={Boolean(settings.multipleModal) || Boolean(settings.dynamicModel)}
                         onChange={(checked) => {
                           if (!checked) {
                             updateSettings({
@@ -1027,7 +1085,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.modelConsistency)}
-                        disabled={Boolean(settings.multipleModal)}
+                        disabled={Boolean(settings.multipleModal) || Boolean(settings.dynamicModel)}
                         onChange={(checked) => updateSettings({ modelConsistency: checked })}
                       />
                     </div>
@@ -1044,7 +1102,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.sameBackground)}
-                        disabled={Boolean(settings.multipleModal)}
+                        disabled={Boolean(settings.multipleModal) || Boolean(settings.dynamicModel)}
                         onChange={(checked) => updateSettings({ sameBackground: checked })}
                       />
                     </div>
@@ -1155,7 +1213,7 @@ export default function WomenCollection() {
 
                       return (
                         <div key={product.id} className={styles.productInformation} style={index > 0 ? { marginTop: "16px" } : undefined}>
-                          {products.length > 1 ? (
+                          {products.length > 1 || settings.dynamicModel ? (
                             <div className={styles.productHeader}>
                               <p>Product {index + 1}</p>
                               {index > 0 && !settings.multipleModal ? (
@@ -1332,7 +1390,7 @@ export default function WomenCollection() {
                           </div>
                           {isLastProduct ? (
                             <>
-                              {!settings.multipleModal && (
+                              {!settings.multipleModal && !(settings.dynamicModel && products.length >= 8) && (
                                 <>
                                   <div
                                     className={styles.addanother}
@@ -1345,7 +1403,7 @@ export default function WomenCollection() {
                                     <div className={styles.iconcenter}>
                                       <img src={PlusIcon} alt="PlusIcon" />
                                     </div>
-                                    <p>Add another product</p>
+                                    <p>{settings.dynamicModel ? "Add another model" : "Add another product"}</p>
                                   </div>
                                   {!canAddProduct ? (
                                     <div className={styles.importantMessage}>
@@ -1354,6 +1412,11 @@ export default function WomenCollection() {
                                   ) : null}
                                 </>
                               )}
+                              {settings.dynamicModel && products.length >= 8 ? (
+                                <div className={styles.importantMessage}>
+                                  <p>Maximum of 8 models reached for a Dynamic Model poster.</p>
+                                </div>
+                              ) : null}
                               <div className={styles.estimateBox}>
                                 <div className={styles.contentAlignment}>
                                   <div className={styles.leftAlignment}>
