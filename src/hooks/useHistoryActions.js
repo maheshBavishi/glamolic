@@ -16,46 +16,95 @@ function parseSupabaseStorageUrl(url) {
   try {
     const { pathname } = new URL(url);
     const signedMatch = pathname.match(/^\/storage\/v1\/object\/sign\/([^/]+)\/(.+)$/);
-    if (signedMatch) return { bucket: signedMatch[1], path: signedMatch[2] };
+    if (signedMatch) return { bucket: signedMatch[1], path: decodeURIComponent(signedMatch[2]) };
     const publicMatch = pathname.match(/^\/storage\/v1\/object\/public\/([^/]+)\/(.+)$/);
-    if (publicMatch) return { bucket: publicMatch[1], path: publicMatch[2] };
+    if (publicMatch) return { bucket: publicMatch[1], path: decodeURIComponent(publicMatch[2]) };
+    const authMatch = pathname.match(/^\/storage\/v1\/object\/authenticated\/([^/]+)\/(.+)$/);
+    if (authMatch) return { bucket: authMatch[1], path: decodeURIComponent(authMatch[2]) };
+    const directMatch = pathname.match(/^\/storage\/v1\/object\/([^/]+)\/(.+)$/);
+    if (directMatch) return { bucket: directMatch[1], path: decodeURIComponent(directMatch[2]) };
   } catch {
     // malformed URL — fall through
   }
   return null;
 }
 
-async function downloadBlob(url, signal) {
+async function downloadBlob(url, signal, maxRetries = 2) {
   const storageInfo = parseSupabaseStorageUrl(url);
-  if (storageInfo) {
-    const { data, error } = await supabase.storage.from(storageInfo.bucket).download(storageInfo.path);
-    if (!error && data instanceof Blob) {
-      return data;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    if (signal?.aborted) {
+      const err = new Error("Download aborted");
+      err.name = "AbortError";
+      throw err;
     }
-    console.warn("supabase.storage.download failed, falling back to fetch:", error?.message);
+
+    if (attempt > 0) {
+      await new Promise((res) => setTimeout(res, 500 * attempt));
+    }
+
+    // 1. Try Supabase Storage SDK download if URL matches Supabase storage pattern
+    if (storageInfo) {
+      try {
+        const { data, error } = await supabase.storage
+          .from(storageInfo.bucket)
+          .download(storageInfo.path);
+
+        if (!error && data instanceof Blob) {
+          return data;
+        }
+        console.warn(`supabase.storage.download attempt ${attempt + 1} failed:`, error?.message);
+
+        // Try getting fresh signed URL as fallback for Supabase storage
+        const { data: signedData } = await supabase.storage
+          .from(storageInfo.bucket)
+          .createSignedUrl(storageInfo.path, 60);
+
+        if (signedData?.signedUrl) {
+          const resp = await fetch(signedData.signedUrl);
+          if (resp.ok) {
+            return await resp.blob();
+          }
+        }
+      } catch (err) {
+        console.warn(`Supabase SDK download error on attempt ${attempt + 1}:`, err);
+      }
+    }
+
+    // 2. Direct fetch fallback
+    const timeoutController = new AbortController();
+    const timeoutId = setTimeout(() => timeoutController.abort(), FETCH_TIMEOUT_MS);
+    const signals = [timeoutController.signal, ...(signal ? [signal] : [])];
+    const combinedSignal =
+      typeof AbortSignal.any === "function"
+        ? AbortSignal.any(signals)
+        : (() => {
+            const ctrl = new AbortController();
+            const abort = () => ctrl.abort();
+            signals.forEach((s) => {
+              if (s.aborted) ctrl.abort();
+              else s.addEventListener("abort", abort, { once: true });
+            });
+            return ctrl.signal;
+          })();
+
+    try {
+      const response = await fetch(url, { signal: combinedSignal });
+      if (response.ok) {
+        return await response.blob();
+      }
+      console.warn(`Direct fetch attempt ${attempt + 1} failed with status ${response.status}`);
+    } catch (fetchErr) {
+      if (fetchErr?.name === "AbortError" && signal?.aborted) {
+        throw fetchErr;
+      }
+      console.warn(`Direct fetch attempt ${attempt + 1} threw error:`, fetchErr);
+    } finally {
+      clearTimeout(timeoutId);
+    }
   }
-  const timeoutController = new AbortController();
-  const timeoutId = setTimeout(() => timeoutController.abort(), FETCH_TIMEOUT_MS);
-  const signals = [timeoutController.signal, ...(signal ? [signal] : [])];
-  const combinedSignal =
-    typeof AbortSignal.any === "function"
-      ? AbortSignal.any(signals)
-      : (() => {
-          const ctrl = new AbortController();
-          const abort = () => ctrl.abort();
-          signals.forEach((s) => {
-            if (s.aborted) ctrl.abort();
-            else s.addEventListener("abort", abort, { once: true });
-          });
-          return ctrl.signal;
-        })();
-  try {
-    const response = await fetch(url, { signal: combinedSignal });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return await response.blob();
-  } finally {
-    clearTimeout(timeoutId);
-  }
+
+  throw new Error(`Failed to fetch image after ${maxRetries + 1} attempts: ${url}`);
 }
 
 async function pooledMap(items, limit, worker) {
