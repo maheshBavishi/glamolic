@@ -26,16 +26,26 @@ function parseSupabaseStorageUrl(url) {
 }
 
 async function downloadBlob(url, signal) {
+  console.log("[Download] downloadBlob called with URL:", url);
+
   const storageInfo = parseSupabaseStorageUrl(url);
   if (storageInfo) {
+    console.log("[Download] Detected Supabase storage URL — bucket:", storageInfo.bucket, "path:", storageInfo.path);
     const { data, error } = await supabase.storage.from(storageInfo.bucket).download(storageInfo.path);
     if (!error && data instanceof Blob) {
+      console.log("[Download] Supabase storage download succeeded. Blob size:", data.size, "bytes");
       return data;
     }
-    console.warn("supabase.storage.download failed, falling back to fetch:", error?.message);
+    console.warn("[Download] supabase.storage.download failed, falling back to fetch. Error:", error?.message, "| data:", data);
+  } else {
+    console.log("[Download] Not a Supabase storage URL — using direct fetch.");
   }
+
   const timeoutController = new AbortController();
-  const timeoutId = setTimeout(() => timeoutController.abort(), FETCH_TIMEOUT_MS);
+  const timeoutId = setTimeout(() => {
+    console.warn("[Download] Fetch timed out after", FETCH_TIMEOUT_MS, "ms for URL:", url);
+    timeoutController.abort();
+  }, FETCH_TIMEOUT_MS);
   const signals = [timeoutController.signal, ...(signal ? [signal] : [])];
   const combinedSignal =
     typeof AbortSignal.any === "function"
@@ -50,9 +60,16 @@ async function downloadBlob(url, signal) {
           return ctrl.signal;
         })();
   try {
+    console.log("[Download] Fetching via HTTP:", url);
     const response = await fetch(url, { signal: combinedSignal });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return await response.blob();
+    console.log("[Download] Fetch response status:", response.status, response.statusText, "for URL:", url);
+    if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+    const blob = await response.blob();
+    console.log("[Download] Fetch blob received. Size:", blob.size, "bytes, type:", blob.type);
+    return blob;
+  } catch (err) {
+    console.error("[Download] Fetch failed for URL:", url, "| Error:", err?.name, err?.message);
+    throw err;
   } finally {
     clearTimeout(timeoutId);
   }
@@ -90,17 +107,24 @@ export const useHistoryActions = () => {
   };
 
   const handleDownloadImage = async (item, index) => {
+    console.log("[Download] handleDownloadImage called — item.id:", item?.id, "index:", index);
     try {
       const imageUrls = await fetchDownloadImageUrls(item);
-      const url = imageUrls[index];
+      console.log("[Download] Fetched image URLs from DB. Total URLs:", imageUrls.length, "| URLs:", imageUrls);
 
+      const url = imageUrls[index];
       if (!url) {
+        console.error("[Download] No URL found at index", index, "in imageUrls:", imageUrls);
         throw new Error("Image URL not found");
       }
+
+      console.log("[Download] Starting single image download. URL:", url);
       const blob = await downloadBlob(url);
+      console.log("[Download] Blob ready — calling saveAs. Filename: image-" + (index + 1) + ".jpg");
       saveAs(blob, `image-${index + 1}.jpg`);
+      console.log("[Download] saveAs triggered successfully for index", index);
     } catch (error) {
-      console.error("Error downloading image:", error);
+      console.error("[Download] handleDownloadImage failed — item.id:", item?.id, "index:", index, "| Error:", error?.name, error?.message, error);
       toast.error("Failed to download image. The file may have been deleted.");
     }
   };
@@ -119,7 +143,9 @@ export const useHistoryActions = () => {
    *   { phase: 'fetching'|'zipping'|'saving', fetched: number, total: number, zipPercent: number }
    */
   const startDownloadAll = async (item, { onProgress, onComplete, onError, signal } = {}) => {
+    console.log("[Download] startDownloadAll called — item.id:", item?.id, "productName:", item?.productName);
     const report = (state) => {
+      console.log("[Download] Progress update:", JSON.stringify(state));
       if (typeof onProgress === "function") onProgress(state);
     };
 
@@ -127,9 +153,12 @@ export const useHistoryActions = () => {
       report({ phase: "fetching", fetched: 0, total: 0, zipPercent: 0, bytesFetched: 0 });
 
       const imageUrls = await fetchDownloadImageUrls(item);
+      console.log("[Download] Raw imageUrls from DB:", imageUrls);
       const validImages = imageUrls.filter(Boolean);
+      console.log("[Download] Valid images count:", validImages.length);
 
       if (validImages.length === 0) {
+        console.error("[Download] No valid images found. Raw imageUrls:", imageUrls);
         throw new Error("No valid images found to download");
       }
 
@@ -141,16 +170,21 @@ export const useHistoryActions = () => {
       let bytesFetched = 0;
 
       await pooledMap(validImages, DOWNLOAD_CONCURRENCY, async (url, index) => {
-        if (signal?.aborted) return;
+        if (signal?.aborted) {
+          console.log("[Download] Aborted before fetching image", index + 1);
+          return;
+        }
 
+        console.log(`[Download] Fetching image ${index + 1}/${validImages.length} — URL:`, url);
         try {
           const blob = await downloadBlob(url, signal);
           zip.file(`image-${index + 1}.jpg`, blob);
           bytesFetched += blob.size;
           fetched++;
+          console.log(`[Download] Image ${index + 1} added to ZIP. Size: ${blob.size} bytes. Total fetched: ${fetched}`);
         } catch (err) {
           if (err?.name === "AbortError" && signal?.aborted) throw err; // user cancelled
-          console.error(`Failed to fetch image ${index + 1}:`, err);
+          console.error(`[Download] Failed to fetch image ${index + 1}. URL: ${url} | Error:`, err?.name, err?.message);
           errors++;
           fetched++;
         }
@@ -164,14 +198,20 @@ export const useHistoryActions = () => {
         });
       });
 
-      if (signal?.aborted) return;
+      if (signal?.aborted) {
+        console.log("[Download] Download aborted after fetching phase.");
+        return;
+      }
 
       const successCount = fetched - errors;
+      console.log(`[Download] Fetch phase done. Success: ${successCount}, Errors: ${errors}, Total: ${validImages.length}`);
+
       if (successCount === 0) {
         throw new Error("Failed to download any images");
       }
 
       // ZIP compression phase
+      console.log("[Download] Starting ZIP compression...");
       report({ phase: "zipping", fetched, total: validImages.length, zipPercent: 0, bytesFetched });
 
       const content = await zip.generateAsync(
@@ -192,19 +232,28 @@ export const useHistoryActions = () => {
         },
       );
 
-      if (signal?.aborted) return;
+      if (signal?.aborted) {
+        console.log("[Download] Download aborted after zipping phase.");
+        return;
+      }
 
+      console.log("[Download] ZIP generated. Size:", content.size, "bytes. Triggering saveAs...");
       report({ phase: "saving", fetched, total: validImages.length, zipPercent: 100, bytesFetched });
 
       const fileName = `${(item.productName || "images").replace(/\s+/g, "-").toLowerCase()}.zip`;
+      console.log("[Download] Saving ZIP as:", fileName);
       saveAs(content, fileName);
+      console.log("[Download] saveAs called successfully.");
 
       if (typeof onComplete === "function") {
         onComplete({ successCount, errorCount: errors, total: validImages.length });
       }
     } catch (err) {
-      if (err?.name === "AbortError") return; // user cancelled — silent
-      console.error("ZIP download failed:", err);
+      if (err?.name === "AbortError") {
+        console.log("[Download] Download cancelled by user.");
+        return; // user cancelled — silent
+      }
+      console.error("[Download] startDownloadAll fatal error:", err?.name, err?.message, err);
       if (typeof onError === "function") {
         onError(err);
       }
