@@ -416,6 +416,7 @@ export default function GeneratedImages({ item }) {
             numberOfImages: imagesPerProduct,
             aspectRatio: "2:3",
             startingVariationIdx: item.settings?.startingVariationIdx || 0,
+            low_cost: profile?.low_cost,
           },
           imageUrl: imageUrl,
           targetIndex: imageIndexInProduct,

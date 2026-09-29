@@ -37,11 +37,6 @@ export const regenerateImage = async (payload) => {
   const baseUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_BACKEND_URL) || DEFAULT_BACKEND_URL;
   const requestUrl = `${baseUrl}/regenerate`;
 
-  const updatedPayload = {
-    ...payload,
-    low_cost: false,
-  };
-
   const response = await fetch(requestUrl, {
     method: "POST",
     headers: {
@@ -50,7 +45,7 @@ export const regenerateImage = async (payload) => {
       Authorization: `Bearer ${token}`,
       "ngrok-skip-browser-warning": "true",
     },
-    body: JSON.stringify(updatedPayload),
+    body: JSON.stringify(payload),
   });
 
   if (response?.status === 401) {

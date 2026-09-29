@@ -274,6 +274,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
         model: "bytedance/seedance-2.0",
         provider: "wavespeed",
         upscaling: false,
+        low_cost: profile?.low_cost,
       };
       await generateVideo(payload);
       toast.success("Video generation started! You will be notified when it's ready.");

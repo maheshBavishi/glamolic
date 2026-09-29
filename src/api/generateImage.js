@@ -39,14 +39,6 @@ export const generateImage = async (payload) => {
   const endPoint = payload?.settings?.doubleimage ? "/generate-double" : "/generate";
   const requestUrl = `${baseUrl}${endPoint}`;
 
-  const updatedPayload = {
-    ...payload,
-    settings: {
-      ...payload?.settings,
-      low_cost: false,
-    },
-  };
-
   const response = await fetch(requestUrl, {
     method: "POST",
     headers: {
@@ -55,7 +47,7 @@ export const generateImage = async (payload) => {
       Authorization: `Bearer ${token}`,
       "ngrok-skip-browser-warning": "true",
     },
-    body: JSON.stringify(updatedPayload),
+    body: JSON.stringify(payload),
   });
 
   if (response?.status === 401) {
