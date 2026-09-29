@@ -9,7 +9,7 @@ import { collectImageUrls } from "@/utils/imageUrlUtils";
 /** Maximum simultaneous image fetches to avoid network saturation */
 const DOWNLOAD_CONCURRENCY = 3;
 
-const FETCH_TIMEOUT_MS = 90_000; // increased: AI images are 8-10MB, 30s was too short
+const FETCH_TIMEOUT_MS = 300_000; // 8K images are now lossless PNGs up to ~100MB, 90s was too short
 
 function parseSupabaseStorageUrl(url) {
   if (!url) return null;
@@ -107,6 +107,14 @@ async function downloadBlob(url, signal, maxRetries = 2) {
   throw new Error(`Failed to fetch image after ${maxRetries + 1} attempts: ${url}`);
 }
 
+function getExtensionFromBlob(blob) {
+  const type = blob?.type || "";
+  if (type.includes("png")) return "png";
+  if (type.includes("webp")) return "webp";
+  if (type.includes("jpeg") || type.includes("jpg")) return "jpg";
+  return "jpg";
+}
+
 async function pooledMap(items, limit, worker) {
   const results = new Array(items.length);
   let nextIndex = 0;
@@ -152,8 +160,9 @@ export const useHistoryActions = () => {
 
       console.log("[Download] Starting single image download. URL:", url);
       const blob = await downloadBlob(url);
-      console.log("[Download] Blob ready — calling saveAs. Filename: image-" + (index + 1) + ".jpg");
-      saveAs(blob, `image-${index + 1}.jpg`);
+      const ext = getExtensionFromBlob(blob);
+      console.log(`[Download] Blob ready — calling saveAs. Filename: image-${index + 1}.${ext}`);
+      saveAs(blob, `image-${index + 1}.${ext}`);
       console.log("[Download] saveAs triggered successfully for index", index);
     } catch (error) {
       console.error("[Download] handleDownloadImage failed — item.id:", item?.id, "index:", index, "| Error:", error?.name, error?.message, error);
@@ -210,7 +219,7 @@ export const useHistoryActions = () => {
         console.log(`[Download] Fetching image ${index + 1}/${validImages.length} — URL:`, url);
         try {
           const blob = await downloadBlob(url, signal);
-          zip.file(`image-${index + 1}.jpg`, blob);
+          zip.file(`image-${index + 1}.${getExtensionFromBlob(blob)}`, blob);
           bytesFetched += blob.size;
           fetched++;
           console.log(`[Download] Image ${index + 1} added to ZIP. Size: ${blob.size} bytes. Total fetched: ${fetched}`);
