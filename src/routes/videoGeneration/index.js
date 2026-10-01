@@ -275,6 +275,7 @@ export default function VideoGeneration({ imageUrl = "", productName = "" }) {
         provider: "wavespeed",
         upscaling: false,
         low_cost: profile?.low_cost,
+        glamolic: true,
       };
       await generateVideo(payload);
       toast.success("Video generation started! You will be notified when it's ready.");

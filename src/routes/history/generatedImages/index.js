@@ -417,6 +417,7 @@ export default function GeneratedImages({ item }) {
             aspectRatio: "2:3",
             startingVariationIdx: item.settings?.startingVariationIdx || 0,
             low_cost: profile?.low_cost,
+            glamolic: true,
           },
           imageUrl: imageUrl,
           targetIndex: imageIndexInProduct,
