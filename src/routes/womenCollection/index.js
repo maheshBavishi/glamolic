@@ -722,6 +722,7 @@ export default function WomenCollection() {
           logoUrl: settings.applyLogo && profile?.brand_logo_url ? profile.brand_logo_url : "",
           logoSize: settings.applyLogo ? (settings.logoSize || "medium") : "",
           show_product_name: Boolean(settings.show_product_name),
+          glamolic: true,
         },
       };
       loadingToast = toast.loading("Starting generation...");
