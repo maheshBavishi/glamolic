@@ -333,7 +333,7 @@ export default function SimpleAffordable() {
         </motion.div>
 
         {/* WhatsApp Claim Banner — shown only to logged-in users who haven't claimed yet */}
-        {user && hasClaimed === false && (
+        {/* {user && hasClaimed === false && (
           <motion.div
             className={styles.whatsappClaimBanner}
             initial={{ opacity: 0, y: -12 }}
@@ -353,7 +353,7 @@ export default function SimpleAffordable() {
               Claim Now
             </button>
           </motion.div>
-        )}
+        )} */}
 
         {isLoadingPlans ? (
           <div className={styles.loadingState}>
@@ -506,14 +506,14 @@ export default function SimpleAffordable() {
         onClose={closePhoneModal}
         onConfirm={handlePhoneConfirm}
       />
-      <WhatsAppVerificationModal
+      {/* <WhatsAppVerificationModal
         isOpen={isWhatsappModalOpen}
         onClose={() => setIsWhatsappModalOpen(false)}
         onVerified={() => {
           setHasClaimed(true);
           setIsWhatsappModalOpen(false);
         }}
-      />
+      /> */}
     </div>
   );
 }
