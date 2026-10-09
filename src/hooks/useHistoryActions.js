@@ -89,7 +89,12 @@ async function downloadBlob(url, signal, maxRetries = 2) {
         })();
 
     try {
-      const response = await fetch(url, { signal: combinedSignal });
+      const response = await fetch(url, {
+        signal: combinedSignal,
+        mode: "cors",
+        cache: "no-store",
+      });
+
       if (response.ok) {
         return await response.blob();
       }

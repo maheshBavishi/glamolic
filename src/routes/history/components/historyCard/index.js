@@ -92,11 +92,17 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
   const instructionGroups = (() => {
     const groupsFromProducts = productMetadata
       .map((product, productIndex) => {
+        const productPrompts = Array.isArray(product?.customPrompt)
+          ? product.customPrompt.filter(hasText)
+          : [];
         const productInstructions = Array.isArray(product?.additionalInstructions)
           ? product.additionalInstructions.filter(hasText)
           : [];
 
-        if (productInstructions.length === 0) return null;
+        const instructions = productPrompts.length > 0 ? productPrompts : productInstructions;
+        const isCustomPrompt = productPrompts.length > 0 || product?.promptMode === "custom";
+
+        if (instructions.length === 0) return null;
 
         const productType = [product?.itemType, product?.subCategory].filter(hasText).join(" - ");
 
@@ -104,7 +110,8 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
           productIndex,
           title: `Product ${productIndex + 1}`,
           subtitle: productType || item?.productName || "",
-          instructions: productInstructions,
+          instructions: instructions,
+          isCustomPrompt,
         };
       })
       .filter(Boolean);
@@ -113,17 +120,23 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
       return groupsFromProducts;
     }
 
+    const settingsPrompts = Array.isArray(settings?.customPrompt)
+      ? settings.customPrompt.filter(hasText)
+      : [];
     const settingsInstructions = Array.isArray(settings?.additionalInstructions)
       ? settings.additionalInstructions.filter(hasText)
       : [];
 
-    if (settingsInstructions.length > 0) {
+    const fallbackInstructions = settingsPrompts.length > 0 ? settingsPrompts : settingsInstructions;
+
+    if (fallbackInstructions.length > 0) {
       return [
         {
           productIndex: 0,
           title: "Product 1",
           subtitle: item?.productName || "",
-          instructions: settingsInstructions,
+          instructions: fallbackInstructions,
+          isCustomPrompt: settingsPrompts.length > 0 || settings?.promptMode === "custom",
         },
       ];
     }
@@ -141,6 +154,7 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
             title: "Product 1",
             subtitle: item?.productName || "",
             instructions: descriptionInstructions,
+            isCustomPrompt: false,
           },
         ];
       }
@@ -255,7 +269,7 @@ export default function HistoryCard({ item, isExpanded, onToggleExpand }) {
           <div className={styles.additionalInstructions}>
             <div className={styles.icontext}>
               <NoteIcon />
-              <h3>Additional Instructions</h3>
+              <h3>{instructionGroups.some((g) => g.isCustomPrompt) ? "Custom Prompt(s)" : "Additional Instructions"}</h3>
             </div>
             {instructionGroups.length > 0 ? (
               <div className={styles.instructionsList}>

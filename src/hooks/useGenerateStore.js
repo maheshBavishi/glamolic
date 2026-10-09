@@ -14,6 +14,7 @@ const NON_PERSISTED_IMAGE_FIELDS = [
 ];
 
 const createInitialSettings = () => ({
+  promptMode: "structured", // "structured" | "custom"
   resolution: "2k",
   imageOrientation: "portrait",
   imageSize: "12x18",
@@ -23,6 +24,7 @@ const createInitialSettings = () => ({
   sameBackground: true,
   backgroundType: "studio",
   additionalInstructions: ["", ""],
+  customPrompt: ["", ""],
   gender: "",
   isEcommerce: false,
   ecommerceViewTypes: [],
@@ -47,12 +49,19 @@ const createInitialProduct = (id = "1", imagesPerProduct = 2) => ({
   dupattaImage: null,
   referenceImage: null,
   additionalInstructions: Array(imagesPerProduct).fill(""),
+  customPrompt: Array(imagesPerProduct).fill(""),
 });
 
-const sanitizeProductForRetention = (product) => {
+const sanitizeProductForRetention = (product, clearPrompts = false) => {
+  const imagesCount = Array.isArray(product?.customPrompt) && product.customPrompt.length > 0 ? product.customPrompt.length : 2;
   const nextProduct = {
     ...product,
-    additionalInstructions: Array.isArray(product?.additionalInstructions) ? product.additionalInstructions : [],
+    additionalInstructions: clearPrompts
+      ? Array(imagesCount).fill("")
+      : (Array.isArray(product?.additionalInstructions) ? product.additionalInstructions : []),
+    customPrompt: clearPrompts
+      ? Array(imagesCount).fill("")
+      : (Array.isArray(product?.customPrompt) ? product.customPrompt : []),
   };
 
   NON_PERSISTED_IMAGE_FIELDS.forEach((field) => {
@@ -132,6 +141,7 @@ export const useGenerateStore = create(
               dupattaImage: null,
               referenceImage: null,
               additionalInstructions: Array(state.settings.imagesPerProduct).fill(""),
+              customPrompt: Array(state.settings.imagesPerProduct).fill(""),
             };
             nextProducts.push(newProduct);
           } else if (nextProducts.length > 2) {
@@ -177,6 +187,7 @@ export const useGenerateStore = create(
             dupattaImage: null,
             referenceImage: null,
             additionalInstructions: Array(state.settings.imagesPerProduct).fill(""),
+            customPrompt: Array(state.settings.imagesPerProduct).fill(""),
           };
           return {
             ...state,
@@ -221,10 +232,18 @@ export const useGenerateStore = create(
         })),
 
       clearProductImages: () =>
-        set((state) => ({
-          ...state,
-          products: sanitizeProductsForRetention(state.products),
-        })),
+        set((state) => {
+          const imagesCount = state.settings.imagesPerProduct || 2;
+          return {
+            ...state,
+            settings: {
+              ...state.settings,
+              customPrompt: Array(imagesCount).fill(""),
+              additionalInstructions: Array(imagesCount).fill(""),
+            },
+            products: state.products.map((product) => sanitizeProductForRetention(product, true)),
+          };
+        }),
 
       resetStore: (settingsOverrides = {}) => {
         if (typeof window !== "undefined") {

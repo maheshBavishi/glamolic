@@ -2,6 +2,30 @@
 @use '../../scss/breakpoints/breakpoints.scss' as *;
 
 .dropdown {
+    &.disabled {
+        cursor: not-allowed !important;
+        opacity: 0.7;
+
+        label {
+            cursor: not-allowed !important;
+            color: rgba(18, 18, 18, 0.4);
+        }
+
+        :global([class*="-container"]),
+        :global([class*="-control"]),
+        :global([class*="-ValueContainer"]),
+        :global([class*="-singleValue"]),
+        :global([class*="-placeholder"]),
+        :global([class*="-IndicatorsContainer"]),
+        :global([class*="-indicatorContainer"]),
+        :global(svg),
+        :global(path),
+        * {
+            cursor: not-allowed !important;
+            pointer-events: auto !important;
+        }
+    }
+
     label {
         display: block;
         color: #121212;

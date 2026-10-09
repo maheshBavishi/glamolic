@@ -145,6 +145,72 @@
                     padding: 0 14px;
                 }
 
+                .modeToggleContainer {
+                    margin-bottom: 20px;
+                    padding: 14px;
+                    border-radius: 14px;
+                    background: #F8FAFA;
+                    border: 1px solid rgba(82, 116, 117, 0.15);
+
+                    .modeToggleLabel {
+                        display: block;
+                        color: #121212;
+                        font-size: 15px;
+                        font-weight: 600;
+                        margin-bottom: 10px;
+                        font-family: var(--font-heebo);
+                    }
+
+                    .modeToggleGroup {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 8px;
+                        background: #ECEFF0;
+                        padding: 4px;
+                        border-radius: 10px;
+
+                        .modeButton {
+                            border: none;
+                            background: transparent;
+                            color: #555;
+                            font-size: 13px;
+                            font-weight: 500;
+                            padding: 8px 10px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 6px;
+                            transition: all 0.2s ease;
+                            font-family: var(--font-heebo);
+
+                            .modeIcon {
+                                font-size: 14px;
+                            }
+
+                            &:hover {
+                                color: #121212;
+                            }
+
+                            &.modeButtonActive {
+                                background: #527475;
+                                color: #FFF;
+                                font-weight: 600;
+                                box-shadow: 0 2px 6px rgba(82, 116, 117, 0.25);
+                            }
+                        }
+                    }
+
+                    .modeHelpText {
+                        color: #727272;
+                        font-size: 12px;
+                        line-height: 1.4;
+                        margin-top: 8px;
+                        font-family: var(--font-heebo);
+                    }
+                }
+
                 .subbox {
                     border-radius: 16px;
                     border: 1px solid rgba(18, 18, 18, 0.10);
@@ -490,11 +556,11 @@
                         textarea {
                             padding: 14px 16px;
                             width: 100%;
-                            color: rgba(18, 18, 18, 0.60);
+                            color: rgba(18, 18, 18, 0.90);
                             font-size: 16px;
                             font-style: normal;
                             font-weight: 500;
-                            line-height: normal;
+                            line-height: 1.5;
                             font-family: var(--font-heebo);
                             height: 100px;
                             resize: none;
@@ -502,15 +568,210 @@
                             border: 1px solid rgba(18, 18, 18, 0.10);
                             background: #FFF;
                             outline: none;
+                            transition: border-color 0.2s, box-shadow 0.2s;
+
+                            &:focus {
+                                border-color: #527475;
+                                box-shadow: 0 0 0 3px rgba(82, 116, 117, 0.12);
+                            }
                         }
 
                         ::placeholder {
-                            color: rgba(18, 18, 18, 0.60);
-                            font-size: 16px;
+                            color: rgba(18, 18, 18, 0.45);
+                            font-size: 15px;
                             font-style: normal;
                             font-family: var(--font-heebo);
-                            font-weight: 500;
+                            font-weight: 400;
                             line-height: normal;
+                        }
+                    }
+
+                    .customPromptSection {
+                        margin-top: 24px;
+                        padding: 20px;
+                        border-radius: 16px;
+                        background: linear-gradient(180deg, #FBFDFD 0%, #F5F8F8 100%);
+                        border: 1px solid rgba(82, 116, 117, 0.20);
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+
+                        .promptHeader {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-bottom: 12px;
+                            flex-wrap: wrap;
+                            gap: 10px;
+
+                            .promptTitleGroup {
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+
+                                h2 {
+                                    color: #121212;
+                                    font-size: 20px;
+                                    font-weight: 600;
+                                    margin: 0;
+                                }
+
+                                .promptBadge {
+                                    background: rgba(82, 116, 117, 0.12);
+                                    color: #527475;
+                                    font-size: 11px;
+                                    font-weight: 700;
+                                    letter-spacing: 0.5px;
+                                    padding: 3px 10px;
+                                    border-radius: 20px;
+                                    text-transform: uppercase;
+                                }
+                            }
+
+                            .promptModeBadge {
+                                font-size: 12px;
+                                color: #727272;
+                                font-weight: 500;
+                            }
+                        }
+
+                        .promptDescription {
+                            color: #666;
+                            font-size: 14px;
+                            line-height: 1.4;
+                            margin-bottom: 14px;
+                        }
+
+                        .promptSuggestions {
+                            margin-bottom: 16px;
+
+                            .suggestionsLabel {
+                                font-size: 12px;
+                                font-weight: 600;
+                                color: #527475;
+                                text-transform: uppercase;
+                                letter-spacing: 0.5px;
+                                margin-bottom: 8px;
+                                display: block;
+                            }
+
+                            .chipsContainer {
+                                display: flex;
+                                flex-wrap: wrap;
+                                gap: 8px;
+
+                                .chip {
+                                    border: 1px solid rgba(82, 116, 117, 0.25);
+                                    background: #FFF;
+                                    color: #333;
+                                    font-size: 12px;
+                                    font-weight: 500;
+                                    padding: 6px 14px;
+                                    border-radius: 16px;
+                                    cursor: pointer;
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 6px;
+                                    transition: all 0.2s ease;
+                                    font-family: var(--font-heebo);
+                                    user-select: none;
+
+                                    .chipCheck {
+                                        font-weight: 700;
+                                        font-size: 11px;
+                                        color: #527475;
+                                        transition: color 0.2s ease;
+                                    }
+
+                                    &:hover {
+                                        background: #E8F1F1;
+                                        border-color: #527475;
+                                        color: #121212;
+                                        transform: translateY(-1px);
+                                    }
+
+                                    &.chipActive {
+                                        background: #527475;
+                                        border-color: #527475;
+                                        color: #FFF;
+                                        font-weight: 600;
+                                        box-shadow: 0 2px 8px rgba(82, 116, 117, 0.28);
+
+                                        .chipCheck {
+                                            color: #FFF;
+                                        }
+
+                                        &:hover {
+                                            background: #446263;
+                                            border-color: #446263;
+                                            color: #FFF;
+                                        }
+                                    }
+
+                                    &:active {
+                                        transform: translateY(0);
+                                    }
+                                }
+                            }
+                        }
+
+                        .promptGrid {
+                            display: grid;
+                            grid-template-columns: 1fr;
+                            gap: 16px;
+
+                            .promptCard {
+                                background: #FFF;
+                                border: 1px solid rgba(18, 18, 18, 0.10);
+                                border-radius: 12px;
+                                padding: 14px;
+
+                                .promptCardHeader {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: space-between;
+                                    margin-bottom: 8px;
+
+                                    label {
+                                        font-size: 14px;
+                                        font-weight: 600;
+                                        color: #121212;
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 6px;
+                                    }
+
+                                    .charCount {
+                                        font-size: 12px;
+                                        color: #888;
+                                    }
+                                }
+
+                                textarea {
+                                    width: 100%;
+                                    min-height: 110px;
+                                    padding: 12px 14px;
+                                    border-radius: 8px;
+                                    border: 1px solid rgba(18, 18, 18, 0.12);
+                                    background: #FAFAFA;
+                                    font-size: 15px;
+                                    font-family: var(--font-heebo);
+                                    color: #121212;
+                                    line-height: 1.5;
+                                    resize: vertical;
+                                    outline: none;
+                                    transition: border-color 0.2s, background 0.2s;
+
+                                    &:focus {
+                                        background: #FFF;
+                                        border-color: #527475;
+                                        box-shadow: 0 0 0 3px rgba(82, 116, 117, 0.12);
+                                    }
+
+                                    &::placeholder {
+                                        color: #999;
+                                        font-size: 14px;
+                                    }
+                                }
+                            }
                         }
                     }
 

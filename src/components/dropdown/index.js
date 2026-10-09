@@ -5,6 +5,11 @@ import styles from './dropdown.module.scss';
 
 const customStyles = (hasError) => {
   return {
+    container: (provided, state) => ({
+      ...provided,
+      cursor: state.isDisabled ? 'not-allowed !important' : 'default',
+      pointerEvents: 'auto',
+    }),
     control: (provided, state) => ({
       ...provided,
       width: '100%',
@@ -16,18 +21,23 @@ const customStyles = (hasError) => {
         : state.isFocused
           ? '1px solid #647F80'
           : '1px solid rgba(18, 18, 18, 0.10)',
-      background: '#FFF',
+      background: state.isDisabled ? '#F7F8F8' : '#FFF',
       padding: '0 4px',
       boxShadow: 'none',
-      cursor: 'pointer',
+      cursor: state.isDisabled ? 'not-allowed !important' : 'pointer',
+      opacity: state.isDisabled ? 0.7 : 1,
+      pointerEvents: state.isDisabled ? 'auto !important' : 'auto',
       '&:hover': {
         border: hasError ? '1px solid #E23030' : '1px solid rgba(18, 18, 18, 0.10)',
+        cursor: state.isDisabled ? 'not-allowed !important' : 'pointer',
       },
     }),
-    valueContainer: (provided) => ({
+    valueContainer: (provided, state) => ({
       ...provided,
       padding: '0 12px',
       height: '54px',
+      cursor: state.isDisabled ? 'not-allowed !important' : 'inherit',
+      pointerEvents: state.isDisabled ? 'auto !important' : 'inherit',
     }),
     input: (provided) => ({
       ...provided,
@@ -178,7 +188,7 @@ export default function Dropdown({
     `dropdown-${generatedId}`;
 
   return (
-    <div className={styles.dropdown}>
+    <div className={`${styles.dropdown} ${disabled ? styles.disabled : ''}`}>
       {label && <label>{label}</label>}
       <Select
         options={options}

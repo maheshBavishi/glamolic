@@ -58,6 +58,53 @@ const formatViewLabel = (value) =>
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
 
+const PROMPT_STYLE_SUGGESTIONS = [
+  { label: "📸 Editorial Magazine", text: "High-fashion editorial photoshoot, dramatic studio lighting, sharp focus, 8k" },
+  { label: "🌅 Golden Hour", text: "Warm golden hour natural sunlight, sunbeams, outdoor luxury terrace, soft bokeh" },
+  { label: "🏛️ Parisian Luxury", text: "Elegant classic Parisian apartment, tall ornate windows, marble flooring, soft morning light" },
+  { label: "🏙️ Urban Street Style", text: "Chic modern street style in downtown Milan, architectural background, cinematic atmosphere" },
+  { label: "💡 Minimalist Studio", text: "Seamless minimalist photography studio, soft diffused rim light, crisp textile details" },
+  { label: "🌿 Botanical Garden", text: "Lush tropical greenhouse, natural soft sunlight, vibrant green foliage background" },
+  { label: "🌃 Moody Night", text: "Atmospheric night city with soft neon reflections, cinematic moody backlighting" },
+];
+
+const togglePromptSuggestion = (currentPrompt, suggestionText) => {
+  const text = String(currentPrompt || "").trim();
+  if (!text) {
+    return suggestionText;
+  }
+  const lowerText = text.toLowerCase();
+  const lowerSuggestion = suggestionText.toLowerCase();
+
+  if (lowerText.includes(lowerSuggestion)) {
+    const startIdx = lowerText.indexOf(lowerSuggestion);
+    const before = text.slice(0, startIdx);
+    const after = text.slice(startIdx + suggestionText.length);
+    const combined = `${before} ${after}`
+      .replace(/,\s*,/g, ",")
+      .replace(/\s*,\s*$/, "")
+      .replace(/^\s*,\s*/, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+    return combined;
+  } else {
+    const cleaned = text.replace(/,\s*$/, "").trim();
+    return cleaned ? `${cleaned}, ${suggestionText}` : suggestionText;
+  }
+};
+
+const isSuggestionActive = (promptVal, suggestionText) => {
+  if (!promptVal) return false;
+  const lowerSuggestion = suggestionText.toLowerCase();
+  if (Array.isArray(promptVal)) {
+    return promptVal.some((p) => typeof p === "string" && p.toLowerCase().includes(lowerSuggestion));
+  }
+  if (typeof promptVal === "string") {
+    return promptVal.toLowerCase().includes(lowerSuggestion);
+  }
+  return false;
+};
+
 const validateImageFile = (file) => {
   const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
   const maxSizeInBytes = 7 * 1024 * 1024;
@@ -464,6 +511,21 @@ export default function WomenCollection() {
     });
   }, [products, settings.imagesPerProduct, updateProduct]);
 
+  useEffect(() => {
+    products.forEach((product) => {
+      const nextPrompts = resizeInstructions(product.customPrompt, settings.imagesPerProduct || 1);
+      const currentPrompts = Array.isArray(product.customPrompt) ? product.customPrompt : [];
+
+      const isDifferent =
+        currentPrompts.length !== nextPrompts.length ||
+        currentPrompts.some((prompt, index) => prompt !== nextPrompts[index]);
+
+      if (isDifferent) {
+        updateProduct(product.id, "customPrompt", nextPrompts);
+      }
+    });
+  }, [products, settings.imagesPerProduct, updateProduct]);
+
   const clearImageErrors = useCallback((productIndex) => {
     setFormErrors((prev) => {
       const nextProducts = [...(prev.products || [])];
@@ -654,7 +716,9 @@ export default function WomenCollection() {
             frontPreview: frontBase64,
             backPreview: backBase64,
             referenceImage: "",
-            additionalInstructions: Array.isArray(product.additionalInstructions) ? product.additionalInstructions : [],
+            additionalInstructions: settings.promptMode === "custom" ? [] : (Array.isArray(product.additionalInstructions) ? product.additionalInstructions : []),
+            customPrompt: settings.promptMode === "custom" ? (Array.isArray(product.customPrompt) ? product.customPrompt : []) : [],
+            promptMode: settings.promptMode === "custom" ? "custom" : "structured",
             poses: settings.isEcommerce
               ? getSortedViews(settings.ecommerceViewTypes || [])
                 .filter((viewType) => VIEW_ORDER.includes(viewType))
@@ -704,6 +768,7 @@ export default function WomenCollection() {
         }),
       );
 
+      const isCustomPromptMode = settings.promptMode === "custom";
       const payload = {
         products: productsWithBase64,
         settings: {
@@ -713,7 +778,9 @@ export default function WomenCollection() {
           backgroundType: settings.backgroundType || "studio",
           unifiedBackground: settings.sameBackground || false,
           modelConsistency: settings.modelConsistency || false,
-          additionalInstructions: settings.additionalInstructions || [],
+          promptMode: isCustomPromptMode ? "custom" : "structured",
+          customPrompt: isCustomPromptMode ? (settings.customPrompt || []) : [],
+          additionalInstructions: isCustomPromptMode ? [] : (settings.additionalInstructions || []),
           numberOfImages: settings.imagesPerProduct || 1,
           aspectRatio: getAspectRatio(settings.imageSize),
           startingVariationIdx: 0,
@@ -792,6 +859,43 @@ export default function WomenCollection() {
                 <div className={styles.boxtitle}>
                   <h2>Generation Settings</h2>
                 </div>
+                <div className={styles.modeToggleContainer}>
+                  <label className={styles.modeToggleLabel}>Generation Mode</label>
+                  <div className={styles.modeToggleGroup}>
+                    <button
+                      type="button"
+                      className={`${styles.modeButton} ${settings.promptMode !== "custom" ? styles.modeButtonActive : ""}`}
+                      onClick={() => updateSettings({ promptMode: "structured" })}
+                    >
+                      <span className={styles.modeIcon}>✨</span>
+                      <span>Structured Mode</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.modeButton} ${settings.promptMode === "custom" ? styles.modeButtonActive : ""}`}
+                      onClick={() => {
+                        updateSettings({
+                          promptMode: "custom",
+                          isEcommerce: false,
+                          ecommerceViewTypes: [],
+                          additionalImagesCount: 0,
+                          sameBackground: false,
+                        });
+                        if (settings.multipleModal) {
+                          setMultipleModal(false);
+                        }
+                      }}
+                    >
+                      <span className={styles.modeIcon}>🎨</span>
+                      <span>Custom Prompt</span>
+                    </button>
+                  </div>
+                  <p className={styles.modeHelpText}>
+                    {settings.promptMode === "custom"
+                      ? "Direct AI prompt control — describe your scene, model styling, lighting & mood."
+                      : "Use structured presets for background, lighting, and e-commerce views."}
+                  </p>
+                </div>
                 <div className={styles.lightbox}>
                   <div className={styles.singleGrid}>
                     <Input
@@ -837,9 +941,14 @@ export default function WomenCollection() {
                       label="Background Type"
                       instanceId="background-type"
                       options={backgroundTypeOptions}
-                      value={backgroundTypeOptions.find((option) => option.value === settings.backgroundType) || null}
+                      value={
+                        settings.promptMode === "custom"
+                          ? { value: "custom", label: "Custom (from prompt)" }
+                          : backgroundTypeOptions.find((option) => option.value === settings.backgroundType) || null
+                      }
                       onChange={(option) => updateSettings({ backgroundType: option?.value || "studio" })}
-                      placeholder="Select background type"
+                      placeholder={settings.promptMode === "custom" ? "Custom (from prompt)" : "Select background type"}
+                      disabled={settings.promptMode === "custom"}
                     />
                     {!settings.isEcommerce ? (
                       <Dropdown
@@ -979,6 +1088,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.multipleModal)}
+                        disabled={settings.promptMode === "custom"}
                         onChange={(checked) => setMultipleModal(checked)}
                       />
                     </div>
@@ -995,7 +1105,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.isEcommerce)}
-                        disabled={Boolean(settings.multipleModal)}
+                        disabled={settings.promptMode === "custom" || Boolean(settings.multipleModal)}
                         onChange={(checked) => {
                           if (!checked) {
                             updateSettings({
@@ -1045,7 +1155,7 @@ export default function WomenCollection() {
                       </div>
                       <Switch
                         checked={Boolean(settings.sameBackground)}
-                        disabled={Boolean(settings.multipleModal)}
+                        disabled={settings.promptMode === "custom" || Boolean(settings.multipleModal)}
                         onChange={(checked) => updateSettings({ sameBackground: checked })}
                       />
                     </div>
@@ -1246,91 +1356,161 @@ export default function WomenCollection() {
                           </div>
                           {productErrors.imageError ? <p className={styles.inlineError}>{productErrors.imageError}</p> : null}
 
-                          <div className={styles.boxtitle}>
-                            <h2>Additional Instructions</h2>
-                          </div>
+                          {settings.promptMode === "custom" ? (
+                            <div className={styles.customPromptSection}>
+                              <div className={styles.promptHeader}>
+                                <div className={styles.promptTitleGroup}>
+                                  <h2>Custom Image Prompt</h2>
+                                  <span className={styles.promptBadge}>Direct AI Control</span>
+                                </div>
+                                <span className={styles.promptModeBadge}>
+                                  {settings.imagesPerProduct || 1} {settings.imagesPerProduct === 1 ? "Prompt" : "Prompts"}
+                                </span>
+                              </div>
+                              <p className={styles.promptDescription}>
+                                Describe your scene, model styling, lighting, and environment in detail. Uploaded garments will be accurately applied.
+                              </p>
 
-                          <div className={styles.textareaGrid}>
-                            {settings.isEcommerce
-                              ? (() => {
-                                const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
-                                const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
-                                const standardCount = standardViews.length;
-                                const totalImages = settings.imagesPerProduct || 1;
+                              <div className={styles.promptSuggestions}>
+                                <span className={styles.suggestionsLabel}>Quick Style Suggestions (Click to Add / Remove):</span>
+                                <div className={styles.chipsContainer}>
+                                  {PROMPT_STYLE_SUGGESTIONS.map((suggestion, sIdx) => {
+                                    const isActive = isSuggestionActive(product.customPrompt, suggestion.text);
+                                    return (
+                                      <button
+                                        key={sIdx}
+                                        type="button"
+                                        className={`${styles.chip} ${isActive ? styles.chipActive : ""}`}
+                                        onClick={() => {
+                                          const totalImages = settings.imagesPerProduct || 1;
+                                          const currentPrompts = resizeInstructions(product.customPrompt, totalImages);
+                                          const next = currentPrompts.map((p) => togglePromptSuggestion(p, suggestion.text));
+                                          updateProduct(product.id, "customPrompt", next);
+                                        }}
+                                      >
+                                        <span className={styles.chipCheck}>{isActive ? "✓" : "+"}</span>
+                                        {suggestion.label}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
 
-                                if (totalImages <= 0) {
+                              <div className={styles.promptGrid}>
+                                {Array.from({ length: settings.imagesPerProduct || 1 }).map((_, imageIndex) => {
+                                  const currentPrompt = Array.isArray(product.customPrompt) ? product.customPrompt[imageIndex] || "" : "";
                                   return (
-                                    <div>
-                                      <label>Instructions</label>
+                                    <div key={`custom-prompt-${product.id}-${imageIndex}`} className={styles.promptCard}>
+                                      <div className={styles.promptCardHeader}>
+                                        <label>
+                                          Prompt for Image {imageIndex + 1}
+                                        </label>
+                                        <span className={styles.charCount}>{currentPrompt.length} characters</span>
+                                      </div>
                                       <textarea
                                         data-lenis-prevent={true}
-                                        placeholder="Instructions..."
-                                        value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                        placeholder="E.g., High-fashion full body shot of an elegant model standing in a sunlit Italian palazzo, soft natural window light, photorealistic 8k, cinematic depth of field..."
+                                        value={currentPrompt}
                                         onChange={(event) => {
-                                          updateProduct(product.id, "additionalInstructions", [event.target.value]);
+                                          const next = resizeInstructions(product.customPrompt, settings.imagesPerProduct || 1);
+                                          next[imageIndex] = event.target.value;
+                                          updateProduct(product.id, "customPrompt", next);
                                         }}
                                       />
                                     </div>
                                   );
-                                }
-                                return (
-                                  <>
-                                    {standardCount > 0 ? (
-                                      <div>
-                                        <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
-                                        <textarea
-                                          data-lenis-prevent={true}
-                                          placeholder="Instructions for selected views..."
-                                          value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
-                                          onChange={(event) => {
-                                            const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                            for (let i = 0; i < standardCount; i += 1) {
-                                              next[i] = event.target.value;
-                                            }
-                                            updateProduct(product.id, "additionalInstructions", next);
-                                          }}
-                                        />
-                                      </div>
-                                    ) : null}
-                                    {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
-                                      const realIndex = standardCount + additionalIndex;
+                                })}
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <div className={styles.boxtitle}>
+                                <h2>Additional Instructions</h2>
+                              </div>
+
+                              <div className={styles.textareaGrid}>
+                                {settings.isEcommerce
+                                  ? (() => {
+                                    const sortedViews = getSortedViews(settings.ecommerceViewTypes || []);
+                                    const standardViews = sortedViews.filter((viewType) => VIEW_ORDER.includes(viewType));
+                                    const standardCount = standardViews.length;
+                                    const totalImages = settings.imagesPerProduct || 1;
+
+                                    if (totalImages <= 0) {
                                       return (
-                                        <div key={`additional-${product.id}-${additionalIndex}`}>
-                                          <label>Additional Image {additionalIndex + 1}</label>
+                                        <div>
+                                          <label>Instructions</label>
                                           <textarea
                                             data-lenis-prevent={true}
-                                            placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
-                                            value={
-                                              Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""
-                                            }
+                                            placeholder="Instructions..."
+                                            value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
                                             onChange={(event) => {
-                                              const next = resizeInstructions(product.additionalInstructions, totalImages);
-                                              next[realIndex] = event.target.value;
-                                              updateProduct(product.id, "additionalInstructions", next);
+                                              updateProduct(product.id, "additionalInstructions", [event.target.value]);
                                             }}
                                           />
                                         </div>
                                       );
-                                    })}
-                                  </>
-                                );
-                              })()
-                              : Array.from({ length: settings.imagesPerProduct || 1 }).map((_, imageIndex) => (
-                                <div key={`${product.id}-${imageIndex}`}>
-                                  <label>Image {imageIndex + 1}</label>
-                                  <textarea
-                                    data-lenis-prevent={true}
-                                    placeholder={`Instruction image ${imageIndex + 1}...`}
-                                    value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
-                                    onChange={(event) => {
-                                      const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
-                                      next[imageIndex] = event.target.value;
-                                      updateProduct(product.id, "additionalInstructions", next);
-                                    }}
-                                  />
-                                </div>
-                              ))}
-                          </div>
+                                    }
+                                    return (
+                                      <>
+                                        {standardCount > 0 ? (
+                                          <div>
+                                            <label>Instructions ({standardViews.map(formatViewLabel).join(", ")})</label>
+                                            <textarea
+                                              data-lenis-prevent={true}
+                                              placeholder="Instructions for selected views..."
+                                              value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[0] || "" : ""}
+                                              onChange={(event) => {
+                                                const next = resizeInstructions(product.additionalInstructions, totalImages);
+                                                for (let i = 0; i < standardCount; i += 1) {
+                                                  next[i] = event.target.value;
+                                                }
+                                                updateProduct(product.id, "additionalInstructions", next);
+                                              }}
+                                            />
+                                          </div>
+                                        ) : null}
+                                        {Array.from({ length: Math.max(totalImages - standardCount, 0) }).map((_, additionalIndex) => {
+                                          const realIndex = standardCount + additionalIndex;
+                                          return (
+                                            <div key={`additional-${product.id}-${additionalIndex}`}>
+                                              <label>Additional Image {additionalIndex + 1}</label>
+                                              <textarea
+                                                data-lenis-prevent={true}
+                                                placeholder={`Instructions for additional image ${additionalIndex + 1}...`}
+                                                value={
+                                                  Array.isArray(product.additionalInstructions) ? product.additionalInstructions[realIndex] || "" : ""
+                                                }
+                                                onChange={(event) => {
+                                                  const next = resizeInstructions(product.additionalInstructions, totalImages);
+                                                  next[realIndex] = event.target.value;
+                                                  updateProduct(product.id, "additionalInstructions", next);
+                                                }}
+                                              />
+                                            </div>
+                                          );
+                                        })}
+                                      </>
+                                    );
+                                  })()
+                                  : Array.from({ length: settings.imagesPerProduct || 1 }).map((_, imageIndex) => (
+                                    <div key={`${product.id}-${imageIndex}`}>
+                                      <label>Image {imageIndex + 1}</label>
+                                      <textarea
+                                        data-lenis-prevent={true}
+                                        placeholder={`Instruction image ${imageIndex + 1}...`}
+                                        value={Array.isArray(product.additionalInstructions) ? product.additionalInstructions[imageIndex] || "" : ""}
+                                        onChange={(event) => {
+                                          const next = resizeInstructions(product.additionalInstructions, settings.imagesPerProduct || 1);
+                                          next[imageIndex] = event.target.value;
+                                          updateProduct(product.id, "additionalInstructions", next);
+                                        }}
+                                      />
+                                    </div>
+                                  ))}
+                              </div>
+                            </>
+                          )}
                           {isLastProduct ? (
                             <>
                               {!settings.multipleModal && (

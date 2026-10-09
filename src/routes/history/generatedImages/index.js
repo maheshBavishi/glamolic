@@ -392,6 +392,16 @@ export default function GeneratedImages({ item }) {
           specificInstruction = item.settings.additionalInstructions[targetIndex] || "";
         }
 
+        let customPrompts = [];
+        let specificPrompt = "";
+        if (productMetadata?.customPrompt && Array.isArray(productMetadata.customPrompt)) {
+          customPrompts = productMetadata.customPrompt;
+          specificPrompt = customPrompts[imageIndexInProduct] || "";
+        } else if (item.settings?.customPrompt && Array.isArray(item.settings.customPrompt)) {
+          customPrompts = item.settings.customPrompt;
+          specificPrompt = item.settings.customPrompt[imageIndexInProduct] || "";
+        }
+
         const payload = {
           product: {
             gender: productMetadata?.gender || "Women",
@@ -404,6 +414,8 @@ export default function GeneratedImages({ item }) {
             topImage: productMetadata?.topImage || "",
             bottomImage: productMetadata?.bottomImage || "",
             dupattaImage: productMetadata?.dupattaImage || "",
+            customPrompt: customPrompts,
+            promptMode: productMetadata?.promptMode || item.settings?.promptMode || "structured",
           },
           settings: {
             productName: item.settings?.productName || "",
@@ -413,6 +425,8 @@ export default function GeneratedImages({ item }) {
             unifiedBackground: item.settings?.sameBackground ?? item.settings?.unifiedBackground ?? false,
             modelConsistency: item.settings?.modelConsistency || false,
             additionalInstructions: additionalInstructions,
+            customPrompt: customPrompts,
+            promptMode: item.settings?.promptMode || "structured",
             numberOfImages: imagesPerProduct,
             aspectRatio: "2:3",
             startingVariationIdx: item.settings?.startingVariationIdx || 0,
@@ -422,6 +436,8 @@ export default function GeneratedImages({ item }) {
           imageUrl: imageUrl,
           targetIndex: imageIndexInProduct,
           additionalInstruction: specificInstruction,
+          customPrompt: specificPrompt || undefined,
+          promptMode: item.settings?.promptMode || "structured",
         };
 
         toastId = toast.loading("Regenerating image...");
