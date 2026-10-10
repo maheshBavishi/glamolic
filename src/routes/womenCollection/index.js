@@ -151,7 +151,6 @@ const compressAndConvertToBase64 = (file, maxWidthPx = 1200, quality = 0.80) =>
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Convert to JPEG with compression; fall back to raw base64 on error
         canvas.toBlob(
           (blob) => {
             if (!blob) {
