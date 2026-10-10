@@ -151,6 +151,7 @@ const compressAndConvertToBase64 = (file, maxWidthPx = 1200, quality = 0.80) =>
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
 
+        // Convert to JPEG with compression; fall back to raw base64 on error
         canvas.toBlob(
           (blob) => {
             if (!blob) {
@@ -332,7 +333,6 @@ export default function WomenCollection() {
   const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, clearProductImages, preserveState, setPreserveState, setMultipleModal } =
     useGenerateStore();
   const { uploadImage, isUploading } = useImageUpload();
-  const isCustomPromptMode = settings.promptMode === "custom";
 
   const handleLogoUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -716,9 +716,9 @@ export default function WomenCollection() {
             frontPreview: frontBase64,
             backPreview: backBase64,
             referenceImage: "",
-            additionalInstructions: isCustomPromptMode ? [] : (Array.isArray(product.additionalInstructions) ? product.additionalInstructions : []),
-            customPrompt: isCustomPromptMode ? (Array.isArray(product.customPrompt) ? product.customPrompt : []) : [],
-            promptMode: isCustomPromptMode ? "custom" : "structured",
+            additionalInstructions: settings.promptMode === "custom" ? [] : (Array.isArray(product.additionalInstructions) ? product.additionalInstructions : []),
+            customPrompt: settings.promptMode === "custom" ? (Array.isArray(product.customPrompt) ? product.customPrompt : []) : [],
+            promptMode: settings.promptMode === "custom" ? "custom" : "structured",
             poses: settings.isEcommerce
               ? getSortedViews(settings.ecommerceViewTypes || [])
                 .filter((viewType) => VIEW_ORDER.includes(viewType))
@@ -768,7 +768,7 @@ export default function WomenCollection() {
         }),
       );
 
-
+      const isCustomPromptMode = settings.promptMode === "custom";
       const payload = {
         products: productsWithBase64,
         settings: {
@@ -864,7 +864,7 @@ export default function WomenCollection() {
                   <div className={styles.modeToggleGroup}>
                     <button
                       type="button"
-                      className={`${styles.modeButton} ${!isCustomPromptMode ? styles.modeButtonActive : ""}`}
+                      className={`${styles.modeButton} ${settings.promptMode !== "custom" ? styles.modeButtonActive : ""}`}
                       onClick={() => updateSettings({ promptMode: "structured" })}
                     >
                       <span className={styles.modeIcon}>✨</span>
@@ -872,7 +872,7 @@ export default function WomenCollection() {
                     </button>
                     <button
                       type="button"
-                      className={`${styles.modeButton} ${isCustomPromptMode ? styles.modeButtonActive : ""}`}
+                      className={`${styles.modeButton} ${settings.promptMode === "custom" ? styles.modeButtonActive : ""}`}
                       onClick={() => {
                         updateSettings({
                           promptMode: "custom",
@@ -891,7 +891,7 @@ export default function WomenCollection() {
                     </button>
                   </div>
                   <p className={styles.modeHelpText}>
-                    {isCustomPromptMode
+                    {settings.promptMode === "custom"
                       ? "Direct AI prompt control — describe your scene, model styling, lighting & mood."
                       : "Use structured presets for background, lighting, and e-commerce views."}
                   </p>
@@ -942,13 +942,13 @@ export default function WomenCollection() {
                       instanceId="background-type"
                       options={backgroundTypeOptions}
                       value={
-                        isCustomPromptMode
+                        settings.promptMode === "custom"
                           ? { value: "custom", label: "Custom (from prompt)" }
                           : backgroundTypeOptions.find((option) => option.value === settings.backgroundType) || null
                       }
                       onChange={(option) => updateSettings({ backgroundType: option?.value || "studio" })}
-                      placeholder={isCustomPromptMode ? "Custom (from prompt)" : "Select background type"}
-                      disabled={isCustomPromptMode}
+                      placeholder={settings.promptMode === "custom" ? "Custom (from prompt)" : "Select background type"}
+                      disabled={settings.promptMode === "custom"}
                     />
                     {!settings.isEcommerce ? (
                       <Dropdown
@@ -1076,59 +1076,55 @@ export default function WomenCollection() {
                     ) : null}
                   </div>
                   <div className={styles.subbox}>
-                    {!isCustomPromptMode && (
-                      <div className={styles.items}>
-                        <div className={styles.icontext}>
-                          <div className={styles.icon}>
-                            <img src={multipleUserIcon} alt="multipleUserIcon" />
-                          </div>
-                          <div>
-                            <h5>Multiple Modal</h5>
-                            <p>2 modals in one image</p>
-                          </div>
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div className={styles.icon}>
+                          <img src={multipleUserIcon} alt="multipleUserIcon" />
                         </div>
-                        <Switch
-                          checked={Boolean(settings.multipleModal)}
-                          disabled={isCustomPromptMode}
-                          onChange={(checked) => setMultipleModal(checked)}
-                        />
+                        <div>
+                          <h5>Multiple Modal</h5>
+                          <p>2 modals in one image</p>
+                        </div>
                       </div>
-                    )}
+                      <Switch
+                        checked={Boolean(settings.multipleModal)}
+                        disabled={settings.promptMode === "custom"}
+                        onChange={(checked) => setMultipleModal(checked)}
+                      />
+                    </div>
 
-                    {!isCustomPromptMode && (
-                      <div className={styles.items}>
-                        <div className={styles.icontext}>
-                          <div className={styles.icon}>
-                            <ShopIcon />
-                          </div>
-                          <div>
-                            <h5>Ecommerce Image</h5>
-                            <p>Specialized for product listings</p>
-                          </div>
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div className={styles.icon}>
+                          <ShopIcon />
                         </div>
-                        <Switch
-                          checked={Boolean(settings.isEcommerce)}
-                          disabled={isCustomPromptMode || Boolean(settings.multipleModal)}
-                          onChange={(checked) => {
-                            if (!checked) {
-                              updateSettings({
-                                isEcommerce: false,
-                                ecommerceViewTypes: [],
-                                additionalImagesCount: 0,
-                                imagesPerProduct: 2,
-                              });
-                              return;
-                            }
-
+                        <div>
+                          <h5>Ecommerce Image</h5>
+                          <p>Specialized for product listings</p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={Boolean(settings.isEcommerce)}
+                        disabled={settings.promptMode === "custom" || Boolean(settings.multipleModal)}
+                        onChange={(checked) => {
+                          if (!checked) {
                             updateSettings({
-                              isEcommerce: true,
-                              ecommerceViewTypes: settings.ecommerceViewTypes || [],
-                              additionalImagesCount: settings.additionalImagesCount || 0,
+                              isEcommerce: false,
+                              ecommerceViewTypes: [],
+                              additionalImagesCount: 0,
+                              imagesPerProduct: 2,
                             });
-                          }}
-                        />
-                      </div>
-                    )}
+                            return;
+                          }
+
+                          updateSettings({
+                            isEcommerce: true,
+                            ecommerceViewTypes: settings.ecommerceViewTypes || [],
+                            additionalImagesCount: settings.additionalImagesCount || 0,
+                          });
+                        }}
+                      />
+                    </div>
 
                     <div className={styles.items}>
                       <div className={styles.icontext}>
@@ -1147,24 +1143,22 @@ export default function WomenCollection() {
                       />
                     </div>
 
-                    {!isCustomPromptMode && (
-                      <div className={styles.items}>
-                        <div className={styles.icontext}>
-                          <div className={styles.icon}>
-                            <SettingIcon />
-                          </div>
-                          <div>
-                            <h5>Unified Background</h5>
-                            <p>Same setting for all products</p>
-                          </div>
+                    <div className={styles.items}>
+                      <div className={styles.icontext}>
+                        <div className={styles.icon}>
+                          <SettingIcon />
                         </div>
-                        <Switch
-                          checked={Boolean(settings.sameBackground)}
-                          disabled={isCustomPromptMode || Boolean(settings.multipleModal)}
-                          onChange={(checked) => updateSettings({ sameBackground: checked })}
-                        />
+                        <div>
+                          <h5>Unified Background</h5>
+                          <p>Same setting for all products</p>
+                        </div>
                       </div>
-                    )}
+                      <Switch
+                        checked={Boolean(settings.sameBackground)}
+                        disabled={settings.promptMode === "custom" || Boolean(settings.multipleModal)}
+                        onChange={(checked) => updateSettings({ sameBackground: checked })}
+                      />
+                    </div>
 
                     <div className={styles.items} style={{ flexDirection: "column", alignItems: "flex-start", gap: "12px" }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
@@ -1362,7 +1356,7 @@ export default function WomenCollection() {
                           </div>
                           {productErrors.imageError ? <p className={styles.inlineError}>{productErrors.imageError}</p> : null}
 
-                          {isCustomPromptMode ? (
+                          {settings.promptMode === "custom" ? (
                             <div className={styles.customPromptSection}>
                               <div className={styles.promptHeader}>
                                 <div className={styles.promptTitleGroup}>
