@@ -90,7 +90,7 @@ const createInitialState = (settingsOverrides = {}) => {
 
 export const useGenerateStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...createInitialState(),
 
       setPreserveState: (preserve) => set({ preserveState: preserve }),
@@ -231,8 +231,14 @@ export const useGenerateStore = create(
           settings: { ...state.settings, ...newSettings },
         })),
 
-      clearProductImages: () =>
+      clearProductImages: (clearPrompts = false) =>
         set((state) => {
+          if (!clearPrompts) {
+            return {
+              ...state,
+              products: state.products.map((product) => sanitizeProductForRetention(product, false)),
+            };
+          }
           const imagesCount = state.settings.imagesPerProduct || 2;
           return {
             ...state,
@@ -244,6 +250,68 @@ export const useGenerateStore = create(
             products: state.products.map((product) => sanitizeProductForRetention(product, true)),
           };
         }),
+
+      saveUserStorage: (userId, category = "") => {
+        if (!userId || typeof window === "undefined") return;
+        try {
+          const state = get();
+          const dataToSave = {
+            settings: state.settings,
+            products: sanitizeProductsForRetention(state.products),
+            previousSettings: state.previousSettings,
+            previousProducts: state.previousProducts ? sanitizeProductsForRetention(state.previousProducts) : null,
+          };
+          const serialized = JSON.stringify(dataToSave);
+          localStorage.setItem(`${GENERATE_STORAGE_KEY}_${userId}`, serialized);
+          if (category) {
+            localStorage.setItem(`${GENERATE_STORAGE_KEY}_${userId}_${category.toLowerCase()}`, serialized);
+          }
+        } catch (err) {
+          console.error("Error saving user generate storage:", err);
+        }
+      },
+
+      loadUserStorage: (userId, category = "") => {
+        if (!userId || typeof window === "undefined") return false;
+        try {
+          let raw = null;
+          if (category) {
+            raw = localStorage.getItem(`${GENERATE_STORAGE_KEY}_${userId}_${category.toLowerCase()}`);
+          }
+          if (!raw) {
+            raw = localStorage.getItem(`${GENERATE_STORAGE_KEY}_${userId}`);
+          }
+          if (!raw) return false;
+
+          const parsed = JSON.parse(raw);
+          if (parsed && (parsed.settings || parsed.products)) {
+            set((state) => {
+              const nextSettings = {
+                ...state.settings,
+                ...(parsed.settings || {}),
+              };
+              const nextProducts = Array.isArray(parsed.products) && parsed.products.length > 0
+                ? parsed.products.map((p, idx) => ({
+                  ...createInitialProduct(p.id || String(idx + 1), nextSettings.imagesPerProduct || 2),
+                  ...p,
+                }))
+                : state.products;
+
+              return {
+                ...state,
+                settings: nextSettings,
+                products: nextProducts,
+                previousSettings: parsed.previousSettings ?? state.previousSettings,
+                previousProducts: parsed.previousProducts ?? state.previousProducts,
+              };
+            });
+            return true;
+          }
+        } catch (err) {
+          console.error("Error loading user generate storage:", err);
+        }
+        return false;
+      },
 
       resetStore: (settingsOverrides = {}) => {
         if (typeof window !== "undefined") {

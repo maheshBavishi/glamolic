@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [userTransactions, setUserTransactions] = useState(null);
 
-  const { resetStore } = useGenerateStore();
+  const { resetStore, saveUserStorage } = useGenerateStore();
   const { resetCredits } = useCreditsStore();
 
   const fetchProfile = async (userId) => {
@@ -200,6 +200,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signOut = async () => {
+    if (user?.id) {
+      saveUserStorage(user.id);
+    }
     await supabase.auth.signOut();
     resetStore();
     resetCredits();

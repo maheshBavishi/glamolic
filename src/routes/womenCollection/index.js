@@ -330,8 +330,21 @@ export default function WomenCollection() {
   const router = useRouter();
   const { user, profile, userTransactions, updateProfile } = useAuth();
   const { credits, loading: creditsLoading, fetchCredits } = useCreditsStore();
-  const { products, settings, addProduct, removeProduct, updateProduct, updateSettings, resetStore, clearProductImages, preserveState, setPreserveState, setMultipleModal } =
-    useGenerateStore();
+  const {
+    products,
+    settings,
+    addProduct,
+    removeProduct,
+    updateProduct,
+    updateSettings,
+    resetStore,
+    clearProductImages,
+    preserveState,
+    setPreserveState,
+    setMultipleModal,
+    saveUserStorage,
+    loadUserStorage,
+  } = useGenerateStore();
   const { uploadImage, isUploading } = useImageUpload();
   const isCustomPromptMode = settings.promptMode === "custom";
 
@@ -409,8 +422,6 @@ export default function WomenCollection() {
   );
 
   useEffect(() => {
-    clearProductImages();
-
     if (preserveState) {
       setPreserveState(false);
       if (settings.gender !== routeCategory) {
@@ -425,9 +436,26 @@ export default function WomenCollection() {
     }
 
     if (settings.gender !== routeCategory) {
+      if (user?.id && loadUserStorage(user.id, routeCategory)) {
+        return;
+      }
       resetStore({ gender: routeCategory });
     }
-  }, [clearProductImages, preserveState, resetStore, routeCategory, setPreserveState, settings.gender, updateSettings]);
+  }, [preserveState, resetStore, routeCategory, setPreserveState, settings.gender, updateSettings, user?.id, loadUserStorage]);
+
+  // Restore user's saved generation settings on mount / login
+  useEffect(() => {
+    if (user?.id) {
+      loadUserStorage(user.id, routeCategory);
+    }
+  }, [user?.id, routeCategory, loadUserStorage]);
+
+  // Auto-save form changes to user's storage
+  useEffect(() => {
+    if (user?.id) {
+      saveUserStorage(user.id, routeCategory);
+    }
+  }, [user?.id, products, settings, routeCategory, saveUserStorage]);
 
   useEffect(() => {
     if (userTransactions?.transaction_type !== "SIGNUP_BONUS" && settings.resolution === "1k") {
@@ -808,8 +836,8 @@ export default function WomenCollection() {
       if (isQueuedResponse || hasTaskResponse || hasImmediateResult) {
         toast.dismiss(loadingToast);
         toast.success(response?.message || "Generation started in background!");
-        clearProductImages();
         if (user?.id) {
+          saveUserStorage(user.id, routeCategory);
           fetchCredits(user.id);
         }
         setFormErrors({ products: [] });
