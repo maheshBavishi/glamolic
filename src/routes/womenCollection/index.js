@@ -1144,7 +1144,7 @@ export default function WomenCollection() {
                                 isEcommerce: false,
                                 ecommerceViewTypes: [],
                                 additionalImagesCount: 0,
-                                imagesPerProduct: 2,
+                                imagesPerProduct: 1,
                               });
                               return;
                             }

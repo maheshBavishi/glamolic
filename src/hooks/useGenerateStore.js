@@ -18,7 +18,7 @@ const createInitialSettings = () => ({
   resolution: "2k",
   imageOrientation: "portrait",
   imageSize: "12x18",
-  imagesPerProduct: 2,
+  imagesPerProduct: 1,
   productName: "",
   modelConsistency: true,
   sameBackground: true,
@@ -35,7 +35,7 @@ const createInitialSettings = () => ({
   show_product_name: false,
 });
 
-const createInitialProduct = (id = "1", imagesPerProduct = 2) => ({
+const createInitialProduct = (id = "1", imagesPerProduct = 1) => ({
   id,
   clothingType: "",
   subCategory: "",
@@ -53,7 +53,7 @@ const createInitialProduct = (id = "1", imagesPerProduct = 2) => ({
 });
 
 const sanitizeProductForRetention = (product, clearPrompts = false) => {
-  const imagesCount = Array.isArray(product?.customPrompt) && product.customPrompt.length > 0 ? product.customPrompt.length : 2;
+  const imagesCount = Array.isArray(product?.customPrompt) && product.customPrompt.length > 0 ? product.customPrompt.length : 1;
   const nextProduct = {
     ...product,
     additionalInstructions: clearPrompts
@@ -239,7 +239,7 @@ export const useGenerateStore = create(
               products: state.products.map((product) => sanitizeProductForRetention(product, false)),
             };
           }
-          const imagesCount = state.settings.imagesPerProduct || 2;
+          const imagesCount = state.settings.imagesPerProduct || 1;
           return {
             ...state,
             settings: {
@@ -292,7 +292,7 @@ export const useGenerateStore = create(
               };
               const nextProducts = Array.isArray(parsed.products) && parsed.products.length > 0
                 ? parsed.products.map((p, idx) => ({
-                  ...createInitialProduct(p.id || String(idx + 1), nextSettings.imagesPerProduct || 2),
+                  ...createInitialProduct(p.id || String(idx + 1), nextSettings.imagesPerProduct || 1),
                   ...p,
                 }))
                 : state.products;
